@@ -1,6 +1,5 @@
 # Pygame template - skeleton for a new pygame project
 from pygame_functions import *
-from MonkeyPosition import *
 import glob
 import pickle
 
@@ -11,18 +10,18 @@ FPS = 120
 screenSize(WIDTH, HEIGHT)
 setBackgroundImage("img/FullScreen.png")
 
-MONKEY_POSITIONS_FILE = "KeyPositions"
+SPRITE_POSITIONS_FILE = "CocoPositions"
 
 
 def getAllPositions():
-    if os.path.isfile(MONKEY_POSITIONS_FILE):
-        with open(MONKEY_POSITIONS_FILE, "rb") as positionFile:
+    if os.path.isfile(SPRITE_POSITIONS_FILE):
+        with open(SPRITE_POSITIONS_FILE, "rb") as positionFile:
             return pickle.Unpickler(positionFile).load()
     return {}
 
 
 def writePositionsFile(dictPosition):
-    with open(MONKEY_POSITIONS_FILE, "wb") as positionFile:
+    with open(SPRITE_POSITIONS_FILE, "wb") as positionFile:
         myPickler = pickle.Pickler(positionFile)
         myPickler.dump(dictPosition)
 
@@ -30,7 +29,7 @@ def writePositionsFile(dictPosition):
 all_positions = getAllPositions()
 print(all_positions)
 
-for filepath in glob.iglob('img/sprites/others/*.png'):
+for filepath in glob.iglob('img/sprites/Coco/*.png'):
     # Filenames are xxx.png thus 7 letters
     spriteName = filepath[-7:-4]
     print(spriteName)
