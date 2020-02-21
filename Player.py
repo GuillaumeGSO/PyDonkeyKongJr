@@ -64,7 +64,7 @@ class Player():
         d["H1H"].setPositions(down=d["H1G"])
         d["H2G"].setPositions(jump=d["H2J"], left=d["H3G"], right=d["H1G"])
         d["H2J"].setPositions(nextMove=d["H2G"], left=d["H3G"])
-        d["H3G"].setPositions(jump=d["H3J"], left=d["H7F"], up=d["H4J"])
+        d["H3G"].setPositions(jump=d["H3J"], left=d["H7F"], up=d["H4J"], right=d["H2G"])
         d["H3J"].setPositions(nextMove=d["H3G"])
         # Jumping to the key
         d["H4J"].setPositions(nextMove=d["H5T"])
@@ -86,8 +86,6 @@ class Player():
 
     def move(self):
         hasMoved = False
-        print(clock())
-        print(self.timeOfNextFrame)
         if clock() > self.timeOfNextFrame:  # We only animate our character every xx ms.
             self.timeOfNextFrame += 500
             if self.spritePosition.nextMove == None:
