@@ -87,7 +87,7 @@ class Player():
     def move(self):
         hasMoved = False
         if clock() > self.timeOfNextFrame:  # We only animate our character every xx ms.
-            self.timeOfNextFrame += 500
+            self.timeOfNextFrame += 100
             if self.spritePosition.nextMove == None:
                 hideSprite(self.spritePosition.sprite)
                 if keyPressed("space"):

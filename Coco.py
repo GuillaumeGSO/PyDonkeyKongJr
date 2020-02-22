@@ -12,6 +12,11 @@ class Coco():
         c = "Coco"
         d["C00"] = SpritePosition("C00", c)
         d["C01"] = SpritePosition("C01", c)
+        d["C02"] = SpritePosition("C02", c)
+        d["C03"] = SpritePosition("C03", c)
+        #No next move in position 0 : not falling without being touched
+        d["C01"].setPositions(nextMove=d["C02"])
+        d["C02"].setPositions(nextMove=d["C03"])
         return d
 
     def __init__(self):
@@ -39,3 +44,15 @@ class Coco():
     def update(self):
         if self.move():
             updateDisplay()
+    
+    def hide(self):
+        hideSprite(self.spritePosition.sprite)
+
+    def show(self):
+        showSprite(self.spritePosition.sprite)
+
+    def init(self):
+        self.spritePosition = self.allPositions.get("C00")
+        self.allPositions.get("C00").setPositions(nextMove=None)
+        self.show()
+

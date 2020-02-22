@@ -17,7 +17,7 @@ from Coco import *
 
 WIDTH = 700
 HEIGHT = 480
-FPS = 10
+FPS = 5
 
 screenSize(WIDTH, HEIGHT)
 setBackgroundImage("img/EmptyScreen.png")
@@ -32,11 +32,33 @@ k = Key()
 c = Croco()
 cc = Coco()
 
-while True:
-    p.update()  
+continue_game = True
+
+while continue_game:
+    p.update()
     b.update()
     k.update()
     c.update()
     cc.update()
+    # if touching(p.spritePosition.sprite, c.spritePosition.sprite):
+    #print("croco touching")
+    # if touching(p.spritePosition.sprite, b.spritePosition.sprite):
+    #print("bird touching")
+    if p.spritePosition.name=="H2J" and cc.spritePosition.name=="C00":
+        cc.spritePosition.nextMove=cc.allPositions["C01"]
+    if cc.spritePosition.name=="C03":
+        cc.hide()
+    if p.spritePosition.name=="H4J":
+        if  k.spritePosition.name=="K03":
+            print("got the key")
+            p.spritePosition.nextMove=p.allPositions["H5T"]
+            k.hide()
+        else:
+            print("missed the key")
+            p.spritePosition.nextMove=p.allPositions["H7F"]
+            k.show()
+    if p.spritePosition.name=="L0G":
+          k.show()
+          cc.init()
+
     tick(FPS)
-   
