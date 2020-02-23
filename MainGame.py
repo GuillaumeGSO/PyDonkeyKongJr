@@ -13,6 +13,7 @@ from Bird import *
 from Key import *
 from Croco import *
 from Coco import *
+from Missed import *
 
 
 WIDTH = 700
@@ -31,10 +32,13 @@ b = Bird()
 k = Key()
 c = Croco()
 cc = Coco()
+m = Missed()
+infoLabel = makeLabel("Score : ", 20, 500, 10, "black")
+showLabel(infoLabel)
 
-continue_game = True
+missed = 0
 
-while continue_game:
+while missed < 3:
     p.update()
     b.update()
     k.update()
@@ -44,21 +48,38 @@ while continue_game:
     #print("croco touching")
     # if touching(p.spritePosition.sprite, b.spritePosition.sprite):
     #print("bird touching")
-    if p.spritePosition.name=="H2J" and cc.spritePosition.name=="C00":
-        cc.spritePosition.nextMove=cc.allPositions["C01"]
-    if cc.spritePosition.name=="C03":
+    if p.spritePosition.name == "H2J" and cc.spritePosition.name == "C00":
+        cc.spritePosition.nextMove = cc.allPositions["C01"]
+    
+    # If the coconut reach the bottom : hide it
+    if cc.spritePosition.name == "C03":
         cc.hide()
-    if p.spritePosition.name=="H4J":
-        if  k.spritePosition.name=="K03":
-            print("got the key")
-            p.spritePosition.nextMove=p.allPositions["H5T"]
+    # If monkey is jumping to the key 
+    if p.spritePosition.name == "H4J":
+        if k.spritePosition.name == "K03":
+            # Monkey grab the key
+            p.spritePosition.nextMove = p.allPositions["H5T"]
             k.hide()
         else:
-            print("missed the key")
-            p.spritePosition.nextMove=p.allPositions["H7F"]
-            k.show()
-    if p.spritePosition.name=="L0G":
-          k.show()
-          cc.init()
+            # Monkey miss the key
+            m.update(missed)
+            missed += 1
+            p.spritePosition.nextMove = p.allPositions["H7F"]
+            #Monkey finish in the bush
+            p.update()
+            p.update()
+    if p.spritePosition.name == "H7F":
+        # Monkey miss the key
+        m.update(missed)
+        missed += 1
+         #Monkey finish in the bush
+        p.update()
+
+    # If starting position : reset some stuff
+    if p.spritePosition.name == "L0G":
+        k.show()
+        cc.init()
 
     tick(FPS)
+changeLabel(infoLabel, "Game Over")
+endWait()
