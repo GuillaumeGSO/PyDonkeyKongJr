@@ -14,6 +14,7 @@ from Key import *
 from Croco import *
 from Coco import *
 from Missed import *
+from Cage import *
 
 
 WIDTH = 700
@@ -33,10 +34,17 @@ k = Key()
 c = Croco()
 cc = Coco()
 m = Missed()
-infoLabel = makeLabel("Score : ", 20, 500, 10, "black")
-showLabel(infoLabel)
+cage = Cage()
 
 missed = 0
+score = 0
+cages = 4
+
+# TODO make this a separate object that can be updated and animate
+infoLabel = makeLabel("Score : " + str(score), 20, 500, 10, "black")
+showLabel(infoLabel)
+
+cage.restore_cages()
 
 while missed < 3:
     p.update()
@@ -50,22 +58,33 @@ while missed < 3:
     #print("bird touching")
     if p.spritePosition.name == "H2J" and cc.spritePosition.name == "C00":
         cc.spritePosition.nextMove = cc.allPositions["C01"]
-    
+
     # If the coconut reach the bottom : hide it
     if cc.spritePosition.name == "C03":
         cc.hide()
-    # If monkey is jumping to the key 
+    # If monkey is jumping to the key
     if p.spritePosition.name == "H4J":
         if k.spritePosition.name == "K03":
             # Monkey grab the key
             p.spritePosition.nextMove = p.allPositions["H5T"]
             k.hide()
+            score += 25
+            changeLabel(infoLabel, "Score : " + str(score))
+            cage.hide_cage(4-cages)
+            cages -= 1
+            if cages == 0:
+                score += 100
+                changeLabel(infoLabel, "Score : " + str(score))
+                cage.show_smile()
+                p.update()
+                p.update()
+                pause(1000)
         else:
             # Monkey miss the key
             m.update(missed)
             missed += 1
             p.spritePosition.nextMove = p.allPositions["H7F"]
-            #Monkey finish in the bush
+            # Monkey finish in the bush
             pause(300)
             p.update()
             pause(300)
@@ -75,7 +94,7 @@ while missed < 3:
     if p.spritePosition.name == "H7F":
         m.update(missed)
         missed += 1
-         #Monkey finish in the bush
+        # Monkey finish in the bush
         pause(300)
         p.update()
         pause(300)
@@ -84,7 +103,12 @@ while missed < 3:
     if p.spritePosition.name == "L0G":
         k.show()
         cc.init()
+        if cages == 0:
+            cages = 4
+            cage.hide_smile()
+            cage.restore_cages()
 
     tick(FPS)
-changeLabel(infoLabel, "Game Over")
+
+changeLabel(infoLabel, "Score : " + str(score))
 endWait()
