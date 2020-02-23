@@ -9,8 +9,14 @@ FPS = 120
 
 screenSize(WIDTH, HEIGHT)
 setBackgroundImage("positions/FullScreen.png")
+"""
+Setup below
+"""
+INCREMENT = 1
+PREFIX = "Cage"
 
-SPRITE_POSITIONS_FILE = "MissedPositions"
+
+SPRITE_POSITIONS_FILE = PREFIX + "Positions"
 
 
 def getAllPositions():
@@ -29,7 +35,7 @@ def writePositionsFile(dictPosition):
 all_positions = getAllPositions()
 print(all_positions)
 
-for filepath in glob.iglob('img/sprites/Missed/*.png'):
+for filepath in glob.iglob("img/sprites/" + PREFIX + "/*.png"):
     # Filenames are xxx.png thus 7 letters
     spriteName = filepath[-7:-4]
     print(spriteName)
@@ -42,17 +48,17 @@ for filepath in glob.iglob('img/sprites/Missed/*.png'):
                    [0], all_positions.get(spriteName)[1])
 
     showSprite(sprite)
-    inc = 1
+
     position = True
     while position:
         if keyPressed("right"):
-            moveSprite(sprite, sprite.rect.x + inc, sprite.rect.y)
+            moveSprite(sprite, sprite.rect.x + INCREMENT, sprite.rect.y)
         if keyPressed("left"):
-            moveSprite(sprite, sprite.rect.x - inc, sprite.rect.y)
+            moveSprite(sprite, sprite.rect.x - INCREMENT, sprite.rect.y)
         if keyPressed("up"):
-            moveSprite(sprite, sprite.rect.x, sprite.rect.y-inc)
+            moveSprite(sprite, sprite.rect.x, sprite.rect.y-INCREMENT)
         if keyPressed("down"):
-            moveSprite(sprite, sprite.rect.x, sprite.rect.y+inc)
+            moveSprite(sprite, sprite.rect.x, sprite.rect.y+INCREMENT)
         if keyPressed("space"):
             print(sprite.rect.x, sprite.rect.y)
             all_positions[spriteName] = (sprite.rect.x, sprite.rect.y)
