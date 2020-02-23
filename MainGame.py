@@ -18,7 +18,7 @@ from Missed import *
 
 WIDTH = 700
 HEIGHT = 480
-FPS = 5
+FPS = 6
 
 screenSize(WIDTH, HEIGHT)
 setBackgroundImage("img/EmptyScreen.png")
@@ -66,14 +66,19 @@ while missed < 3:
             missed += 1
             p.spritePosition.nextMove = p.allPositions["H7F"]
             #Monkey finish in the bush
+            pause(300)
             p.update()
+            pause(300)
             p.update()
+            pause(300)
+    # If monkey is falling...
     if p.spritePosition.name == "H7F":
-        # Monkey miss the key
         m.update(missed)
         missed += 1
          #Monkey finish in the bush
+        pause(300)
         p.update()
+        pause(300)
 
     # If starting position : reset some stuff
     if p.spritePosition.name == "L0G":
