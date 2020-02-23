@@ -37,7 +37,7 @@ class SpritePosition:
     
     @staticmethod
     def getAllPositions(fileName):
-        newFileName = fileName + "Positions"
+        newFileName = "positions/" + fileName + "Positions"
         if os.path.isfile(newFileName):
             with open(newFileName, "rb") as positionFile:
                 return pickle.Unpickler(positionFile).load()

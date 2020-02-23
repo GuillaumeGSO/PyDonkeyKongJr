@@ -8,9 +8,9 @@ HEIGHT = 480
 FPS = 120
 
 screenSize(WIDTH, HEIGHT)
-setBackgroundImage("img/FullScreen.png")
+setBackgroundImage("positions/FullScreen.png")
 
-SPRITE_POSITIONS_FILE = "CocoPositions"
+SPRITE_POSITIONS_FILE = "MissedPositions"
 
 
 def getAllPositions():
@@ -29,7 +29,7 @@ def writePositionsFile(dictPosition):
 all_positions = getAllPositions()
 print(all_positions)
 
-for filepath in glob.iglob('img/sprites/Coco/*.png'):
+for filepath in glob.iglob('img/sprites/Missed/*.png'):
     # Filenames are xxx.png thus 7 letters
     spriteName = filepath[-7:-4]
     print(spriteName)
