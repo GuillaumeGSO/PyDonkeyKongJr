@@ -45,6 +45,7 @@ class Croco():
         self.spritePosition = self.allPositions.get("C00")
         self.frame = 0
         self.timeOfNextFrame = clock()
+        self.sound=makeSound("sounds/Croco.wav")
 
     def move(self):
         hasMoved = False
@@ -65,3 +66,4 @@ class Croco():
     def update(self):
         if self.move():
             updateDisplay()
+            playSound(self.sound)
