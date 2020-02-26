@@ -64,7 +64,8 @@ class Player():
         d["H1H"].setPositions(down=d["H1G"])
         d["H2G"].setPositions(jump=d["H2J"], left=d["H3G"], right=d["H1G"])
         d["H2J"].setPositions(nextMove=d["H2G"], left=d["H3G"])
-        d["H3G"].setPositions(jump=d["H3J"], left=d["H7F"], up=d["H4J"], right=d["H2G"])
+        d["H3G"].setPositions(jump=d["H3J"], left=d["H7F"],
+                              up=d["H4J"], right=d["H2G"])
         d["H3J"].setPositions(nextMove=d["H3G"])
         # Jumping to the key
         d["H4J"].setPositions(nextMove=d["H5T"])
@@ -83,6 +84,7 @@ class Player():
         self.spritePosition = self.allPositions.get("L0G")
         self.frame = 0
         self.timeOfNextFrame = clock()
+        self.sound = makeSound("sounds/Monkey.wav")
 
     def move(self):
         hasMoved = False
@@ -93,28 +95,28 @@ class Player():
                 if keyPressed("space"):
                     if self.spritePosition.jumpMove != None:
                         self.spritePosition = self.spritePosition.jumpMove
-                        hasMoved=True
+                        hasMoved = True
                 elif keyPressed("right"):
                     if self.spritePosition.rightMove != None:
                         self.spritePosition = self.spritePosition.rightMove
-                        hasMoved=True
+                        hasMoved = True
                 elif keyPressed("left"):
                     if self.spritePosition.leftMove != None:
                         self.spritePosition = self.spritePosition.leftMove
-                        hasMoved=True
+                        hasMoved = True
                 elif keyPressed("up"):
                     if self.spritePosition.upMove != None:
                         self.spritePosition = self.spritePosition.upMove
-                        hasMoved=True
+                        hasMoved = True
                 elif keyPressed("down"):
                     if self.spritePosition.downMove != None:
                         self.spritePosition = self.spritePosition.downMove
-                        hasMoved=True
+                        hasMoved = True
             else:
-                hasMoved=True
+                hasMoved = True
                 hideSprite(self.spritePosition.sprite)
                 self.spritePosition = self.spritePosition.nextMove
-            
+
             moveSprite(self.spritePosition.sprite,
                        self.spritePosition.x, self.spritePosition.y)
             showSprite(self.spritePosition.sprite)
@@ -125,3 +127,4 @@ class Player():
     def update(self):
         if self.move():
             updateDisplay()
+            playSound(self.sound)
