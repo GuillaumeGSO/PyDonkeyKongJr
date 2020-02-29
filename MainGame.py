@@ -15,6 +15,8 @@ from Croco import *
 from Coco import *
 from Missed import *
 from Cage import *
+from Score import *
+import random
 
 
 WIDTH = 700
@@ -23,26 +25,24 @@ FPS = 6
 
 screenSize(WIDTH, HEIGHT)
 setBackgroundImage("img/EmptyScreen.png")
+# setBackgroundImage("positions/FullScreen.png")
 
 """
 Position of sprites are recorded using positionning_tool.py in a file named xxxPositions
 """
 setAutoUpdate(False)
+sc = Score()
 p = Player()
-b = Bird()
+b = Bird()  # TODO a list of birds randomly added
 k = Key()
-c = Croco()
+c = Croco()  # TODO a list of crocodile randomly added
 cc = Coco()
 m = Missed()
 cage = Cage()
 
 missed = 0
-score = 0
 cages = 4
 
-# TODO make this a separate object that can be updated and animate
-infoLabel = makeLabel("Score : " + str(score), 20, 500, 10, "black")
-showLabel(infoLabel)
 
 cage.restore_cages()
 
@@ -52,10 +52,7 @@ while missed < 3:
     k.update()
     c.update()
     cc.update()
-    # if touching(p.spritePosition.sprite, c.spritePosition.sprite):
-    #print("croco touching")
-    # if touching(p.spritePosition.sprite, b.spritePosition.sprite):
-    #print("bird touching")
+    
     if p.spritePosition.name == "H2J" and cc.spritePosition.name == "C00":
         cc.spritePosition.nextMove = cc.allPositions["C01"]
 
@@ -68,13 +65,11 @@ while missed < 3:
             # Monkey grab the key
             p.spritePosition.nextMove = p.allPositions["H5T"]
             k.hide()
-            score += 25
-            changeLabel(infoLabel, "Score : " + str(score))
+            sc.addPoints(random.randrange(5, 10))
             cage.hide_cage(4-cages)
             cages -= 1
             if cages == 0:
-                score += 100
-                changeLabel(infoLabel, "Score : " + str(score))
+                sc.addPoints(25)
                 cage.show_smile()
                 p.update()
                 p.update()
@@ -109,6 +104,4 @@ while missed < 3:
             cage.restore_cages()
 
     tick(FPS)
-
-changeLabel(infoLabel, "Score : " + str(score))
 endWait()
