@@ -19,7 +19,6 @@ class Score():
         changeLabel(self.scoreLabel, str(self.score))
 
     def addPoints(self, points):
-        print("adding " + str(points))
         for i in range(points):
             self.score += 1
             changeLabel(self.scoreLabel, str(self.score))

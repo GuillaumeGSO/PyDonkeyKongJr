@@ -27,6 +27,7 @@ class Croco():
         d["C00"].setPositions(nextMove=d["C01"])
         d["C01"].setPositions(nextMove=d["C02"])
         d["C02"].setPositions(nextMove=d["C03"])
+        d["C02"].eaterName="C01"
         d["C03"].setPositions(nextMove=d["C04"])
         d["C04"].setPositions(nextMove=d["C05"])
         d["C05"].setPositions(nextMove=d["C06"])
@@ -34,6 +35,7 @@ class Croco():
         d["C07"].setPositions(nextMove=d["C08"])
         d["C08"].setPositions(nextMove=d["C09"])
         d["C09"].setPositions(nextMove=d["C10"])
+        d["C09"].eaterName="C03"
         d["C10"].setPositions(nextMove=d["C11"])
         d["C11"].setPositions(nextMove=d["C12"])
         d["C12"].setPositions(nextMove=d["C00"])

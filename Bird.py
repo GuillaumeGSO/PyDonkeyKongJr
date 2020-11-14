@@ -15,6 +15,7 @@ class Bird():
         d["B02"] = SpritePosition("B02", b)
         d["B03"] = SpritePosition("B03", b)
         d["B04"] = SpritePosition("B04", b)
+        d["B04"].eaterName="C02"
         d["B05"] = SpritePosition("B05", b)
         d["B06"] = SpritePosition("B06", b)
         d["B07"] = SpritePosition("B07", b)

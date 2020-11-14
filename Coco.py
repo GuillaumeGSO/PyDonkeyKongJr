@@ -22,6 +22,7 @@ class Coco():
     def __init__(self):
         self.allPositions = self.generate()
         self.spritePosition = self.allPositions.get("C00")
+        self.visible = True
         self.frame = 0
         self.timeOfNextFrame = clock()
 
@@ -47,9 +48,11 @@ class Coco():
     
     def hide(self):
         hideSprite(self.spritePosition.sprite)
+        visible = False
 
     def show(self):
         showSprite(self.spritePosition.sprite)
+        visible = True
 
     def init(self):
         self.spritePosition = self.allPositions.get("C00")

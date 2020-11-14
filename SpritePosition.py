@@ -5,19 +5,21 @@ import pickle
 class SpritePosition:
 
     def __init__(self, name, prefix=""):
-        #Name must be the filename of a sprite
+        # Name must be the filename of a sprite
         self.name = name
-        #prefix should be both of img/sprites' subdirectory and prefix of a *Positions file
+        # Prefix should be both of img/sprites' subdirectory and prefix of a *Positions file
         if prefix != "":
             newPrefix = prefix + "/"
         self.sprite = makeSprite("img/sprites/" + newPrefix + name + ".png")
-        #all the close positions
+        # All the close positions
         self.jumpMove = None
         self.upMove = None
         self.downMove = None
         self.leftMove = None
         self.rightMove = None
         self.nextMove = None
+        # Name of the sprite that can eat self 
+        self.eaterName = None
 
         dictPositions = self.getAllPositions(prefix)
         self.x = 0

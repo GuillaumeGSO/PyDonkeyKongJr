@@ -13,25 +13,41 @@ class Player():
         m = "Monkey"
         # Lower level
         d["L0G"] = SpritePosition("L0G", m)
+        d["L0G"].eaterName = "C11"
         d["L0H"] = SpritePosition("L0H", m)
+        d["L0H"].eaterName = "B01"
         d["L1G"] = SpritePosition("L1G", m)
+        d["L1G"].eaterName = "C10"
         d["L1J"] = SpritePosition("L1J", m)
+        d["L1J"].eaterName = "B02"
         d["L2G"] = SpritePosition("L2G", m)
+        d["L2G"].eaterName = "C09"
         d["L2H"] = SpritePosition("L2H", m)
+        d["L2H"].eaterName = "B03"
         d["L3G"] = SpritePosition("L3G", m)
+        d["L3G"].eaterName = "C08"
         d["L3H"] = SpritePosition("L3H", m)
+        d["L3H"].eaterName = "B04"
         d["L4G"] = SpritePosition("L4G", m)
+        d["L4G"].eaterName = "C07"
         d["L4J"] = SpritePosition("L4J", m)
+        d["L4J"].eaterName = "B05"
         d["L5G"] = SpritePosition("L5G", m)
+        d["L5G"].eaterName = "C06"
         d["L5H"] = SpritePosition("L5H", m)
-        d
+        d["L5H"].eaterName = "B06"
+
         # Higher level
         d["H0G"] = SpritePosition("H0G", m)
+        d["H0G"].eaterName = "C04"
         d["H1G"] = SpritePosition("H1G", m)
+        d["H1G"].eaterName = "C03"
         d["H1H"] = SpritePosition("H1H", m)
         d["H2G"] = SpritePosition("H2G", m)
+        d["H2G"].eaterName = "C02"
         d["H2J"] = SpritePosition("H2J", m)
         d["H3G"] = SpritePosition("H3G", m)
+        d["H3G"].eaterName = "C01"
         d["H3J"] = SpritePosition("H3J", m)
         # Juming to the key
         d["H4J"] = SpritePosition("H4J", m)
@@ -82,8 +98,8 @@ class Player():
     def __init__(self):
         self.allPositions = self.generate()
         self.spritePosition = self.allPositions.get("L0G")
-        self.frame = 0
         self.timeOfNextFrame = clock()
+        self.timeOfJumpFrame = clock()
         self.sound = makeSound("sounds/Monkey.wav")
 
     def move(self):
@@ -113,15 +129,22 @@ class Player():
                         self.spritePosition = self.spritePosition.downMove
                         hasMoved = True
             else:
-                hasMoved = True
-                hideSprite(self.spritePosition.sprite)
-                self.spritePosition = self.spritePosition.nextMove
+                if clock() > self.timeOfJumpFrame:  # jumping !
+                    hasMoved = True
+                    print("next move")
+                    hideSprite(self.spritePosition.sprite)
+                    self.spritePosition = self.spritePosition.nextMove
+                    self.timeOfJumpFrame = clock()
+                else:
+                    self.timeOfJumpFrame += 5000
+                    print("waiting for end of jump")
 
             moveSprite(self.spritePosition.sprite,
                        self.spritePosition.x, self.spritePosition.y)
             showSprite(self.spritePosition.sprite)
         else:
             self.timeOfNextFrame = clock()
+            self.timeOfJumpFrame = clock()
         return hasMoved
 
     def update(self):
