@@ -21,7 +21,7 @@ import random
 
 WIDTH = 700
 HEIGHT = 480
-FPS = 6
+FPS = 10
 
 screenSize(WIDTH, HEIGHT)
 setBackgroundImage("img/EmptyScreen.png")
@@ -41,7 +41,7 @@ m = Missed()
 cage = Cage()
 
 missed = 0
-cages = 4
+cages = 1
 
 
 cage.restore_cages()
@@ -57,7 +57,7 @@ while missed < 3:
     if p.spritePosition.eaterName == c.spritePosition.name or p.spritePosition.eaterName == b.spritePosition.name:
         #m.update(missed)
         #missed += 1
-        toto = 3
+        pass
     
     # If the coconut hit a crocodile
     if cc.visible and c.spritePosition.eaterName == cc.spritePosition.name:
@@ -66,13 +66,17 @@ while missed < 3:
         if c.spritePosition.name == "C09":
             print("coco touch lower croco")
             sc.addPoints(3)
-        hideSprite(c.spritePosition.sprite)
+            hideSprite(c.spritePosition.sprite)
+        cc.init()
+        cc.visible = False
     
     # If the coconut hit a bird
     if  cc.visible and c.spritePosition.eaterName == b.spritePosition.name:
         print("coco touched bird")
         sc.addPoints(6)
         hideSprite(c.spritePosition.sprite)
+        cc.init()
+        cc.visible = False
     
     # If the monkey touch the coconut, it falls
     if p.spritePosition.name == "H2J" and cc.spritePosition.name == "C00":
@@ -80,32 +84,37 @@ while missed < 3:
 
     # If the coconut reach the bottom : hide it
     if cc.visible and cc.spritePosition.name == "C03":
-        cc.hide()
+        cc.init()
+        cc.visible = False
+    
 
     # If monkey is jumping to the key
     if p.spritePosition.name == "H4J":
         if k.spritePosition.name == "K03":
             # Monkey grab the key
             p.spritePosition.nextMove = p.allPositions["H5T"]
-            k.hide()
             sc.addPoints(random.randrange(5, 10))
             cage.hide_cage(4-cages)
+            k.hide()
             cages -= 1
             if cages == 0:
+                #Mummy is free !
+                p.update()
+                p.update()
                 sc.addPoints(25)
                 cage.show_smile()
-                p.update()
-                p.update()
                 pause(1000)
         else:
+            # Monkey jump for the key
+            pause(300)
+            p.spritePosition.nextMove = p.allPositions["H7F"]
+            p.update()
+            
             # Monkey miss the key
             m.update(missed)
             missed += 1
-            p.spritePosition.nextMove = p.allPositions["H7F"]
+            
             # Monkey finish in the bush
-            pause(300)
-            p.update()
-            pause(300)
             p.update()
             pause(300)
     # If monkey is falling...

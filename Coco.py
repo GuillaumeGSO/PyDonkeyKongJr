@@ -31,9 +31,11 @@ class Coco():
         if clock() > self.timeOfNextFrame:  # We only animate our character every xx ms.
             self.timeOfNextFrame += 500
             if self.spritePosition.nextMove == None:
-                hideSprite(self.spritePosition.sprite)
+                print("coco last move", self.spritePosition.y)
+                self.hide()
             else:
                 hasMoved=True
+                print("coco next move", self.spritePosition.y)
                 hideSprite(self.spritePosition.sprite)
                 self.spritePosition = self.spritePosition.nextMove
             
