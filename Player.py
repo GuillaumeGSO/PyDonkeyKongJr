@@ -95,59 +95,60 @@ class Player():
         d["H7L"].setPositions(nextMove=d["L0G"])
         return d
 
-    def __init__(self):
+    def __init__(self, game):
+        self.game = game
         self.allPositions = self.generate()
         self.spritePosition = self.allPositions.get("L0G")
-        self.timeOfNextFrame = clock()
-        self.timeOfJumpFrame = clock()
+        self.timeOfNextFrame = PyGame.clock()
+        self.timeOfJumpFrame = PyGame.clock()
         self.sound = makeSound("sounds/Monkey.wav")
 
     def move(self):
         hasMoved = False
-        if clock() > self.timeOfNextFrame:  # We only animate our character every xx ms.
+        if PyGame.clock() > self.timeOfNextFrame:  # We only animate our character every xx ms.
             self.timeOfNextFrame += 100
             if self.spritePosition.nextMove == None:
-                hideSprite(self.spritePosition.sprite)
-                if keyPressed("space"):
+                self.game.hideSprite(self.spritePosition.sprite)
+                if self.game.keyPressed("space"):
                     if self.spritePosition.jumpMove != None:
                         self.spritePosition = self.spritePosition.jumpMove
                         hasMoved = True
-                elif keyPressed("right"):
+                elif self.game.keyPressed("right"):
                     if self.spritePosition.rightMove != None:
                         self.spritePosition = self.spritePosition.rightMove
                         hasMoved = True
-                elif keyPressed("left"):
+                elif self.game.keyPressed("left"):
                     if self.spritePosition.leftMove != None:
                         self.spritePosition = self.spritePosition.leftMove
                         hasMoved = True
-                elif keyPressed("up"):
+                elif self.game.keyPressed("up"):
                     if self.spritePosition.upMove != None:
                         self.spritePosition = self.spritePosition.upMove
                         hasMoved = True
-                elif keyPressed("down"):
+                elif self.game.keyPressed("down"):
                     if self.spritePosition.downMove != None:
                         self.spritePosition = self.spritePosition.downMove
                         hasMoved = True
             else:
-                if clock() > self.timeOfJumpFrame:  # jumping !
+                if PyGame.clock() > self.timeOfJumpFrame:  # jumping !
                     hasMoved = True
                     print("next move")
-                    hideSprite(self.spritePosition.sprite)
+                    self.game.hideSprite(self.spritePosition.sprite)
                     self.spritePosition = self.spritePosition.nextMove
-                    self.timeOfJumpFrame = clock()
+                    self.timeOfJumpFrame = PyGame.clock()
                 else:
                     self.timeOfJumpFrame += 5000
                     print("waiting for end of jump")
 
-            moveSprite(self.spritePosition.sprite,
+            self.game.moveSprite(self.spritePosition.sprite,
                        self.spritePosition.x, self.spritePosition.y)
-            showSprite(self.spritePosition.sprite)
+            self.game.showSprite(self.spritePosition.sprite)
         else:
-            self.timeOfNextFrame = clock()
-            self.timeOfJumpFrame = clock()
+            self.timeOfNextFrame = PyGame.clock()
+            self.timeOfJumpFrame = PyGame.clock()
         return hasMoved
 
     def update(self):
         if self.move():
-            updateDisplay()
-            playSound(self.sound)
+            self.game.updateDisplay()
+            self.game.playSound(self.sound)

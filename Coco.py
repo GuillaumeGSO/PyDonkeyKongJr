@@ -19,16 +19,17 @@ class Coco():
         d["C02"].setPositions(nextMove=d["C03"])
         return d
 
-    def __init__(self):
+    def __init__(self, game):
+        self.game = game
         self.allPositions = self.generate()
         self.spritePosition = self.allPositions.get("C00")
         self.visible = True
         self.frame = 0
-        self.timeOfNextFrame = clock()
+        self.timeOfNextFrame = PyGame.clock()
 
     def move(self):
         hasMoved = False
-        if clock() > self.timeOfNextFrame:  # We only animate our character every xx ms.
+        if PyGame.clock() > self.timeOfNextFrame:  # We only animate our character every xx ms.
             self.timeOfNextFrame += 500
             if self.spritePosition.nextMove == None:
                 print("coco last move", self.spritePosition.y)
@@ -36,24 +37,24 @@ class Coco():
             else:
                 hasMoved=True
                 print("coco next move", self.spritePosition.y)
-                hideSprite(self.spritePosition.sprite)
+                self.game.hideSprite(self.spritePosition.sprite)
                 self.spritePosition = self.spritePosition.nextMove
             
-            moveSprite(self.spritePosition.sprite,
+            self.game.moveSprite(self.spritePosition.sprite,
                        self.spritePosition.x, self.spritePosition.y)
-            showSprite(self.spritePosition.sprite)
+            self.game.showSprite(self.spritePosition.sprite)
         return hasMoved
 
     def update(self):
         if self.move():
-            updateDisplay()
+            self.game.updateDisplay()
     
     def hide(self):
-        hideSprite(self.spritePosition.sprite)
+        self.game.hideSprite(self.spritePosition.sprite)
         visible = False
 
     def show(self):
-        showSprite(self.spritePosition.sprite)
+        self.game.showSprite(self.spritePosition.sprite)
         visible = True
 
     def init(self):

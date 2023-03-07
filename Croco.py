@@ -42,30 +42,31 @@ class Croco():
      
         return d
 
-    def __init__(self):
+    def __init__(self, game):
+        self.game = game
         self.allPositions = self.generate()
         self.spritePosition = self.allPositions.get("C00")
         self.frame = 0
-        self.timeOfNextFrame = clock()
+        self.timeOfNextFrame = PyGame.clock()
         self.sound=makeSound("sounds/Croco.wav")
 
     def move(self):
         hasMoved = False
-        if clock() > self.timeOfNextFrame:  # We only animate our character every xx ms.
+        if PyGame.clock() > self.timeOfNextFrame:  # We only animate our character every xx ms.
             self.timeOfNextFrame += 500
             if self.spritePosition.nextMove == None:
-                hideSprite(self.spritePosition.sprite)
+                self.game.hideSprite(self.spritePosition.sprite)
             else:
                 hasMoved=True
-                hideSprite(self.spritePosition.sprite)
+                self.game.hideSprite(self.spritePosition.sprite)
                 self.spritePosition = self.spritePosition.nextMove
             
-            moveSprite(self.spritePosition.sprite,
+            self.game.moveSprite(self.spritePosition.sprite,
                        self.spritePosition.x, self.spritePosition.y)
-            showSprite(self.spritePosition.sprite)
+            self.game.showSprite(self.spritePosition.sprite)
         return hasMoved
 
     def update(self):
         if self.move():
-            updateDisplay()
-            playSound(self.sound)
+            self.game.updateDisplay()
+            self.game.playSound(self.sound)
