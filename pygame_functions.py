@@ -302,7 +302,7 @@ class PyGame:
             self.screen = pygame.display.set_mode([sizex, sizey], pygame.FULLSCREEN)
         else:
             self.screen = pygame.display.set_mode([sizex, sizey])
-        self.background = Background()
+        self.background = Background(self)
         self.screen.fill(self.background.colour)
         pygame.display.set_caption(self.gameName)
         self.background.surface = self.screen.copy()
@@ -686,8 +686,9 @@ class newLabel(pygame.sprite.Sprite):
 
 
 class Background():
-    def __init__(self):
+    def __init__(self, game):
         self.colour = pygame.Color("black")
+        self.game = game
 
     def setTiles(self, tiles):
         if type(tiles) is str:
@@ -700,8 +701,8 @@ class Background():
         self.stagePosY = 0
         self.tileWidth = self.tiles[0][0].get_width()
         self.tileHeight = self.tiles[0][0].get_height()
-        # self.screen.blit(self.tiles[0][0], [0, 0])
-        # self.surface = self.screen.copy()
+        self.game.screen.blit(self.tiles[0][0], [0, 0])
+        self.surface = self.game.screen.copy()
 
     def scroll(self, x, y):
         self.stagePosX -= x
