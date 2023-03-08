@@ -17,14 +17,11 @@ from Missed import *
 from Cage import *
 from Score import *
 import random
+from Settings import *
 
 class Main:
 
-    def run(self):
-        WIDTH = 700
-        HEIGHT = 480
-        FPS = 10
-
+    def run(self):       
         game = PyGame()
         game.screenSize(WIDTH, HEIGHT)
         game.setBackgroundImage("img/EmptyScreen.png")
@@ -48,6 +45,8 @@ class Main:
 
 
         cage.restore_cages()
+
+        #TODO game logic should be in objects
 
         while missed < 3:
             p.update()

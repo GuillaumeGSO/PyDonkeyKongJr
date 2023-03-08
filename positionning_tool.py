@@ -1,71 +1,88 @@
 # Pygame template - skeleton for a new pygame project
-from pygame_functions import *
+
 import glob
+import os
 import pickle
+from Settings import *
 
-WIDTH = 700
-HEIGHT = 480
-FPS = 120
-
-screenSize(WIDTH, HEIGHT)
-setBackgroundImage("positions/FullScreen.png")
-"""
-Setup below
-"""
-INCREMENT = 1
-PREFIX = "Cage"
+from pygame_functions import *
 
 
-SPRITE_POSITIONS_FILE = PREFIX + "Positions"
+
+class PositioningTool:
+    """
+    This tools is showing a screenshot of the game with original sprites.
+    All the sprites will appear one by one
+    Use keys to adjust sprites to original and save in positions files
+    """
+
+    def run(self):
+        tool = PyGame()
+        tool.screenSize(WIDTH, HEIGHT)
+        tool.setBackgroundImage("positions/FullScreen.png")
+
+        """
+        Setup below
+        """
+        INCREMENT = 1
+        ALL_PREFIX = ["Bird","Cage", "Coco", "Croco", "Key", "Missed", "Monkey"]
 
 
-def getAllPositions():
-    if os.path.isfile(SPRITE_POSITIONS_FILE):
-        with open(SPRITE_POSITIONS_FILE, "rb") as positionFile:
-            return pickle.Unpickler(positionFile).load()
-    return {}
+        for prefix in ALL_PREFIX:
+            positionFileName = prefix + "Positions"
+            all_positions = PositioningTool.getAllPositions(positionFileName)
+            print(all_positions)
 
+            for filepath in glob.iglob("img/sprites/" + prefix + "/*.png"):
+                # Filenames are xxx.png thus 7 letters
+                spriteName = filepath[-7:-4]
+                print(spriteName)
+                sprite = makeSprite(filepath)
+                print(all_positions.get(spriteName))
+                if all_positions.get(spriteName) == None:
+                    tool.moveSprite(sprite, WIDTH / 2, HEIGHT / 2)
+                else:
+                    tool.moveSprite(sprite, all_positions.get(spriteName)
+                            [0], all_positions.get(spriteName)[1])
 
-def writePositionsFile(dictPosition):
-    with open(SPRITE_POSITIONS_FILE, "wb") as positionFile:
-        myPickler = pickle.Pickler(positionFile)
-        myPickler.dump(dictPosition)
+                tool.showSprite(sprite)
 
+                position = True
+                while position:
+                    if tool.keyPressed("right"):
+                        tool.moveSprite(sprite, sprite.rect.x + INCREMENT, sprite.rect.y)
+                    if tool.keyPressed("left"):
+                        tool.moveSprite(sprite, sprite.rect.x - INCREMENT, sprite.rect.y)
+                    if tool.keyPressed("up"):
+                        tool.moveSprite(sprite, sprite.rect.x, sprite.rect.y-INCREMENT)
+                    if tool.keyPressed("down"):
+                        tool.moveSprite(sprite, sprite.rect.x, sprite.rect.y+INCREMENT)
+                    if tool.keyPressed("space"):
+                        print(sprite.rect.x, sprite.rect.y)
+                        all_positions[spriteName] = (sprite.rect.x, sprite.rect.y)
+                        position = False
+                    tool.showSprite(sprite)
+                    tool.tick(10)
 
-all_positions = getAllPositions()
-print(all_positions)
+                tool.hideSprite(sprite)
+            PositioningTool.writePositionInFile(all_positions, positionFileName)
+        print("End of positionning")
 
-for filepath in glob.iglob("img/sprites/" + PREFIX + "/*.png"):
-    # Filenames are xxx.png thus 7 letters
-    spriteName = filepath[-7:-4]
-    print(spriteName)
-    sprite = makeSprite(filepath)
-    print(all_positions.get(spriteName))
-    if all_positions.get(spriteName) == None:
-        moveSprite(sprite, WIDTH / 2, HEIGHT / 2)
-    else:
-        moveSprite(sprite, all_positions.get(spriteName)
-                   [0], all_positions.get(spriteName)[1])
+    @staticmethod
+    def getAllPositions(spritePositionFile):
+        if os.path.isfile(spritePositionFile):
+            with open(spritePositionFile, "rb") as positionFile:
+                return pickle.Unpickler(positionFile).load()
+        return {}
 
-    showSprite(sprite)
+    @staticmethod
+    def writePositionInFile(dictPosition, spritePositionFile):
+        with open(spritePositionFile, "wb") as positionFile:
+            myPickler = pickle.Pickler(positionFile)
+            #myPickler.dump(dictPosition)
 
-    position = True
-    while position:
-        if keyPressed("right"):
-            moveSprite(sprite, sprite.rect.x + INCREMENT, sprite.rect.y)
-        if keyPressed("left"):
-            moveSprite(sprite, sprite.rect.x - INCREMENT, sprite.rect.y)
-        if keyPressed("up"):
-            moveSprite(sprite, sprite.rect.x, sprite.rect.y-INCREMENT)
-        if keyPressed("down"):
-            moveSprite(sprite, sprite.rect.x, sprite.rect.y+INCREMENT)
-        if keyPressed("space"):
-            print(sprite.rect.x, sprite.rect.y)
-            all_positions[spriteName] = (sprite.rect.x, sprite.rect.y)
-            position = False
-        showSprite(sprite)
-        tick(10)
+def main():
+    PositioningTool().run()
 
-    hideSprite(sprite)
-writePositionsFile(all_positions)
-print("End of positionning")
+if __name__ == "__main__":
+    main()

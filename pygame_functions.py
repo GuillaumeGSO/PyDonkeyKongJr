@@ -321,9 +321,6 @@ class PyGame:
             self.updateDisplay()
         
 
-    
-
-
     def addSpriteImage(sprite, image):
         sprite.addImage(image)
 
