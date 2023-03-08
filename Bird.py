@@ -1,3 +1,4 @@
+from Game import Game
 from pygame_functions import *
 from SpritePosition import *
 
@@ -15,6 +16,7 @@ class Bird():
         d["B02"] = SpritePosition("B02", b)
         d["B03"] = SpritePosition("B03", b)
         d["B04"] = SpritePosition("B04", b)
+        d["B04"].eaterName="C02"
         d["B05"] = SpritePosition("B05", b)
         d["B06"] = SpritePosition("B06", b)
         d["B07"] = SpritePosition("B07", b)
@@ -29,28 +31,29 @@ class Bird():
         d["B07"].setPositions(nextMove=d["B00"])
         return d
 
-    def __init__(self):
+    def __init__(self, game):
+        self.game = game
         self.allPositions = self.generate()
         self.spritePosition = self.allPositions.get("B00")
         self.frame = 0
-        self.timeOfNextFrame = clock()
+        self.timeOfNextFrame = PyGame.clock()
 
     def move(self):
         hasMoved = False
-        if clock() > self.timeOfNextFrame:  # We only animate our character every xx ms.
+        if PyGame.clock() > self.timeOfNextFrame:  # We only animate our character every xx ms.
             self.timeOfNextFrame += 500
             if self.spritePosition.nextMove == None:
-                hideSprite(self.spritePosition.sprite)
+                self.game.hideSprite(self.spritePosition.sprite)
             else:
                 hasMoved=True
-                hideSprite(self.spritePosition.sprite)
+                self.game.hideSprite(self.spritePosition.sprite)
                 self.spritePosition = self.spritePosition.nextMove
             
-            moveSprite(self.spritePosition.sprite,
+            self.game.moveSprite(self.spritePosition.sprite,
                        self.spritePosition.x, self.spritePosition.y)
-            showSprite(self.spritePosition.sprite)
+            self.game.showSprite(self.spritePosition.sprite)
         return hasMoved
 
     def update(self):
         if self.move():
-            updateDisplay()
+            self.game.updateDisplay()

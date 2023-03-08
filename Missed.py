@@ -15,7 +15,8 @@ class Missed():
         d["M02"] = SpritePosition("M02", b)
         return d
 
-    def __init__(self):
+    def __init__(self, game):
+        self.game = game
         self.allPositions = self.generate()
         self.spritePosition = [self.allPositions.get("M00"), 
         self.allPositions.get("M01"), self.allPositions.get("M02")]
@@ -24,12 +25,12 @@ class Missed():
 
     def update(self, num_error):
         spriteToAdd = self.spritePosition[num_error]
-        moveSprite(spriteToAdd.sprite,
+        self.game.moveSprite(spriteToAdd.sprite,
                    spriteToAdd.x, spriteToAdd.y)
-        playSound(self.sound)
+        self.game.playSound(self.sound)
         for i in range(5):
-            showSprite(spriteToAdd.sprite)
-            pause(150)
-            hideSprite(spriteToAdd.sprite)
-            pause(150)
-        showSprite(spriteToAdd.sprite)
+            self.game.showSprite(spriteToAdd.sprite)
+            self.game.pause(150)
+            self.game.hideSprite(spriteToAdd.sprite)
+            self.game.pause(150)
+        self.game.showSprite(spriteToAdd.sprite)

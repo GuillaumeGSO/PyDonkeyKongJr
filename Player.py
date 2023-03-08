@@ -13,25 +13,41 @@ class Player():
         m = "Monkey"
         # Lower level
         d["L0G"] = SpritePosition("L0G", m)
+        d["L0G"].eaterName = "C11"
         d["L0H"] = SpritePosition("L0H", m)
+        d["L0H"].eaterName = "B01"
         d["L1G"] = SpritePosition("L1G", m)
+        d["L1G"].eaterName = "C10"
         d["L1J"] = SpritePosition("L1J", m)
+        d["L1J"].eaterName = "B02"
         d["L2G"] = SpritePosition("L2G", m)
+        d["L2G"].eaterName = "C09"
         d["L2H"] = SpritePosition("L2H", m)
+        d["L2H"].eaterName = "B03"
         d["L3G"] = SpritePosition("L3G", m)
+        d["L3G"].eaterName = "C08"
         d["L3H"] = SpritePosition("L3H", m)
+        d["L3H"].eaterName = "B04"
         d["L4G"] = SpritePosition("L4G", m)
+        d["L4G"].eaterName = "C07"
         d["L4J"] = SpritePosition("L4J", m)
+        d["L4J"].eaterName = "B05"
         d["L5G"] = SpritePosition("L5G", m)
+        d["L5G"].eaterName = "C06"
         d["L5H"] = SpritePosition("L5H", m)
-        d
+        d["L5H"].eaterName = "B06"
+
         # Higher level
         d["H0G"] = SpritePosition("H0G", m)
+        d["H0G"].eaterName = "C04"
         d["H1G"] = SpritePosition("H1G", m)
+        d["H1G"].eaterName = "C03"
         d["H1H"] = SpritePosition("H1H", m)
         d["H2G"] = SpritePosition("H2G", m)
+        d["H2G"].eaterName = "C02"
         d["H2J"] = SpritePosition("H2J", m)
         d["H3G"] = SpritePosition("H3G", m)
+        d["H3G"].eaterName = "C01"
         d["H3J"] = SpritePosition("H3J", m)
         # Juming to the key
         d["H4J"] = SpritePosition("H4J", m)
@@ -79,52 +95,60 @@ class Player():
         d["H7L"].setPositions(nextMove=d["L0G"])
         return d
 
-    def __init__(self):
+    def __init__(self, game):
+        self.game = game
         self.allPositions = self.generate()
         self.spritePosition = self.allPositions.get("L0G")
-        self.frame = 0
-        self.timeOfNextFrame = clock()
+        self.timeOfNextFrame = PyGame.clock()
+        self.timeOfJumpFrame = PyGame.clock()
         self.sound = makeSound("sounds/Monkey.wav")
 
     def move(self):
         hasMoved = False
-        if clock() > self.timeOfNextFrame:  # We only animate our character every xx ms.
+        if PyGame.clock() > self.timeOfNextFrame:  # We only animate our character every xx ms.
             self.timeOfNextFrame += 100
             if self.spritePosition.nextMove == None:
-                hideSprite(self.spritePosition.sprite)
-                if keyPressed("space"):
+                self.game.hideSprite(self.spritePosition.sprite)
+                if self.game.keyPressed("space"):
                     if self.spritePosition.jumpMove != None:
                         self.spritePosition = self.spritePosition.jumpMove
                         hasMoved = True
-                elif keyPressed("right"):
+                elif self.game.keyPressed("right"):
                     if self.spritePosition.rightMove != None:
                         self.spritePosition = self.spritePosition.rightMove
                         hasMoved = True
-                elif keyPressed("left"):
+                elif self.game.keyPressed("left"):
                     if self.spritePosition.leftMove != None:
                         self.spritePosition = self.spritePosition.leftMove
                         hasMoved = True
-                elif keyPressed("up"):
+                elif self.game.keyPressed("up"):
                     if self.spritePosition.upMove != None:
                         self.spritePosition = self.spritePosition.upMove
                         hasMoved = True
-                elif keyPressed("down"):
+                elif self.game.keyPressed("down"):
                     if self.spritePosition.downMove != None:
                         self.spritePosition = self.spritePosition.downMove
                         hasMoved = True
             else:
-                hasMoved = True
-                hideSprite(self.spritePosition.sprite)
-                self.spritePosition = self.spritePosition.nextMove
+                if PyGame.clock() > self.timeOfJumpFrame:  # jumping !
+                    hasMoved = True
+                    print("next move")
+                    self.game.hideSprite(self.spritePosition.sprite)
+                    self.spritePosition = self.spritePosition.nextMove
+                    self.timeOfJumpFrame = PyGame.clock()
+                else:
+                    self.timeOfJumpFrame += 5000
+                    print("waiting for end of jump")
 
-            moveSprite(self.spritePosition.sprite,
+            self.game.moveSprite(self.spritePosition.sprite,
                        self.spritePosition.x, self.spritePosition.y)
-            showSprite(self.spritePosition.sprite)
+            self.game.showSprite(self.spritePosition.sprite)
         else:
-            self.timeOfNextFrame = clock()
+            self.timeOfNextFrame = PyGame.clock()
+            self.timeOfJumpFrame = PyGame.clock()
         return hasMoved
 
     def update(self):
         if self.move():
-            updateDisplay()
-            playSound(self.sound)
+            self.game.updateDisplay()
+            self.game.playSound(self.sound)

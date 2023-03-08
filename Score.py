@@ -1,4 +1,4 @@
-from pygame_functions import *
+from Game import Game
 from SpritePosition import *
 
 
@@ -8,21 +8,20 @@ class Score():
     """
     # https://pygame-zero.readthedocs.io/en/stable/index.html
 
-    def __init__(self):
+    def __init__(self, game):
         self.score = 0
-        self.scoreLabel = makeLabel(str(self.score), 80, 690, 0, "black")
+        self.scoreLabel = game.makeLabel(str(self.score), 80, 690, 0, "black")
         font = pygame.font.Font("fonts/Open 24 Display St.ttf", 80)
         self.scoreLabel.font = font
         self.scoreLabel.rect.topright = 690, 0
         self.sound = makeSound("sounds/Score.wav")
-        showLabel(self.scoreLabel)
-        changeLabel(self.scoreLabel, str(self.score))
+        game.showLabel(self.scoreLabel)
+        game.changeLabel(self.scoreLabel, str(self.score))
 
-    def addPoints(self, points):
-        print("adding " + str(points))
+    def addPoints(self, game, points):
         for i in range(points):
             self.score += 1
-            changeLabel(self.scoreLabel, str(self.score))
+            game.changeLabel(self.scoreLabel, str(self.score))
             self.scoreLabel.rect.topright = 690, 0
-            playSound(self.sound)
-            pause(50)
+            game.playSound(self.sound)
+            game.pause(50)

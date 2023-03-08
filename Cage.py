@@ -19,7 +19,8 @@ class Cage():
         d["CSM"] = SpritePosition("CSM", b)
         return d
 
-    def __init__(self):
+    def __init__(self, game):
+        self.game = game
         self.allPositions = self.generate()
         self.spritePosition = [self.allPositions.get("C00"),
                                self.allPositions.get("C01"),
@@ -30,20 +31,20 @@ class Cage():
     def hide_cage(self, num_cage):
         print(num_cage)
         spriteToAdd = self.spritePosition[num_cage]
-        moveSprite(spriteToAdd.sprite,
+        self.game.moveSprite(spriteToAdd.sprite,
                    spriteToAdd.x, spriteToAdd.y)
-        hideSprite(spriteToAdd.sprite)
+        self.game.hideSprite(spriteToAdd.sprite)
 
     def restore_cages(self):
         for spriteToAdd in self.spritePosition:
-            moveSprite(spriteToAdd.sprite,
+            self.game.moveSprite(spriteToAdd.sprite,
                        spriteToAdd.x, spriteToAdd.y)
-            showSprite(spriteToAdd.sprite)
+            self.game.showSprite(spriteToAdd.sprite)
 
     def hide_smile(self):
-        hideSprite(self.smilePostion.sprite)
+        self.game.hideSprite(self.smilePostion.sprite)
 
     def show_smile(self):
-        moveSprite(self.smilePostion.sprite,
+        self.game.moveSprite(self.smilePostion.sprite,
                    self.smilePostion.x, self.smilePostion.y)
-        showSprite(self.smilePostion.sprite)
+        self.game.showSprite(self.smilePostion.sprite)
