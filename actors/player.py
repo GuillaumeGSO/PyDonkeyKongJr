@@ -1,5 +1,5 @@
-from pygame_functions import *
-from SpritePosition import *
+import pygame as pg
+from positions.SpritePosition import *
 
 
 class Player():
@@ -7,6 +7,63 @@ class Player():
     One and only one player.
     It should contains all of its different locations and sprites
     """
+    
+    def __init__(self, game):
+        self.game = game
+        self.allPositions = self.generate()
+        self.spritePosition = self.allPositions.get("L0G")
+        # self.sound = makeSound("sounds/Monkey.wav")
+
+    def update(self):
+        pass
+        # if self.move():
+        #     self.game.updateDisplay()
+        #     self.game.playSound(self.sound)
+
+    # def move(self):
+    #     hasMoved = False
+    #     if PyGame.clock() > self.timeOfNextFrame:  # We only animate our character every xx ms.
+    #         self.timeOfNextFrame += 100
+    #         if self.spritePosition.nextMove == None:
+    #             self.game.hideSprite(self.spritePosition.sprite)
+    #             if self.game.keyPressed("space"):
+    #                 if self.spritePosition.jumpMove != None:
+    #                     self.spritePosition = self.spritePosition.jumpMove
+    #                     hasMoved = True
+    #             elif self.game.keyPressed("right"):
+    #                 if self.spritePosition.rightMove != None:
+    #                     self.spritePosition = self.spritePosition.rightMove
+    #                     hasMoved = True
+    #             elif self.game.keyPressed("left"):
+    #                 if self.spritePosition.leftMove != None:
+    #                     self.spritePosition = self.spritePosition.leftMove
+    #                     hasMoved = True
+    #             elif self.game.keyPressed("up"):
+    #                 if self.spritePosition.upMove != None:
+    #                     self.spritePosition = self.spritePosition.upMove
+    #                     hasMoved = True
+    #             elif self.game.keyPressed("down"):
+    #                 if self.spritePosition.downMove != None:
+    #                     self.spritePosition = self.spritePosition.downMove
+    #                     hasMoved = True
+    #         else:
+    #             if PyGame.clock() > self.timeOfJumpFrame:  # jumping !
+    #                 hasMoved = True
+    #                 print("next move")
+    #                 self.game.hideSprite(self.spritePosition.sprite)
+    #                 self.spritePosition = self.spritePosition.nextMove
+    #                 self.timeOfJumpFrame = PyGame.clock()
+    #             else:
+    #                 self.timeOfJumpFrame += 5000
+    #                 print("waiting for end of jump")
+
+    #         self.game.moveSprite(self.spritePosition.sprite,
+    #                    self.spritePosition.x, self.spritePosition.y)
+    #         self.game.showSprite(self.spritePosition.sprite)
+    #     else:
+    #         self.timeOfNextFrame = PyGame.clock()
+    #         self.timeOfJumpFrame = PyGame.clock()
+    #     return hasMoved
 
     def generate(self):
         d = {}
@@ -95,60 +152,4 @@ class Player():
         d["H7L"].setPositions(nextMove=d["L0G"])
         return d
 
-    def __init__(self, game):
-        self.game = game
-        self.allPositions = self.generate()
-        self.spritePosition = self.allPositions.get("L0G")
-        self.timeOfNextFrame = PyGame.clock()
-        self.timeOfJumpFrame = PyGame.clock()
-        self.sound = makeSound("sounds/Monkey.wav")
-
-    def move(self):
-        hasMoved = False
-        if PyGame.clock() > self.timeOfNextFrame:  # We only animate our character every xx ms.
-            self.timeOfNextFrame += 100
-            if self.spritePosition.nextMove == None:
-                self.game.hideSprite(self.spritePosition.sprite)
-                if self.game.keyPressed("space"):
-                    if self.spritePosition.jumpMove != None:
-                        self.spritePosition = self.spritePosition.jumpMove
-                        hasMoved = True
-                elif self.game.keyPressed("right"):
-                    if self.spritePosition.rightMove != None:
-                        self.spritePosition = self.spritePosition.rightMove
-                        hasMoved = True
-                elif self.game.keyPressed("left"):
-                    if self.spritePosition.leftMove != None:
-                        self.spritePosition = self.spritePosition.leftMove
-                        hasMoved = True
-                elif self.game.keyPressed("up"):
-                    if self.spritePosition.upMove != None:
-                        self.spritePosition = self.spritePosition.upMove
-                        hasMoved = True
-                elif self.game.keyPressed("down"):
-                    if self.spritePosition.downMove != None:
-                        self.spritePosition = self.spritePosition.downMove
-                        hasMoved = True
-            else:
-                if PyGame.clock() > self.timeOfJumpFrame:  # jumping !
-                    hasMoved = True
-                    print("next move")
-                    self.game.hideSprite(self.spritePosition.sprite)
-                    self.spritePosition = self.spritePosition.nextMove
-                    self.timeOfJumpFrame = PyGame.clock()
-                else:
-                    self.timeOfJumpFrame += 5000
-                    print("waiting for end of jump")
-
-            self.game.moveSprite(self.spritePosition.sprite,
-                       self.spritePosition.x, self.spritePosition.y)
-            self.game.showSprite(self.spritePosition.sprite)
-        else:
-            self.timeOfNextFrame = PyGame.clock()
-            self.timeOfJumpFrame = PyGame.clock()
-        return hasMoved
-
-    def update(self):
-        if self.move():
-            self.game.updateDisplay()
-            self.game.playSound(self.sound)
+    

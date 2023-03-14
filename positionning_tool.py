@@ -3,7 +3,7 @@
 import glob
 import os
 import pickle
-from Settings import *
+from settings import *
 
 from pygame_functions import *
 

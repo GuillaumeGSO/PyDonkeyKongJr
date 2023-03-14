@@ -18,7 +18,7 @@ def loadImage(fileName, useColorKey=False):
             # Return the image
             return image
         else:
-            raise Exception(f"Error loading image: {fileName} – Check filename and path?")
+            raise Exception(f"Error loading image: {fileName} – Check filename and path ?")
 
 def makeSound(filename):
     pygame.mixer.init()
@@ -262,10 +262,6 @@ class PyGame:
         else:
             return False
 
-
-    
-
-
     def mouseX(self):
         x = pygame.mouse.get_pos()
         return x[0]
@@ -497,7 +493,7 @@ class PyGame:
         waiting = True
         while waiting:
             for event in pygame.event.get():
-                if event.type == pygame.QUIT or (event.type == pygame.KEYDOWN and event.key == keydict["esc"]):
+                if event.type == pygame.QUIT or (event.type == pygame.KEYDOWN and event.key == self.keydict["esc"]):
                     waiting = False
         pygame.quit()
         exit()
@@ -656,7 +652,7 @@ class newLabel(pygame.sprite.Sprite):
         self.renderText()
         self.rect.topleft = oldTopLeft
         # if screenRefresh:
-        #     self.updateDisplay()
+        self.updateDisplay()
 
     def renderText(self):
         lineSurfaces = []

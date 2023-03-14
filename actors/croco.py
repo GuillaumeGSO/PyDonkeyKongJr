@@ -1,11 +1,39 @@
-from pygame_functions import *
-from SpritePosition import *
+import pygame as pg
+from positions.SpritePosition import *
 
 
-class Croco():
+class Croco(pg.sprite.Sprite):
     """
     Multiple crocodile possible
     """
+
+    
+
+    def __init__(self, game):
+        self.game = game
+        self.allPositions = self.generate()
+        self.spritePosition = self.allPositions.get("C00")
+        # self.sound=makeSound("sounds/Croco.wav")
+        super().__init__(self.game.sprite_group)
+
+    def update(self):
+        pass
+    
+    def move(self):
+        hasMoved = False
+        if PyGame.clock() > self.timeOfNextFrame:  # We only animate our character every xx ms.
+            self.timeOfNextFrame += 500
+            if self.spritePosition.nextMove == None:
+                self.game.hideSprite(self.spritePosition.sprite)
+            else:
+                hasMoved=True
+                self.game.hideSprite(self.spritePosition.sprite)
+                self.spritePosition = self.spritePosition.nextMove
+            
+            self.game.moveSprite(self.spritePosition.sprite,
+                       self.spritePosition.x, self.spritePosition.y)
+            self.game.showSprite(self.spritePosition.sprite)
+        return hasMoved
 
     def generate(self):
         d = {}
@@ -41,32 +69,3 @@ class Croco():
         d["C12"].setPositions(nextMove=d["C00"])
      
         return d
-
-    def __init__(self, game):
-        self.game = game
-        self.allPositions = self.generate()
-        self.spritePosition = self.allPositions.get("C00")
-        self.frame = 0
-        self.timeOfNextFrame = PyGame.clock()
-        self.sound=makeSound("sounds/Croco.wav")
-
-    def move(self):
-        hasMoved = False
-        if PyGame.clock() > self.timeOfNextFrame:  # We only animate our character every xx ms.
-            self.timeOfNextFrame += 500
-            if self.spritePosition.nextMove == None:
-                self.game.hideSprite(self.spritePosition.sprite)
-            else:
-                hasMoved=True
-                self.game.hideSprite(self.spritePosition.sprite)
-                self.spritePosition = self.spritePosition.nextMove
-            
-            self.game.moveSprite(self.spritePosition.sprite,
-                       self.spritePosition.x, self.spritePosition.y)
-            self.game.showSprite(self.spritePosition.sprite)
-        return hasMoved
-
-    def update(self):
-        if self.move():
-            self.game.updateDisplay()
-            self.game.playSound(self.sound)
