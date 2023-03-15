@@ -15,7 +15,7 @@ class Cage():
                                self.allPositions.get("C01"),
                                self.allPositions.get("C02"),
                                self.allPositions.get("C03")]
-        self.game.threat_group.add(self.spritePosition)
+        self.game.cage_group.add(self.spritePosition)
         self.smilePostion = self.allPositions.get("CSM")
 
     # def __init__(self, game):

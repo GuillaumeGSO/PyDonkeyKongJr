@@ -42,12 +42,12 @@ class DonkeyKongJr:
 
     def draw(self):
         self.threat_group.clear(self.app.screen, self.app.bg)
-        self.threat_group.draw(self.app.screen)
         self.player_group.clear(self.app.screen, self.app.bg)
-        self.player_group.draw(self.app.screen)
         self.weapon_group.clear(self.app.screen, self.app.bg)
-        self.weapon_group.draw(self.app.screen)
         self.cage_group.clear(self.app.screen, self.app.bg)
-        self.cage_group.draw(self.app.screen)
         self.info_group.clear(self.app.screen, self.app.bg)
+        self.threat_group.draw(self.app.screen)
+        self.player_group.draw(self.app.screen)
+        self.weapon_group.draw(self.app.screen)
+        self.cage_group.draw(self.app.screen)
         self.info_group.draw(self.app.screen)
