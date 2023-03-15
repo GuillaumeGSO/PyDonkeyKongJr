@@ -1,6 +1,7 @@
 # from pygame_functions import *
-from positions.SpritePosition import *
 import pygame as pg
+
+from positions.SpritePosition import *
 
 
 class Bird():
@@ -24,7 +25,7 @@ class Bird():
         self.spritePosition.kill()
         if newPosition != None:
             self.spritePosition = newPosition
-        self.game.sprite_group.add(self.spritePosition)
+        self.game.threat_group.add(self.spritePosition)
     
     def generatePositions(self):
         d = {}
@@ -43,7 +44,6 @@ class Bird():
         d["B02"].nextMove="B03"
         d["B03"].nextMove="B04"
         d["B04"].nextMove="B05"
-        d["B04"].eaterName="C02"
         d["B05"].nextMove="B06"
         d["B06"].nextMove="B07"
         d["B07"].nextMove="B00"

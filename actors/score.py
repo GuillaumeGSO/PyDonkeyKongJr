@@ -1,5 +1,7 @@
-from positions.SpritePosition import *
 import pygame as pg
+
+from positions.SpritePosition import *
+
 
 class Score(pg.sprite.Sprite):
     """

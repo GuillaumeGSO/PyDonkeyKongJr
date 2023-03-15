@@ -1,41 +1,33 @@
 import pygame as pg
+
 from positions.SpritePosition import *
 
 
-class Croco(pg.sprite.Sprite):
+class Croco():
     """
     Multiple crocodile possible
     """
-
     
-
     def __init__(self, game):
         self.game = game
-        self.allPositions = self.generate()
-        self.spritePosition = self.allPositions.get("C00")
+        self.allPositions = self.generatePositions()
+        self.spritePosition: SpritePosition = None
         # self.sound=makeSound("sounds/Croco.wav")
-        super().__init__(self.game.sprite_group)
+        
 
     def update(self):
-        pass
+        if self.spritePosition == None:
+            self.spritePosition = self.allPositions.get("C00")
+            return
+        newPosition = self.allPositions.get(self.spritePosition.nextMove)
+        self.spritePosition.kill()
+        if newPosition != None:
+            self.spritePosition = newPosition
+        self.game.threat_group.add(self.spritePosition)
     
-    def move(self):
-        hasMoved = False
-        if PyGame.clock() > self.timeOfNextFrame:  # We only animate our character every xx ms.
-            self.timeOfNextFrame += 500
-            if self.spritePosition.nextMove == None:
-                self.game.hideSprite(self.spritePosition.sprite)
-            else:
-                hasMoved=True
-                self.game.hideSprite(self.spritePosition.sprite)
-                self.spritePosition = self.spritePosition.nextMove
-            
-            self.game.moveSprite(self.spritePosition.sprite,
-                       self.spritePosition.x, self.spritePosition.y)
-            self.game.showSprite(self.spritePosition.sprite)
-        return hasMoved
+    
 
-    def generate(self):
+    def generatePositions(self):
         d = {}
         c = "Croco"
         d["C00"] = SpritePosition("C00", c)
@@ -55,7 +47,6 @@ class Croco(pg.sprite.Sprite):
         d["C00"].nextMove="C01"
         d["C01"].nextMove="C02"
         d["C02"].nextMove="C03"
-        d["C02"].eaterName="C01"
         d["C03"].nextMove="C04"
         d["C04"].nextMove="C05"
         d["C05"].nextMove="C06"
@@ -63,7 +54,6 @@ class Croco(pg.sprite.Sprite):
         d["C07"].nextMove="C08"
         d["C08"].nextMove="C09"
         d["C09"].nextMove="C10"
-        d["C09"].eaterName="C03"
         d["C10"].nextMove="C11"
         d["C11"].nextMove="C12"
         d["C12"].nextMove="C00"
