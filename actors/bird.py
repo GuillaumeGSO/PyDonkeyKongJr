@@ -10,26 +10,21 @@ class Bird():
 
 
     def __init__(self, game):
-        print("INIT BIRD")
         self.game = game
         self.allPositions = self.generatePositions()
-        self.spritePosition = None
+        self.spritePosition: SpritePosition = None
         
            
 
     def update(self):
-        print(self.game.sprite_group)
         if self.spritePosition == None:
             self.spritePosition = self.allPositions.get("B00")
-        else:
-            newPosition = self.allPositions.get(self.spritePosition.nextMove)
-            self.game.sprite_group.remove(self.spritePosition)
-            self.spritePosition.kill()
-            if newPosition != None:
-                self.spritePosition = newPosition
-                self.spritePosition.update()
+            return
+        newPosition = self.allPositions.get(self.spritePosition.nextMove)
+        self.spritePosition.kill()
+        if newPosition != None:
+            self.spritePosition = newPosition
         self.game.sprite_group.add(self.spritePosition)
-        print(self.game.sprite_group)
     
     def generatePositions(self):
         d = {}

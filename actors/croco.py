@@ -52,20 +52,20 @@ class Croco(pg.sprite.Sprite):
         d["C11"] = SpritePosition("C11", c)
         d["C12"] = SpritePosition("C12", c)
         
-        d["C00"].setPositions(nextMove=d["C01"])
-        d["C01"].setPositions(nextMove=d["C02"])
-        d["C02"].setPositions(nextMove=d["C03"])
+        d["C00"].nextMove="C01"
+        d["C01"].nextMove="C02"
+        d["C02"].nextMove="C03"
         d["C02"].eaterName="C01"
-        d["C03"].setPositions(nextMove=d["C04"])
-        d["C04"].setPositions(nextMove=d["C05"])
-        d["C05"].setPositions(nextMove=d["C06"])
-        d["C06"].setPositions(nextMove=d["C07"])
-        d["C07"].setPositions(nextMove=d["C08"])
-        d["C08"].setPositions(nextMove=d["C09"])
-        d["C09"].setPositions(nextMove=d["C10"])
+        d["C03"].nextMove="C04"
+        d["C04"].nextMove="C05"
+        d["C05"].nextMove="C06"
+        d["C06"].nextMove="C07"
+        d["C07"].nextMove="C08"
+        d["C08"].nextMove="C09"
+        d["C09"].nextMove="C10"
         d["C09"].eaterName="C03"
-        d["C10"].setPositions(nextMove=d["C11"])
-        d["C11"].setPositions(nextMove=d["C12"])
-        d["C12"].setPositions(nextMove=d["C00"])
+        d["C10"].nextMove="C11"
+        d["C11"].nextMove="C12"
+        d["C12"].nextMove="C00"
      
         return d

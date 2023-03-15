@@ -34,10 +34,25 @@ class App:
         pg.display.flip()
 
     def check_events(self):
+        self.game.playerMove = None
         for event in pg.event.get():
             if event.type == pg.QUIT or (event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE):
                 pg.quit()
                 sys.exit()
+            if event.type == pg.KEYDOWN:
+                if event.key == pg.K_LEFT:
+                    self.game.playerMove = "LEFT"
+                elif event.key == pg.K_RIGHT:
+                    self.game.playerMove = "RIGHT"
+                elif event.key == pg.K_UP:
+                    self.game.playerMove = "UP"
+                elif event.key == pg.K_DOWN:
+                    self.game.playerMove = "DOWN"
+                elif event.key == pg.K_SPACE:
+                    self.game.playerMove = "JUMP"
+
+                
+    
 
     def run(self):
         while True:

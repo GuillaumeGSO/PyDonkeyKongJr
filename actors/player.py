@@ -10,15 +10,37 @@ class Player():
     
     def __init__(self, game):
         self.game = game
-        self.allPositions = self.generate()
-        self.spritePosition = self.allPositions.get("L0G")
+        self.allPositions = self.generatePositions()
+        self.spritePosition: SpritePosition = None
+        self.playerMove = None
         # self.sound = makeSound("sounds/Monkey.wav")
 
-    def update(self):
-        pass
-        # if self.move():
-        #     self.game.updateDisplay()
-        #     self.game.playSound(self.sound)
+    def update(self, playerMove):
+        # self.playerMove = playerMove
+        if self.spritePosition == None:
+            self.spritePosition = self.allPositions.get("L0G")
+            self.game.sprite_group.add(self.spritePosition)
+            return
+        
+        print(playerMove)
+        if playerMove == None:
+            newPosition = self.allPositions.get(self.spritePosition.nextMove)
+        elif playerMove == "JUMP":
+            newPosition = self.allPositions.get(self.spritePosition.jumpMove)
+        elif playerMove == "LEFT":
+            newPosition = self.allPositions.get(self.spritePosition.leftMove)
+        elif playerMove == "RIGHT":
+            newPosition = self.allPositions.get(self.spritePosition.rightMove)
+        elif playerMove == "UP":
+            newPosition = self.allPositions.get(self.spritePosition.upMove)
+        elif playerMove == "DOWN":    
+            newPosition = self.allPositions.get(self.spritePosition.downMove)
+
+        if newPosition != None:
+            self.spritePosition.kill()
+            self.spritePosition = newPosition
+            self.game.sprite_group.add(self.spritePosition)
+            playerMove = None
 
     # def move(self):
     #     hasMoved = False
@@ -65,7 +87,7 @@ class Player():
     #         self.timeOfJumpFrame = PyGame.clock()
     #     return hasMoved
 
-    def generate(self):
+    def generatePositions(self):
         d = {}
         m = "Monkey"
         # Lower level
@@ -119,37 +141,62 @@ class Player():
 
         # Updating of positions
         # Lower level
-        d["L0G"].setPositions(jump=d["L0H"], right=d["L1G"])
-        d["L0H"].setPositions(down=d["L0G"], right=d["L1J"])
-        d["L1G"].setPositions(jump=d["L1J"], left=d["L0G"], right=d["L2G"])
-        d["L1J"].setPositions(nextMove=d["L1G"])
-        d["L2G"].setPositions(jump=d["L2H"], left=d["L1G"], right=d["L3G"])
-        d["L2H"].setPositions(left=d["L1J"], right=d["L3H"], down=d["L2G"])
-        d["L3G"].setPositions(jump=d["L3H"], left=d["L2G"], right=d["L4G"])
-        d["L3H"].setPositions(left=d["L2H"], right=d["L4J"], down=d["L3G"])
-        d["L4G"].setPositions(jump=d["L4J"], left=d["L3G"], right=d["L5G"])
-        d["L4J"].setPositions(nextMove=d["L4G"])
-        d["L5G"].setPositions(jump=d["L5H"], left=d["L4G"])
-        d["L5H"].setPositions(left=d["L4J"], up=d["H0G"], down=d["L5G"])
+        d["L0G"].jumpMove="L0H"
+        d["L0G"].rightMove="L1G"
+        d["L0H"].downMove="L0G"
+        d["L0H"].rightMove="L1J"
+        d["L1G"].jumpMove="L1J"
+        d["L1G"].leftMove="L0G"
+        d["L1G"].rightMove="L2G"
+        d["L1J"].nextMove="L1G"
+        d["L2G"].jumpMove="L2H"
+        d["L2G"].leftMove="L1G"
+        d["L2G"].rightMove="L3G"
+        d["L2H"].leftMove="L1J"
+        d["L2H"].rightMove="L3H"
+        d["L2H"].downMove="L2G"
+        d["L3G"].jumpMove="L3H"
+        d["L3G"].leftMove="L2G"
+        d["L3G"].rightMove="L4G"
+        d["L3H"].leftMove="L2H"
+        d["L3H"].rightMove="L4J"
+        d["L3H"].downMove="L3G"
+        d["L4G"].jumpMove="L4J"
+        d["L4G"].leftMove="L3G"
+        d["L4G"].rightMove="L5G"
+        d["L4J"].nextMove="L4G"
+        d["L5G"].jumpMove="L5H"
+        d["L5G"].leftMove="L4G"
+        d["L5H"].leftMove="L4J"
+        d["L5H"].upMove="H0G"
+        d["L5H"].downMove="L5G"
         # Higher level
-        d["H0G"].setPositions(left=d["H1G"], down=d["L5H"])
-        d["H1G"].setPositions(jump=d["H1H"], left=d["H2G"], right=d["H0G"])
-        d["H1H"].setPositions(down=d["H1G"])
-        d["H2G"].setPositions(jump=d["H2J"], left=d["H3G"], right=d["H1G"])
-        d["H2J"].setPositions(nextMove=d["H2G"], left=d["H3G"])
-        d["H3G"].setPositions(jump=d["H3J"], left=d["H7F"],
-                              up=d["H4J"], right=d["H2G"])
-        d["H3J"].setPositions(nextMove=d["H3G"])
+        d["H0G"].leftMove="H1G"
+        d["H0G"].downMove="L5H"
+        d["H1G"].jumpMove="H1H"
+        d["H1G"].leftMove="H2G"
+        d["H1G"].rightMove="H0G"
+        d["H1H"].downMove="H1G"
+        d["H2G"].jumpMove="H2J"
+        d["H2G"].leftMove="H3G"
+        d["H2G"].rightMove="H1G"
+        d["H2J"].nextMove="H2G"
+        d["H2J"].leftMove="H3G"
+        d["H3G"].jumpMove="H3J"
+        d["H3G"].leftMove="H7F"
+        d["H3G"].upMove="H4J"
+        d["H3G"].rightMove="H2G"
+        d["H3J"].nextMove="H3G"
         # Jumping to the key
-        d["H4J"].setPositions(nextMove=d["H5T"])
+        d["H4J"].nextMove="H5T"
         # Taking the key
-        d["H5T"].setPositions(nextMove=d["H5O"])
+        d["H5T"].nextMove="H5O"
         # Opening the cage and win
-        d["H5O"].setPositions(nextMove=d["H6W"])
-        d["H6W"].setPositions(nextMove=d["L0G"])
+        d["H5O"].nextMove="H6W"
+        d["H6W"].nextMove="L0G"
         # Fail to get the key and loose
-        d["H7F"].setPositions(nextMove=d["H7L"])
-        d["H7L"].setPositions(nextMove=d["L0G"])
+        d["H7F"].nextMove="H7L"
+        d["H7L"].nextMove="L0G"
         return d
 
     

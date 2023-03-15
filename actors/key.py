@@ -55,10 +55,10 @@ class Key():
         d["K02b"] = SpritePosition("K02", k)
         d["K01b"] = SpritePosition("K01", k)
         
-        d["K00"].setPositions(nextMove=d["K01"])
-        d["K01"].setPositions(nextMove=d["K02"])
-        d["K02"].setPositions(nextMove=d["K03"])
-        d["K03"].setPositions(nextMove=d["K02b"])
-        d["K02b"].setPositions(nextMove=d["K01b"])
-        d["K01b"].setPositions(nextMove=d["K00"])
+        d["K00"].nextMove="K01"
+        d["K01"].nextMove="K02"
+        d["K02"].nextMove="K03"
+        d["K03"].nextMove="K02"
+        d["K02b"].nextMove="K01b"
+        d["K01b"].nextMove="K00"
         return d

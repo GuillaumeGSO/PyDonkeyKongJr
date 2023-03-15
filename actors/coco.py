@@ -60,7 +60,7 @@ class Coco(pg.sprite.Sprite):
         d["C02"] = SpritePosition("C02", c)
         d["C03"] = SpritePosition("C03", c)
         #No next move in position 0 : not falling without being touched
-        d["C01"].setPositions(nextMove=d["C02"])
-        d["C02"].setPositions(nextMove=d["C03"])
+        d["C01"].nextMove="C02"
+        d["C02"].nextMove="C03"
         return d
 

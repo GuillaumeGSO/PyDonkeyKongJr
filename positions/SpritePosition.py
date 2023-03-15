@@ -25,13 +25,11 @@ class SpritePosition(pg.sprite.Sprite):
         self.y = self.dictPositions.get(self.positionName)[1]
         self.rect.x = self.x
         self.rect.y = self.y
-        print(self.x, self.y)
    
     def generatePath(self):
         return "img/sprites/" + self.actorType + "/" + self.positionName + ".png"
 
     def update(self):
-        print("spritePositionUpdate", self.actorType, self.positionName)
         if (self.nextMove != None):
             self.positionName = self.nextMove
             self.path = self.generatePath()
@@ -41,19 +39,7 @@ class SpritePosition(pg.sprite.Sprite):
             self.y = self.dictPositions.get(self.positionName)[1]
             self.rect.x = self.x
             self.rect.y = self.y
-        else:
-            pass
-            # self.kill()
-        return self
 
-    def setPositions(self, jump=None, up=None, down=None, left=None, right=None, nextMove=None):
-        self.jumpMove = jump
-        self.upMove = up
-        self.downMove = down
-        self.leftMove = left
-        self.rightMove = right
-        self.nextMove = nextMove
-    
     @staticmethod
     def getAllPositions(fileName):
         newFileName = "positions/" + fileName + "Positions"
