@@ -16,7 +16,10 @@ class DonkeyKongJr:
         self.app = app
         self.threat_group: pg.sprite.Group = pg.sprite.Group()
         self.player_group: pg.sprite.Group = pg.sprite.Group()
+        self.weapon_group: pg.sprite.Group = pg.sprite.Group()
         self.cage_group: pg.sprite.Group = pg.sprite.Group()
+        self.info_group: pg.sprite.Group = pg.sprite.Group()
+
         self.bird = Bird(self)
         self.croco = Croco(self)
         self.cage = Cage(self)
@@ -26,7 +29,6 @@ class DonkeyKongJr:
         self.score = Score(self)
         self.player = Player(self)
         self.playerMove = None
-
 
     def update(self):
         self.player.update(self.playerMove)
@@ -43,3 +45,9 @@ class DonkeyKongJr:
         self.threat_group.draw(self.app.screen)
         self.player_group.clear(self.app.screen, self.app.bg)
         self.player_group.draw(self.app.screen)
+        self.weapon_group.clear(self.app.screen, self.app.bg)
+        self.weapon_group.draw(self.app.screen)
+        self.cage_group.clear(self.app.screen, self.app.bg)
+        self.cage_group.draw(self.app.screen)
+        self.info_group.clear(self.app.screen, self.app.bg)
+        self.info_group.draw(self.app.screen)

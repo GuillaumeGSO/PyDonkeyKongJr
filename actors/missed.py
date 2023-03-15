@@ -8,17 +8,22 @@ class Missed():
     Errors during the game : 3 lives only
     """
 
-    
-
     def __init__(self, game):
         self.game = game
-        self.allPositions = self.generate()
-        self.spritePosition = [self.allPositions.get("M00"), 
-        self.allPositions.get("M01"), self.allPositions.get("M02")]
+        self.allPositions = self.generatePositions()
+        self.spritePosition: SpritePosition = None
         # self.sound = makeSound("sounds/Missed.wav")
-    
+
     def update(self):
         pass
+        # if self.spritePosition == None:
+        #     self.spritePosition = self.allPositions.get("M00")
+        #     return
+        # newPosition = self.allPositions.get(self.spritePosition.nextMove)
+        # self.spritePosition.kill()
+        # if newPosition != None:
+        #     self.spritePosition = newPosition
+        # self.game.info_group.add(self.spritePosition)
 
     # def update(self, num_error):
     #     spriteToAdd = self.spritePosition[num_error]
@@ -32,7 +37,7 @@ class Missed():
     #         self.game.pause(150)
     #     self.game.showSprite(spriteToAdd.sprite)
 
-    def generate(self):
+    def generatePositions(self):
         d = {}
         b = "Missed"
         d["M00"] = SpritePosition("M00", b)

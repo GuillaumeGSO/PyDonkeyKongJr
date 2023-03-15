@@ -3,17 +3,17 @@ import pygame as pg
 from positions.SpritePosition import *
 
 
-class Score(pg.sprite.Sprite):
+class Score():
     """
     Display the score with sound
     """
-    # https://pygame-zero.readthedocs.io/en/stable/index.html
 
     def __init__(self, game):
         self.game = game
         self.score = 0
-        # self.scoreLabel = self.game.makeLabel(str(self.score), 80, 690, 0, "black")
-        # font = pygame.font.Font("fonts/Open 24 Display St.ttf", 80)
+        # self.scoreLabel = self.game.makeLabel(
+        #     str(self.score), 80, 690, 0, "black")
+        font = pg.font.Font("fonts/Open 24 Display St.ttf", 80)
         # self.scoreLabel.font = font
         # self.scoreLabel.rect.topright = 690, 0
         # self.sound = makeSound("sounds/Score.wav")

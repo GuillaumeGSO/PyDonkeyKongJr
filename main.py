@@ -19,14 +19,14 @@ from settings import *
 class App:
 
     def __init__(self):
-        pg.init();
+        pg.init()
         pg.display.set_caption(SCREEN_NAME)
         self.screen = pg.display.set_mode((WIDTH, HEIGHT))
-        self.bg = pg.image.load(os.path.join("img", "EmptyScreen.png")).convert()
-        self.screen.blit(self.bg, [0,0])
+        self.bg = pg.image.load(os.path.join(
+            "img", "EmptyScreen.png")).convert()
+        self.screen.blit(self.bg, [0, 0])
         self.clock = pg.time.Clock()
         self.game = DonkeyKongJr(self)
-        
 
     def update(self):
         self.game.update()
@@ -35,11 +35,6 @@ class App:
     def draw(self):
         self.game.draw()
         pg.display.flip()
-
-
-
-
-
 
     def check_events(self):
         self.game.playerMove = None
@@ -59,19 +54,11 @@ class App:
                 elif event.key == pg.K_SPACE:
                     self.game.playerMove = "JUMP"
 
-                
-    
-
     def run(self):
         while True:
             self.check_events()
             self.update()
             self.draw()
-        
-
-
-
-
 
 
 if __name__ == "__main__":

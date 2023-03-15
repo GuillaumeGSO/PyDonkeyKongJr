@@ -5,7 +5,7 @@ from positions.SpritePosition import *
 
 class Croco():
     """
-    Multiple crocodile possible
+    Crocodile that starts from top and all the way down
     """
     
     def __init__(self, game):
