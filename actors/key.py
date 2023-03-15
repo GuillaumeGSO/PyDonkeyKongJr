@@ -36,7 +36,7 @@ class Key():
         d["K00"].nextMove = "K01"
         d["K01"].nextMove = "K02"
         d["K02"].nextMove = "K03"
-        d["K03"].nextMove = "K02"
+        d["K03"].nextMove = "K02b"
         d["K02b"].nextMove = "K01b"
         d["K01b"].nextMove = "K00"
         return d
