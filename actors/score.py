@@ -1,32 +1,27 @@
 import pygame as pg
 
-from positions.SpritePosition import *
-
 
 class Score():
     """
     Display the score with sound
     """
 
-    def __init__(self, game):
-        self.game = game
+    def __init__(self):
         self.score = 0
-        # self.scoreLabel = self.game.makeLabel(
-        #     str(self.score), 80, 690, 0, "black")
-        font = pg.font.Font("fonts/Open 24 Display St.ttf", 80)
-        # self.scoreLabel.font = font
-        # self.scoreLabel.rect.topright = 690, 0
+        self.score_font = pg.font.Font("fonts/Open 24 Display St.ttf", 72)
         # self.sound = makeSound("sounds/Score.wav")
-        # self.game.showLabel(self.scoreLabel)
-        # self.game.changeLabel(self.scoreLabel, str(self.score))
 
     def update(self):
-        pass
+        self.score_surface = self.score_font.render(
+            str(self.score), True, "black")
+
+    def draw(self, screen):
+        score_rect = self.score_surface.get_rect()
+        score_rect.right = 685
+        screen.blit(self.score_surface, score_rect)
 
     def addPoints(self, points):
-        for i in range(points):
-            self.score += 1
-            self.game.changeLabel(self.scoreLabel, str(self.score))
-            self.scoreLabel.rect.topright = 690, 0
-            self.game.playSound(self.sound)
-            self.game.pause(50)
+        print("add score")
+        self.score += points
+        # self.draw_text(self.game.app.screen, self.score)
+        # self.game.playSound(self.sound)

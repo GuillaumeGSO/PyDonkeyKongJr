@@ -8,7 +8,7 @@ class Player():
     One and only one player.
     It should contains all of its different locations and sprites
     """
-    
+
     def __init__(self, game):
         self.game = game
         self.allPositions = self.generatePositions()
@@ -22,7 +22,7 @@ class Player():
             self.spritePosition = self.allPositions.get("L0G")
             self.game.player_group.add(self.spritePosition)
             return
-        
+
         if playerMove == None:
             newPosition = self.allPositions.get(self.spritePosition.nextMove)
         elif playerMove == "JUMP":
@@ -33,15 +33,15 @@ class Player():
             newPosition = self.allPositions.get(self.spritePosition.rightMove)
         elif playerMove == "UP":
             newPosition = self.allPositions.get(self.spritePosition.upMove)
-        elif playerMove == "DOWN":    
+        elif playerMove == "DOWN":
             newPosition = self.allPositions.get(self.spritePosition.downMove)
 
         if newPosition != None:
+            self.game.score.addPoints(1)
             self.spritePosition.kill()
             self.spritePosition = newPosition
             self.game.player_group.add(self.spritePosition)
             playerMove = None
-
 
     def generatePositions(self):
         d = {}
@@ -81,80 +81,78 @@ class Player():
 
         # Updating of positions
         # Lower level
-        d["L0G"].jumpMove="L0H"
-        d["L0G"].rightMove="L1G"
+        d["L0G"].jumpMove = "L0H"
+        d["L0G"].rightMove = "L1G"
 
-        d["L0H"].downMove="L0G"
-        d["L0H"].rightMove="L1J"
+        d["L0H"].downMove = "L0G"
+        d["L0H"].rightMove = "L1J"
 
-        d["L1G"].jumpMove="L1J"
-        d["L1G"].leftMove="L0G"
-        d["L1G"].rightMove="L2G"
+        d["L1G"].jumpMove = "L1J"
+        d["L1G"].leftMove = "L0G"
+        d["L1G"].rightMove = "L2G"
 
-        d["L1J"].nextMove="L1G"
+        d["L1J"].nextMove = "L1G"
 
-        d["L2G"].jumpMove="L2H"
-        d["L2G"].leftMove="L1G"
-        d["L2G"].rightMove="L3G"
+        d["L2G"].jumpMove = "L2H"
+        d["L2G"].leftMove = "L1G"
+        d["L2G"].rightMove = "L3G"
 
-        d["L2H"].leftMove="L1J"
-        d["L2H"].rightMove="L3H"
-        d["L2H"].downMove="L2G"
+        d["L2H"].leftMove = "L1J"
+        d["L2H"].rightMove = "L3H"
+        d["L2H"].downMove = "L2G"
 
-        d["L3G"].jumpMove="L3H"
-        d["L3G"].leftMove="L2G"
-        d["L3G"].rightMove="L4G"
+        d["L3G"].jumpMove = "L3H"
+        d["L3G"].leftMove = "L2G"
+        d["L3G"].rightMove = "L4G"
 
-        d["L3H"].leftMove="L2H"
-        d["L3H"].rightMove="L4J"
-        d["L3H"].downMove="L3G"
+        d["L3H"].leftMove = "L2H"
+        d["L3H"].rightMove = "L4J"
+        d["L3H"].downMove = "L3G"
 
-        d["L4G"].jumpMove="L4J"
-        d["L4G"].leftMove="L3G"
-        d["L4G"].rightMove="L5G"
+        d["L4G"].jumpMove = "L4J"
+        d["L4G"].leftMove = "L3G"
+        d["L4G"].rightMove = "L5G"
 
-        d["L4J"].nextMove="L4G"
+        d["L4J"].nextMove = "L4G"
 
-        d["L5G"].jumpMove="L5H"
-        d["L5G"].leftMove="L4G"
+        d["L5G"].jumpMove = "L5H"
+        d["L5G"].leftMove = "L4G"
 
-        d["L5H"].leftMove="L4J"
-        d["L5H"].upMove="H0G"
-        d["L5H"].downMove="L5G"
+        d["L5H"].leftMove = "L4J"
+        d["L5H"].upMove = "H0G"
+        d["L5H"].downMove = "L5G"
         # Higher level
-        d["H0G"].leftMove="H1G"
-        d["H0G"].downMove="L5H"
+        d["H0G"].leftMove = "H1G"
+        d["H0G"].downMove = "L5H"
 
-        d["H1G"].jumpMove="H1H"
-        d["H1G"].leftMove="H2G"
-        d["H1G"].rightMove="H0G"
+        d["H1G"].jumpMove = "H1H"
+        d["H1G"].leftMove = "H2G"
+        d["H1G"].rightMove = "H0G"
 
-        d["H1H"].downMove="H1G"
+        d["H1H"].downMove = "H1G"
 
-        d["H2G"].jumpMove="H2J"
-        d["H2G"].leftMove="H3G"
-        d["H2G"].rightMove="H1G"
+        d["H2G"].jumpMove = "H2J"
+        d["H2G"].leftMove = "H3G"
+        d["H2G"].rightMove = "H1G"
 
-        d["H2J"].nextMove="H2G"
-        d["H2J"].leftMove="H3G"
+        d["H2J"].nextMove = "H2G"
+        d["H2J"].leftMove = "H3G"
 
-        d["H3G"].jumpMove="H3J"
-        d["H3G"].leftMove="H7F"
-        d["H3G"].upMove="H4J"
-        d["H3G"].rightMove="H2G"
+        d["H3G"].jumpMove = "H3J"
+        d["H3G"].leftMove = "H7F"
+        d["H3G"].upMove = "H4J"
+        d["H3G"].rightMove = "H2G"
 
-        d["H3J"].nextMove="H3G"
+        d["H3J"].nextMove = "H3G"
 
         # Jumping to the key
-        d["H4J"].nextMove="H5T"
+        d["H4J"].nextMove = "H5T"
         # Taking the key
-        d["H5T"].nextMove="H5O"
+        d["H5T"].nextMove = "H5O"
         # Opening the cage and win
-        d["H5O"].nextMove="H6W"
-        d["H6W"].nextMove="L0G"
+        d["H5O"].nextMove = "H6W"
+        d["H6W"].nextMove = "L0G"
         # Fail to get the key and loose
-        d["H7F"].nextMove="H7L"
-        d["H7L"].nextMove="L0G"
+        d["H7F"].nextMove = "H7L"
+        d["H7L"].nextMove = "L0G"
         return d
-
-    

@@ -17,7 +17,7 @@ class SpritePosition(pg.sprite.Sprite):
         self.downMove = None
         self.leftMove = None
         self.rightMove = None
-        self.nextMove  = None
+        self.nextMove = None
         self.eaterName = None
 
         self.dictPositions = self.getAllPositions(self.actorType)
@@ -25,7 +25,7 @@ class SpritePosition(pg.sprite.Sprite):
         self.y = self.dictPositions.get(self.positionName)[1]
         self.rect.x = self.x
         self.rect.y = self.y
-   
+
     def generatePath(self):
         return "img/sprites/" + self.actorType + "/" + self.positionName + ".png"
 
@@ -47,7 +47,7 @@ class SpritePosition(pg.sprite.Sprite):
             with open(newFileName, "rb") as positionFile:
                 return pickle.Unpickler(positionFile).load()
         return {}
-    
+
     @staticmethod
     def loadImage(fileName, useColorKey=False):
         if os.path.isfile(fileName):
@@ -56,4 +56,5 @@ class SpritePosition(pg.sprite.Sprite):
             # Return the image
             return image
         else:
-            raise Exception(f"Error loading image: {fileName} – Check filename and path ?")
+            raise Exception(
+                f"Error loading image: {fileName} – Check filename and path ?")

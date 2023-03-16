@@ -24,6 +24,11 @@ class App:
         self.screen = pg.display.set_mode((WIDTH, HEIGHT))
         self.bg = pg.image.load(os.path.join(
             "img", "EmptyScreen.png")).convert()
+
+        # TO DISPLAY ORIGINAL SCREEN WITH ALL SPRITES
+        # self.bg = pg.image.load(os.path.join(
+        #     "positions", "FullScreen.png")).convert()
+
         self.screen.blit(self.bg, [0, 0])
 
         # color = (255, 255, 0)
