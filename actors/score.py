@@ -13,7 +13,7 @@ class Score():
 
     def update(self):
         self.score_surface = self.score_font.render(
-            " " + str(self.score), True, "black", "white")
+            " " + str(self.score), True, "black", (254, 254, 254))
 
     def draw(self, screen):
         score_rect = self.score_surface.get_rect()
