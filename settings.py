@@ -1,5 +1,5 @@
 SCREEN_NAME = "Donkey Kong Jr"
 WIDTH = 700
 HEIGHT = 480
-FPS = 5
+FPS = 6
 SCORE_DELAY = 10

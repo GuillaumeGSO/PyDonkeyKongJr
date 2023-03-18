@@ -17,11 +17,17 @@ class Player():
         # self.sound = makeSound("sounds/Monkey.wav")
 
     def update(self, playerMove):
-        # self.playerMove = playerMove
+
         if self.spritePosition == None:
             self.spritePosition = self.allPositions.get("L0G")
             self.game.player_group.add(self.spritePosition)
             return
+
+        # print("key", pg.sprite.spritecollideany(
+        #     self.spritePosition, self.game.cage_group))
+
+        # print("threat", pg.sprite.spritecollideany(
+        #     self.spritePosition, self.game.threat_group))
 
         if playerMove == None:
             newPosition = self.allPositions.get(self.spritePosition.nextMove)

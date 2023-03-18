@@ -14,10 +14,10 @@ from settings import *
 class DonkeyKongJr:
     def __init__(self, app):
         self.app = app
-        self.threat_group: pg.sprite.Group = pg.sprite.Group()
         self.player_group: pg.sprite.Group = pg.sprite.Group()
         self.weapon_group: pg.sprite.Group = pg.sprite.Group()
         self.cage_group: pg.sprite.Group = pg.sprite.Group()
+        self.threat_group: pg.sprite.Group = pg.sprite.Group()
         self.info_group: pg.sprite.Group = pg.sprite.Group()
 
         self.bird = Bird(self)

@@ -10,6 +10,7 @@ class Coco():
 
     def __init__(self, game):
         self.game = game
+        self.isVisible = True
         self.allPositions = self.generatePositions()
         self.spritePosition: SpritePosition = None
 
@@ -17,11 +18,34 @@ class Coco():
         if self.spritePosition == None:
             self.spritePosition = self.allPositions.get("C00")
             return
-        newPosition = self.allPositions.get(self.spritePosition.nextMove)
+        if not self.isVisible:
+            self.spritePosition.kill()
+            return
+
+        # print("threat", pg.sprite.spritecollideany(
+        #     self.spritePosition, self.game.threat_group))
+
+        if self.mustFall():
+            newPosition = self.allPositions.get("C01")
+        else:
+            newPosition = self.allPositions.get(self.spritePosition.nextMove)
+
         self.spritePosition.kill()
         if newPosition != None:
             self.spritePosition = newPosition
+
+        self.handleBottom()
         self.game.weapon_group.add(self.spritePosition)
+
+    def mustFall(self) -> bool:
+        collider = pg.sprite.spritecollideany(
+            self.spritePosition, self.game.player_group)
+
+        return collider != None and collider.positionName == "H2J" and self.spritePosition == self.allPositions.get("C00")
+
+    def handleBottom(self):
+        if self.spritePosition.positionName == "C03":
+            self.isVisible = False
 
     def generatePositions(self):
         d = {}
@@ -33,4 +57,5 @@ class Coco():
         # No next move in position 0 : not falling without being touched
         d["C01"].nextMove = "C02"
         d["C02"].nextMove = "C03"
+
         return d
