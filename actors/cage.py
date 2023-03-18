@@ -10,18 +10,19 @@ class Cage():
 
     def __init__(self, game):
         self.game = game
+        self.openedCage = 0
         self.allPositions = self.generatePositions()
-        self.spritePosition = [self.allPositions.get("C00"),
-                               self.allPositions.get("C01"),
-                               self.allPositions.get("C02"),
-                               self.allPositions.get("C03")]
-        self.game.cage_group.add(self.spritePosition)
+        self.spritePositions = [self.allPositions.get("C00"),
+                                self.allPositions.get("C01"),
+                                self.allPositions.get("C02"),
+                                self.allPositions.get("C03")]
+        self.game.cage_group.add(self.spritePositions)
         self.smilePostion = self.allPositions.get("CSM")
 
-    # def __init__(self, game):
-    #     self.game = game
-    #     self.allPositions = self.generatePositions()
-    #     self.spritePosition: SpritePosition = None
+    def openCage(self):
+        self.game.cage_group.remove(self.spritePositions[self.openedCage])
+        self.openedCage -= 1
+        self.game.score.addPoints(25)
 
     def update(self):
         pass

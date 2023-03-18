@@ -30,7 +30,7 @@ class Croco():
 
     def doKill(self):
         self.isKilled = True
-        # FIXME crocoile points are different at top and bottom
+        # FIXME crocodile points are different at top and bottom
         self.game.score.addPoints(5)
 
     def generatePositions(self):

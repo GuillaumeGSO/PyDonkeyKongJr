@@ -23,9 +23,6 @@ class Player():
             self.game.player_group.add(self.spritePosition)
             return
 
-        # print("key", pg.sprite.spritecollideany(
-        #     self.spritePosition, self.game.cage_group))
-
         # print("threat", pg.sprite.spritecollideany(
         #     self.spritePosition, self.game.threat_group))
 
@@ -42,11 +39,25 @@ class Player():
         elif playerMove == "DOWN":
             newPosition = self.allPositions.get(self.spritePosition.downMove)
 
+        toto = self.handleKey()
+        if toto != None:
+            newPosition = toto
+
         if newPosition != None:
             self.spritePosition.kill()
             self.spritePosition = newPosition
             self.game.player_group.add(self.spritePosition)
             playerMove = None
+
+    def handleKey(self):
+        if (self.spritePosition.positionName == "H4J"):
+            collider = pg.sprite.spritecollideany(
+                self.spritePosition, self.game.cage_group)
+            if collider != None and collider.positionName == "K03":
+                self.game.key.catchKey()
+                return self.allPositions.get("H5O")
+            return self.allPositions.get("H7F")
+        return None
 
     def generatePositions(self):
         d = {}
@@ -150,8 +161,6 @@ class Player():
 
         d["H3J"].nextMove = "H3G"
 
-        # Jumping to the key
-        d["H4J"].nextMove = "H5T"
         # Taking the key
         d["H5T"].nextMove = "H5O"
         # Opening the cage and win
