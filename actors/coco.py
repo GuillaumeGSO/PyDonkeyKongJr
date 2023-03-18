@@ -5,7 +5,8 @@ from positions.SpritePosition import *
 
 class Coco():
     """
-    The coconut falls when touched by monkey and respawn when monkey starts
+    The coconut falls when touched by monkey and respawn when monkey starts.
+    It kills all enemies when falling
     """
 
     def __init__(self, game):
@@ -22,9 +23,6 @@ class Coco():
             self.spritePosition.kill()
             return
 
-        # print("threat", pg.sprite.spritecollideany(
-        #     self.spritePosition, self.game.threat_group))
-
         if self.mustFall():
             newPosition = self.allPositions.get("C01")
         else:
@@ -35,17 +33,30 @@ class Coco():
             self.spritePosition = newPosition
 
         self.handleBottom()
+
+        self.handleThreats()
+
         self.game.weapon_group.add(self.spritePosition)
 
     def mustFall(self) -> bool:
         collider = pg.sprite.spritecollideany(
             self.spritePosition, self.game.player_group)
-
         return collider != None and collider.positionName == "H2J" and self.spritePosition == self.allPositions.get("C00")
 
     def handleBottom(self):
         if self.spritePosition.positionName == "C03":
             self.isVisible = False
+
+    def handleThreats(self):
+        collider = pg.sprite.spritecollideany(
+            self.spritePosition, self.game.threat_group)
+        print(collider)
+        if collider != None:
+            print(collider.actorType)
+            if collider.actorType == "Bird":
+                self.game.bird.doKill()
+            if collider.actorType == "Croco":
+                self.game.croco.doKill()
 
     def generatePositions(self):
         d = {}
