@@ -37,7 +37,6 @@ class Player():
             newPosition = self.allPositions.get(self.spritePosition.downMove)
 
         if newPosition != None:
-            self.game.score.addPoints(1)
             self.spritePosition.kill()
             self.spritePosition = newPosition
             self.game.player_group.add(self.spritePosition)

@@ -26,7 +26,7 @@ class DonkeyKongJr:
         self.coco = Coco(self)
         self.key = Key(self)
         self.missed = Missed(self)
-        self.score = Score()
+        self.score = Score(self.app.screen)
         self.player = Player(self)
         self.playerMove = None
 
@@ -51,4 +51,4 @@ class DonkeyKongJr:
         self.weapon_group.draw(self.app.screen)
         self.cage_group.draw(self.app.screen)
         self.info_group.draw(self.app.screen)
-        self.score.draw(self.app.screen)
+        self.score.draw()
