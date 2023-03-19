@@ -31,8 +31,9 @@ class App:
 
         self.screen.blit(self.bg, [0, 0])
 
-        color = (255, 255, 0)
-        self.screen.fill(color)
+        # This hides bachground
+        # color = (255, 255, 0)
+        # self.screen.fill(color)
 
         self.clock = pg.time.Clock()
         self.game = DonkeyKongJr(self)

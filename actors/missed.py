@@ -14,6 +14,10 @@ class Missed():
         self.spritePosition: SpritePosition = None
         # self.sound = makeSound("sounds/Missed.wav")
 
+    def miss(self, number):
+        self.spritePosition = self.allPositions.get("M0" + str(number))
+        self.game.info_group.add(self.spritePosition)
+
     def update(self):
         pass
         # if self.spritePosition == None:

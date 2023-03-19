@@ -14,6 +14,7 @@ from settings import *
 class DonkeyKongJr:
     def __init__(self, app):
         self.app = app
+        self.number_of_life = 0
         self.player_group: pg.sprite.Group = pg.sprite.Group()
         self.weapon_group: pg.sprite.Group = pg.sprite.Group()
         self.cage_group: pg.sprite.Group = pg.sprite.Group()
@@ -52,3 +53,10 @@ class DonkeyKongJr:
         self.cage_group.draw(self.app.screen)
         self.info_group.draw(self.app.screen)
         self.score.draw()
+
+    def catchKey(self):
+        self.key.catchKey()
+
+    def addMissed(self):
+        self.missed.miss(self.number_of_life)
+        self.number_of_life += 1

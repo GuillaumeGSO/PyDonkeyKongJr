@@ -39,9 +39,11 @@ class Player():
         elif playerMove == "DOWN":
             newPosition = self.allPositions.get(self.spritePosition.downMove)
 
-        toto = self.handleKey()
-        if toto != None:
-            newPosition = toto
+        temp = self.handleKey()
+        if temp != None:
+            newPosition = temp
+
+        self.handleFall()
 
         if newPosition != None:
             self.spritePosition.kill()
@@ -54,10 +56,14 @@ class Player():
             collider = pg.sprite.spritecollideany(
                 self.spritePosition, self.game.cage_group)
             if collider != None and collider.positionName == "K03":
-                self.game.key.catchKey()
+                self.game.catchKey()
                 return self.allPositions.get("H5O")
             return self.allPositions.get("H7F")
         return None
+
+    def handleFall(self):
+        if self.spritePosition.positionName == "H7L":
+            self.game.addMissed()
 
     def generatePositions(self):
         d = {}
