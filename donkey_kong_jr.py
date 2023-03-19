@@ -15,6 +15,7 @@ class DonkeyKongJr:
     def __init__(self, app):
         self.app = app
         self.number_of_life = 0
+        self.is_playing = True
         self.player_group: pg.sprite.Group = pg.sprite.Group()
         self.weapon_group: pg.sprite.Group = pg.sprite.Group()
         self.cage_group: pg.sprite.Group = pg.sprite.Group()
@@ -29,34 +30,51 @@ class DonkeyKongJr:
         self.missed = Missed(self)
         self.score = Score(self.app.screen)
         self.player = Player(self)
-        self.playerMove = None
+        self.player_move = None
 
     def update(self):
-        self.player.update(self.playerMove)
+        self.missed.update()
         self.croco.update()
         self.bird.update()
         self.cage.update()
         self.coco.update()
         self.key.update()
-        self.missed.update()
         self.score.update()
+        if self.is_playing:
+            self.player.update(self.player_move)
 
     def draw(self):
-        self.threat_group.clear(self.app.screen, self.app.bg)
-        self.player_group.clear(self.app.screen, self.app.bg)
-        self.weapon_group.clear(self.app.screen, self.app.bg)
-        self.cage_group.clear(self.app.screen, self.app.bg)
+        if self.is_playing:
+            self.player_group.clear(self.app.screen, self.app.bg)
+
         self.info_group.clear(self.app.screen, self.app.bg)
+        self.threat_group.clear(self.app.screen, self.app.bg)
+        self.cage_group.clear(self.app.screen, self.app.bg)
+        self.weapon_group.clear(self.app.screen, self.app.bg)
+
+        if self.is_playing:
+            self.player_group.draw(self.app.screen)
+
+        self.info_group.draw(self.app.screen)
         self.threat_group.draw(self.app.screen)
-        self.player_group.draw(self.app.screen)
         self.weapon_group.draw(self.app.screen)
         self.cage_group.draw(self.app.screen)
-        self.info_group.draw(self.app.screen)
         self.score.draw()
 
-    def catchKey(self):
-        self.key.catchKey()
+    def catch_key(self):
+        self.key.catch_key()
 
-    def addMissed(self):
+    def add_to_score(self, points):
+        self.score.add_points(points)
+
+    def add_missed(self):
         self.missed.miss(self.number_of_life)
         self.number_of_life += 1
+        if self.number_of_life == NUMBER_OF_LIFE:
+            self.is_playing = False
+
+    def init_objects(self):
+        if not self.key.is_visible:
+            self.key.init_key()
+        if not self.coco.is_visible:
+            self.coco.init_coco()

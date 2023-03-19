@@ -22,7 +22,7 @@ class Score():
         score_rect.right = 685
         self.screen.blit(self.score_surface, score_rect)
 
-    def addPoints(self, points):
+    def add_points(self, points):
         for _ in range(points):
             self.score += 1
             self.update()

@@ -10,15 +10,15 @@ class Key():
 
     def __init__(self, game):
         self.game = game
-        self.isKilled = False
-        self.allPositions = self.generatePositions()
-        self.spritePosition: SpritePosition = None
+        self.is_visible = True
+        self.allPositions = self.generate_positions()
+        self.spritePosition = None
 
     def update(self):
         if self.spritePosition == None:
             self.spritePosition = self.allPositions.get("K00")
             return
-        if self.isKilled:
+        if not self.is_visible:
             self.spritePosition.kill()
             return
         newPosition = self.allPositions.get(self.spritePosition.nextMove)
@@ -27,11 +27,15 @@ class Key():
             self.spritePosition = newPosition
         self.game.cage_group.add(self.spritePosition)
 
-    def catchKey(self):
-        self.isKilled = True
+    def catch_key(self):
+        self.is_visible = False
         self.game.cage.openCage()
 
-    def generatePositions(self):
+    def init_key(self):
+        self.is_visible = True
+        self.spritePosition = None
+
+    def generate_positions(self):
         d = {}
         k = "Key"
         d["K00"] = SpritePosition("K00", k)

@@ -10,8 +10,8 @@ class Missed():
 
     def __init__(self, game):
         self.game = game
-        self.allPositions = self.generatePositions()
-        self.spritePosition: SpritePosition = None
+        self.allPositions = self.generate_positions()
+        self.spritePosition = None
         # self.sound = makeSound("sounds/Missed.wav")
 
     def miss(self, number):
@@ -41,7 +41,7 @@ class Missed():
     #         self.game.pause(150)
     #     self.game.showSprite(spriteToAdd.sprite)
 
-    def generatePositions(self):
+    def generate_positions(self):
         d = {}
         b = "Missed"
         d["M00"] = SpritePosition("M00", b)

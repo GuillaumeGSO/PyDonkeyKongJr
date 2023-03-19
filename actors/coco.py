@@ -11,15 +11,18 @@ class Coco():
 
     def __init__(self, game):
         self.game = game
-        self.isVisible = True
-        self.allPositions = self.generatePositions()
-        self.spritePosition: SpritePosition = None
+        self.allPositions = self.generate_positions()
+        self.init_coco()
+
+    def init_coco(self):
+        self.is_visible = True
+        self.spritePosition = None
 
     def update(self):
         if self.spritePosition == None:
             self.spritePosition = self.allPositions.get("C00")
             return
-        if not self.isVisible:
+        if not self.is_visible:
             self.spritePosition.kill()
             return
 
@@ -45,18 +48,18 @@ class Coco():
 
     def handleBottom(self):
         if self.spritePosition.positionName == "C03":
-            self.isVisible = False
+            self.is_visible = False
 
     def handleThreats(self):
         collider = pg.sprite.spritecollideany(
             self.spritePosition, self.game.threat_group)
         if collider != None:
             if collider.actorType == "Bird":
-                self.game.bird.doKill()
+                self.game.bird.do_kill()
             if collider.actorType == "Croco":
-                self.game.croco.doKill()
+                self.game.croco.do_kill()
 
-    def generatePositions(self):
+    def generate_positions(self):
         d = {}
         c = "Coco"
         d["C00"] = SpritePosition("C00", c)

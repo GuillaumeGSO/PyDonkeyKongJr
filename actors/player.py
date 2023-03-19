@@ -11,33 +11,33 @@ class Player():
 
     def __init__(self, game):
         self.game = game
-        self.allPositions = self.generatePositions()
-        self.spritePosition: SpritePosition = None
+        self.isNewTurn = True
+        self.all_positions = self.generate_positions()
+        self.sprite_position = None
         self.playerMove = None
         # self.sound = makeSound("sounds/Monkey.wav")
 
     def update(self, playerMove):
 
-        if self.spritePosition == None:
-            self.spritePosition = self.allPositions.get("L0G")
-            self.game.player_group.add(self.spritePosition)
+        if self.startOfGame():
             return
 
-        # print("threat", pg.sprite.spritecollideany(
+        # TODO print("threat", pg.sprite.spritecollideany(
         #     self.spritePosition, self.game.threat_group))
 
         if playerMove == None:
-            newPosition = self.allPositions.get(self.spritePosition.nextMove)
+            newPosition = self.all_positions.get(self.sprite_position.nextMove)
         elif playerMove == "JUMP":
-            newPosition = self.allPositions.get(self.spritePosition.jumpMove)
+            newPosition = self.all_positions.get(self.sprite_position.jumpMove)
         elif playerMove == "LEFT":
-            newPosition = self.allPositions.get(self.spritePosition.leftMove)
+            newPosition = self.all_positions.get(self.sprite_position.leftMove)
         elif playerMove == "RIGHT":
-            newPosition = self.allPositions.get(self.spritePosition.rightMove)
+            newPosition = self.all_positions.get(
+                self.sprite_position.rightMove)
         elif playerMove == "UP":
-            newPosition = self.allPositions.get(self.spritePosition.upMove)
+            newPosition = self.all_positions.get(self.sprite_position.upMove)
         elif playerMove == "DOWN":
-            newPosition = self.allPositions.get(self.spritePosition.downMove)
+            newPosition = self.all_positions.get(self.sprite_position.downMove)
 
         temp = self.handleKey()
         if temp != None:
@@ -46,26 +46,38 @@ class Player():
         self.handleFall()
 
         if newPosition != None:
-            self.spritePosition.kill()
-            self.spritePosition = newPosition
-            self.game.player_group.add(self.spritePosition)
+            self.sprite_position.kill()
+            self.sprite_position = newPosition
+            self.game.player_group.add(self.sprite_position)
             playerMove = None
 
+    def startOfGame(self):
+        if self.sprite_position == None:
+            self.sprite_position = self.all_positions.get("L0G")
+
+        if self.sprite_position.positionName == "L0G" and self.isNewTurn:
+            self.game.init_objects()
+            self.game.player_group.add(self.sprite_position)
+            self.isNewTurn = False
+            return True
+        return False
+
     def handleKey(self):
-        if (self.spritePosition.positionName == "H4J"):
+        if (self.sprite_position.positionName == "H4J"):
             collider = pg.sprite.spritecollideany(
-                self.spritePosition, self.game.cage_group)
+                self.sprite_position, self.game.cage_group)
             if collider != None and collider.positionName == "K03":
-                self.game.catchKey()
-                return self.allPositions.get("H5O")
-            return self.allPositions.get("H7F")
+                self.game.catch_key()
+                return self.all_positions.get("H5O")
+            return self.all_positions.get("H7F")
         return None
 
     def handleFall(self):
-        if self.spritePosition.positionName == "H7L":
-            self.game.addMissed()
+        if self.sprite_position.positionName == "H7L":
+            self.game.add_missed()
+        self.isNewTurn = True
 
-    def generatePositions(self):
+    def generate_positions(self):
         d = {}
         m = "Monkey"
         # Lower level

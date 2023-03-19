@@ -11,9 +11,9 @@ class Bird():
 
     def __init__(self, game):
         self.game = game
-        self.isKilled = False
-        self.allPositions = self.generatePositions()
-        self.spritePosition: SpritePosition = None
+        self.is_killed = False
+        self.allPositions = self.generate_positions()
+        self.spritePosition = None
 
     def update(self):
         if self.spritePosition == None:
@@ -25,11 +25,11 @@ class Bird():
             self.spritePosition = newPosition
         self.game.threat_group.add(self.spritePosition)
 
-    def doKill(self):
-        self.isKilled = True
-        self.game.score.addPoints(10)
+    def do_kill(self):
+        self.is_killed = True
+        self.game.add_to_score(10)
 
-    def generatePositions(self):
+    def generate_positions(self):
         d = {}
         b = "Bird"
         d["B00"] = SpritePosition("B00", b)

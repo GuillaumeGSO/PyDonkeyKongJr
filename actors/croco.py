@@ -10,16 +10,16 @@ class Croco():
 
     def __init__(self, game):
         self.game = game
-        self.isKilled = False
-        self.allPositions = self.generatePositions()
-        self.spritePosition: SpritePosition = None
+        self.is_killed = False
+        self.allPositions = self.generate_positions()
+        self.spritePosition = None
         # self.sound=makeSound("sounds/Croco.wav")
 
     def update(self):
         if self.spritePosition == None:
             self.spritePosition = self.allPositions.get("C00")
             return
-        if self.isKilled:
+        if self.is_killed:
             self.spritePosition.kill()
             return
         newPosition = self.allPositions.get(self.spritePosition.nextMove)
@@ -28,12 +28,12 @@ class Croco():
             self.spritePosition = newPosition
         self.game.threat_group.add(self.spritePosition)
 
-    def doKill(self):
-        self.isKilled = True
+    def do_kill(self):
+        self.is_killed = True
         # FIXME crocodile points are different at top and bottom
-        self.game.score.addPoints(5)
+        self.game.add_to_score(5)
 
-    def generatePositions(self):
+    def generate_positions(self):
         d = {}
         c = "Croco"
         d["C00"] = SpritePosition("C00", c)
