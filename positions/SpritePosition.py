@@ -18,6 +18,7 @@ class SpritePosition(pg.sprite.Sprite):
         self.left_move = None
         self.right_move = None
         self.next_move = None
+        self.eater_name = None
 
         self.dict_positions = self.getAllPositions(self.actor_type)
         self.x = self.dict_positions.get(self.position_name)[0]

@@ -15,6 +15,15 @@ class Player():
         self.all_positions = self.generate_positions()
         self.sprite_position = None
         self.player_move = None
+        # Eater positions
+        self.eater_names = ["C11",      "B01",
+                            "C10",      "B02",
+                            "C09",      "B03",
+                            "C08",      "B04",
+                            "C07",      "B05",
+                            "C06",      "B06",
+                            "C04",      "C03",
+                            "C02",      "C01"]
         # self.sound = makeSound("sounds/Monkey.wav")
 
     def update(self, player_move):
@@ -46,6 +55,8 @@ class Player():
 
         self.handle_fall()
 
+        self.handle_threats()
+
         if newPosition != None:
             self.sprite_position.kill()
             self.sprite_position = newPosition
@@ -76,6 +87,12 @@ class Player():
         if self.sprite_position.position_name == "H7L":
             self.game.add_missed()
         self.is_new_turn = True
+
+    def handle_threats(self):
+        collider = pg.sprite.spritecollideany(
+            self.sprite_position, self.game.threat_group)
+        if collider != None and collider.position_name in self.eater_names:
+            print("MISS", collider.position_name)
 
     def generate_positions(self):
         d = {}
@@ -155,6 +172,7 @@ class Player():
         d["L5H"].left_move = "L4J"
         d["L5H"].up_move = "H0G"
         d["L5H"].down_move = "L5G"
+
         # Higher level
         d["H0G"].left_move = "H1G"
         d["H0G"].down_move = "L5H"
@@ -187,4 +205,5 @@ class Player():
         # Fail to get the key and loose
         d["H7F"].next_move = "H7L"
         d["H7L"].next_move = "L0G"
+
         return d

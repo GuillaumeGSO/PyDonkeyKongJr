@@ -62,7 +62,7 @@ class Croco():
         d["C06"].next_move = "C07"
         d["C07"].next_move = "C08"
         d["C08"].next_move = "C09"
-        d["C09"].next_move = "C09"
+        d["C09"].next_move = "C10"
         d["C10"].next_move = "C11"
         d["C11"].next_move = "C12"
         d["C12"].next_move = "C00"
