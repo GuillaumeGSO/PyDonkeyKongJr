@@ -10,10 +10,13 @@ class Croco():
 
     def __init__(self, game):
         self.game = game
-        self.is_killed = False
         self.allPositions = self.generate_positions()
-        self.spritePosition = None
+        self.init_croco()
         # self.sound=makeSound("sounds/Croco.wav")
+
+    def init_croco(self):
+        self.is_killed = False
+        self.spritePosition = None
 
     def update(self):
         if self.spritePosition == None:
@@ -59,7 +62,7 @@ class Croco():
         d["C06"].next_move = "C07"
         d["C07"].next_move = "C08"
         d["C08"].next_move = "C09"
-        d["C09"].next_move = "C10"
+        d["C09"].next_move = "C09"
         d["C10"].next_move = "C11"
         d["C11"].next_move = "C12"
         d["C12"].next_move = "C00"

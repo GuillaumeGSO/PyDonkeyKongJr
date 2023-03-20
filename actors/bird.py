@@ -11,11 +11,17 @@ class Bird():
 
     def __init__(self, game):
         self.game = game
-        self.is_killed = False
         self.allPositions = self.generate_positions()
+        self.init_bird()
+
+    def init_bird(self):
+        self.is_killed = False
         self.spritePosition = None
 
     def update(self):
+        if self.is_killed:
+            return
+
         if self.spritePosition == None:
             self.spritePosition = self.allPositions.get("B00")
             return
@@ -27,7 +33,9 @@ class Bird():
 
     def do_kill(self):
         self.is_killed = True
+        self.game.threat_group.remove(self.spritePosition)
         self.game.add_to_score(10)
+        self.spritePosition == None
 
     def generate_positions(self):
         d = {}

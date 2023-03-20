@@ -78,5 +78,9 @@ class DonkeyKongJr:
             self.key.init_key()
         if not self.coco.is_visible:
             self.coco.init_coco()
+        if self.bird.is_killed:
+            self.bird.init_bird()
+        if self.croco.is_killed:
+            self.croco.init_croco()
         if self.cage.fully_opened:
             self.cage.init_cage()

@@ -54,9 +54,9 @@ class Coco():
         collider = pg.sprite.spritecollideany(
             self.spritePosition, self.game.threat_group)
         if collider != None:
-            if collider.actorType == "Bird":
+            if collider.actor_type == "Bird":
                 self.game.bird.do_kill()
-            if collider.actorType == "Croco":
+            if collider.actor_type == "Croco":
                 self.game.croco.do_kill()
 
     def generate_positions(self):

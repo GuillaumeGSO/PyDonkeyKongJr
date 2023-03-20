@@ -22,9 +22,6 @@ class Player():
         if self.is_new_turn:
             self.start_of_game()
 
-        # TODO print("threat", pg.sprite.spritecollideany(
-        #     self.spritePosition, self.game.threat_group))
-
         if player_move == None:
             newPosition = self.all_positions.get(
                 self.sprite_position.next_move)

@@ -32,7 +32,7 @@ class App:
         self.screen.blit(self.bg, [0, 0])
 
         # This hides bachground
-        # color = (255, 255, 0)
+        # color = (0, 255, 0)
         # self.screen.fill(color)
 
         self.clock = pg.time.Clock()
