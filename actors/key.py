@@ -29,7 +29,7 @@ class Key():
 
     def catch_key(self):
         self.is_visible = False
-        self.game.cage.openCage()
+        self.game.cage.open_cage()
 
     def init_key(self):
         self.is_visible = True
@@ -48,7 +48,7 @@ class Key():
         d["K00"].nextMove = "K01"
         d["K01"].nextMove = "K02"
         d["K02"].nextMove = "K03"
-        d["K03"].nextMove = "K02b"
+        d["K03"].nextMove = "K03"
         d["K02b"].nextMove = "K01b"
         d["K01b"].nextMove = "K00"
         return d

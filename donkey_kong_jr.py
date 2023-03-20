@@ -78,3 +78,5 @@ class DonkeyKongJr:
             self.key.init_key()
         if not self.coco.is_visible:
             self.coco.init_coco()
+        if self.cage.fully_opened:
+            self.cage.init_cage()
