@@ -20,26 +20,6 @@ class Missed():
 
     def update(self):
         pass
-        # if self.spritePosition == None:
-        #     self.spritePosition = self.allPositions.get("M00")
-        #     return
-        # newPosition = self.allPositions.get(self.spritePosition.nextMove)
-        # self.spritePosition.kill()
-        # if newPosition != None:
-        #     self.spritePosition = newPosition
-        # self.game.info_group.add(self.spritePosition)
-
-    # def update(self, num_error):
-    #     spriteToAdd = self.spritePosition[num_error]
-    #     self.game.moveSprite(spriteToAdd.sprite,
-    #                spriteToAdd.x, spriteToAdd.y)
-    #     self.game.playSound(self.sound)
-    #     for i in range(5):
-    #         self.game.showSprite(spriteToAdd.sprite)
-    #         self.game.pause(150)
-    #         self.game.hideSprite(spriteToAdd.sprite)
-    #         self.game.pause(150)
-    #     self.game.showSprite(spriteToAdd.sprite)
 
     def generate_positions(self):
         d = {}

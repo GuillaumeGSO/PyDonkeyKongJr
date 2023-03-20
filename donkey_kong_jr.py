@@ -33,15 +33,15 @@ class DonkeyKongJr:
         self.player_move = None
 
     def update(self):
-        self.missed.update()
         self.croco.update()
         self.bird.update()
-        self.cage.update()
         self.coco.update()
-        self.key.update()
-        self.score.update()
         if self.is_playing:
             self.player.update(self.player_move)
+        self.key.update()
+        self.score.update()
+        self.missed.update()
+        self.cage.update()
 
     def draw(self):
         if self.is_playing:

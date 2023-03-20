@@ -22,7 +22,7 @@ class Croco():
         if self.is_killed:
             self.spritePosition.kill()
             return
-        newPosition = self.allPositions.get(self.spritePosition.nextMove)
+        newPosition = self.allPositions.get(self.spritePosition.next_move)
         self.spritePosition.kill()
         if newPosition != None:
             self.spritePosition = newPosition
@@ -50,18 +50,18 @@ class Croco():
         d["C11"] = SpritePosition("C11", c)
         d["C12"] = SpritePosition("C12", c)
 
-        d["C00"].nextMove = "C01"
-        d["C01"].nextMove = "C02"
-        d["C02"].nextMove = "C03"
-        d["C03"].nextMove = "C04"
-        d["C04"].nextMove = "C05"
-        d["C05"].nextMove = "C06"
-        d["C06"].nextMove = "C07"
-        d["C07"].nextMove = "C08"
-        d["C08"].nextMove = "C09"
-        d["C09"].nextMove = "C10"
-        d["C10"].nextMove = "C11"
-        d["C11"].nextMove = "C12"
-        d["C12"].nextMove = "C00"
+        d["C00"].next_move = "C01"
+        d["C01"].next_move = "C02"
+        d["C02"].next_move = "C03"
+        d["C03"].next_move = "C04"
+        d["C04"].next_move = "C05"
+        d["C05"].next_move = "C06"
+        d["C06"].next_move = "C07"
+        d["C07"].next_move = "C08"
+        d["C08"].next_move = "C09"
+        d["C09"].next_move = "C10"
+        d["C10"].next_move = "C11"
+        d["C11"].next_move = "C12"
+        d["C12"].next_move = "C00"
 
         return d

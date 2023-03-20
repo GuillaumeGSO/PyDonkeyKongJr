@@ -29,7 +29,7 @@ class Coco():
         if self.mustFall():
             newPosition = self.allPositions.get("C01")
         else:
-            newPosition = self.allPositions.get(self.spritePosition.nextMove)
+            newPosition = self.allPositions.get(self.spritePosition.next_move)
 
         self.spritePosition.kill()
         if newPosition != None:
@@ -44,10 +44,10 @@ class Coco():
     def mustFall(self) -> bool:
         collider = pg.sprite.spritecollideany(
             self.spritePosition, self.game.player_group)
-        return collider != None and collider.positionName == "H2J" and self.spritePosition == self.allPositions.get("C00")
+        return collider != None and collider.position_name == "H2J" and self.spritePosition == self.allPositions.get("C00")
 
     def handleBottom(self):
-        if self.spritePosition.positionName == "C03":
+        if self.spritePosition.position_name == "C03":
             self.is_visible = False
 
     def handleThreats(self):
@@ -67,7 +67,7 @@ class Coco():
         d["C02"] = SpritePosition("C02", c)
         d["C03"] = SpritePosition("C03", c)
         # No next move in position 0 : not falling without being touched
-        d["C01"].nextMove = "C02"
-        d["C02"].nextMove = "C03"
+        d["C01"].next_move = "C02"
+        d["C02"].next_move = "C03"
 
         return d

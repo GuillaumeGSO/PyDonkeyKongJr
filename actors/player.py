@@ -14,66 +14,68 @@ class Player():
         self.isNewTurn = True
         self.all_positions = self.generate_positions()
         self.sprite_position = None
-        self.playerMove = None
+        self.player_move = None
         # self.sound = makeSound("sounds/Monkey.wav")
 
-    def update(self, playerMove):
+    def update(self, player_move):
 
-        if self.startOfGame():
+        if self.start_of_game():
             return
 
         # TODO print("threat", pg.sprite.spritecollideany(
         #     self.spritePosition, self.game.threat_group))
 
-        if playerMove == None:
-            newPosition = self.all_positions.get(self.sprite_position.nextMove)
-        elif playerMove == "JUMP":
-            newPosition = self.all_positions.get(self.sprite_position.jumpMove)
-        elif playerMove == "LEFT":
-            newPosition = self.all_positions.get(self.sprite_position.leftMove)
-        elif playerMove == "RIGHT":
+        if player_move == None:
             newPosition = self.all_positions.get(
-                self.sprite_position.rightMove)
-        elif playerMove == "UP":
-            newPosition = self.all_positions.get(self.sprite_position.upMove)
-        elif playerMove == "DOWN":
-            newPosition = self.all_positions.get(self.sprite_position.downMove)
+                self.sprite_position.next_move)
+        elif player_move == "JUMP":
+            newPosition = self.all_positions.get(
+                self.sprite_position.jump_move)
+        elif player_move == "LEFT":
+            newPosition = self.all_positions.get(
+                self.sprite_position.left_move)
+        elif player_move == "RIGHT":
+            newPosition = self.all_positions.get(
+                self.sprite_position.right_move)
+        elif player_move == "UP":
+            newPosition = self.all_positions.get(self.sprite_position.up_move)
+        elif player_move == "DOWN":
+            newPosition = self.all_positions.get(
+                self.sprite_position.down_move)
 
-        temp = self.handleKey()
+        temp = self.handle_key()
         if temp != None:
             newPosition = temp
 
-        self.handleFall()
+        self.handle_fall()
 
         if newPosition != None:
             self.sprite_position.kill()
             self.sprite_position = newPosition
             self.game.player_group.add(self.sprite_position)
-            playerMove = None
+            player_move = None
 
-    def startOfGame(self):
+    def start_of_game(self):
         if self.sprite_position == None:
             self.sprite_position = self.all_positions.get("L0G")
 
-        if self.sprite_position.positionName == "L0G" and self.isNewTurn:
+        if self.sprite_position.position_name == "L0G" and self.isNewTurn:
             self.game.init_objects()
             self.game.player_group.add(self.sprite_position)
             self.isNewTurn = False
             return True
         return False
 
-    def handleKey(self):
-        if (self.sprite_position.positionName == "H4J"):
-            collider = pg.sprite.spritecollideany(
-                self.sprite_position, self.game.cage_group)
-            if collider != None and collider.positionName == "K03":
+    def handle_key(self):
+        if self.sprite_position.position_name == "H4J":
+            if self.game.key.is_grabable:
                 self.game.catch_key()
                 return self.all_positions.get("H5O")
             return self.all_positions.get("H7F")
         return None
 
-    def handleFall(self):
-        if self.sprite_position.positionName == "H7L":
+    def handle_fall(self):
+        if self.sprite_position.position_name == "H7L":
             self.game.add_missed()
         self.isNewTurn = True
 
@@ -115,76 +117,76 @@ class Player():
 
         # Updating of positions
         # Lower level
-        d["L0G"].jumpMove = "L0H"
-        d["L0G"].rightMove = "L1G"
+        d["L0G"].jump_move = "L0H"
+        d["L0G"].right_move = "L1G"
 
-        d["L0H"].downMove = "L0G"
-        d["L0H"].rightMove = "L1J"
+        d["L0H"].down_move = "L0G"
+        d["L0H"].right_move = "L1J"
 
-        d["L1G"].jumpMove = "L1J"
-        d["L1G"].leftMove = "L0G"
-        d["L1G"].rightMove = "L2G"
+        d["L1G"].jump_move = "L1J"
+        d["L1G"].left_move = "L0G"
+        d["L1G"].right_move = "L2G"
 
-        d["L1J"].nextMove = "L1G"
+        d["L1J"].next_move = "L1G"
 
-        d["L2G"].jumpMove = "L2H"
-        d["L2G"].leftMove = "L1G"
-        d["L2G"].rightMove = "L3G"
+        d["L2G"].jump_move = "L2H"
+        d["L2G"].left_move = "L1G"
+        d["L2G"].right_move = "L3G"
 
-        d["L2H"].leftMove = "L1J"
-        d["L2H"].rightMove = "L3H"
-        d["L2H"].downMove = "L2G"
+        d["L2H"].left_move = "L1J"
+        d["L2H"].right_move = "L3H"
+        d["L2H"].down_move = "L2G"
 
-        d["L3G"].jumpMove = "L3H"
-        d["L3G"].leftMove = "L2G"
-        d["L3G"].rightMove = "L4G"
+        d["L3G"].jump_move = "L3H"
+        d["L3G"].left_move = "L2G"
+        d["L3G"].right_move = "L4G"
 
-        d["L3H"].leftMove = "L2H"
-        d["L3H"].rightMove = "L4J"
-        d["L3H"].downMove = "L3G"
+        d["L3H"].left_move = "L2H"
+        d["L3H"].right_move = "L4J"
+        d["L3H"].down_move = "L3G"
 
-        d["L4G"].jumpMove = "L4J"
-        d["L4G"].leftMove = "L3G"
-        d["L4G"].rightMove = "L5G"
+        d["L4G"].jump_move = "L4J"
+        d["L4G"].left_move = "L3G"
+        d["L4G"].right_move = "L5G"
 
-        d["L4J"].nextMove = "L4G"
+        d["L4J"].next_move = "L4G"
 
-        d["L5G"].jumpMove = "L5H"
-        d["L5G"].leftMove = "L4G"
+        d["L5G"].jump_move = "L5H"
+        d["L5G"].left_move = "L4G"
 
-        d["L5H"].leftMove = "L4J"
-        d["L5H"].upMove = "H0G"
-        d["L5H"].downMove = "L5G"
+        d["L5H"].left_move = "L4J"
+        d["L5H"].up_move = "H0G"
+        d["L5H"].down_move = "L5G"
         # Higher level
-        d["H0G"].leftMove = "H1G"
-        d["H0G"].downMove = "L5H"
+        d["H0G"].left_move = "H1G"
+        d["H0G"].down_move = "L5H"
 
-        d["H1G"].jumpMove = "H1H"
-        d["H1G"].leftMove = "H2G"
-        d["H1G"].rightMove = "H0G"
+        d["H1G"].jump_move = "H1H"
+        d["H1G"].left_move = "H2G"
+        d["H1G"].right_move = "H0G"
 
-        d["H1H"].downMove = "H1G"
+        d["H1H"].down_move = "H1G"
 
-        d["H2G"].jumpMove = "H2J"
-        d["H2G"].leftMove = "H3G"
-        d["H2G"].rightMove = "H1G"
+        d["H2G"].jump_move = "H2J"
+        d["H2G"].left_move = "H3G"
+        d["H2G"].right_move = "H1G"
 
-        d["H2J"].nextMove = "H2G"
-        d["H2J"].leftMove = "H3G"
+        d["H2J"].next_move = "H2G"
+        d["H2J"].left_move = "H3G"
 
-        d["H3G"].jumpMove = "H3J"
-        d["H3G"].leftMove = "H7F"
-        d["H3G"].upMove = "H4J"
-        d["H3G"].rightMove = "H2G"
+        d["H3G"].jump_move = "H3J"
+        d["H3G"].left_move = "H7F"
+        d["H3G"].up_move = "H4J"
+        d["H3G"].right_move = "H2G"
 
-        d["H3J"].nextMove = "H3G"
+        d["H3J"].next_move = "H3G"
 
         # Taking the key
-        d["H5T"].nextMove = "H5O"
+        d["H5T"].next_move = "H5O"
         # Opening the cage and win
-        d["H5O"].nextMove = "H6W"
-        d["H6W"].nextMove = "L0G"
+        d["H5O"].next_move = "H6W"
+        d["H6W"].next_move = "L0G"
         # Fail to get the key and loose
-        d["H7F"].nextMove = "H7L"
-        d["H7L"].nextMove = "L0G"
+        d["H7F"].next_move = "H7L"
+        d["H7L"].next_move = "L0G"
         return d

@@ -7,35 +7,35 @@ class SpritePosition(pg.sprite.Sprite):
 
     def __init__(self, name, actorType):
         pg.sprite.Sprite.__init__(self)
-        self.positionName = name
-        self.actorType = actorType
+        self.position_name = name
+        self.actor_type = actorType
         self.path = self.generatePath()
         self.image = self.loadImage(self.path)
         self.rect = self.image.get_rect()
-        self.jumpMove = None
-        self.upMove = None
-        self.downMove = None
-        self.leftMove = None
-        self.rightMove = None
-        self.nextMove = None
+        self.jump_move = None
+        self.up_move = None
+        self.down_move = None
+        self.left_move = None
+        self.right_move = None
+        self.next_move = None
 
-        self.dictPositions = self.getAllPositions(self.actorType)
-        self.x = self.dictPositions.get(self.positionName)[0]
-        self.y = self.dictPositions.get(self.positionName)[1]
+        self.dict_positions = self.getAllPositions(self.actor_type)
+        self.x = self.dict_positions.get(self.position_name)[0]
+        self.y = self.dict_positions.get(self.position_name)[1]
         self.rect.x = self.x
         self.rect.y = self.y
 
     def generatePath(self):
-        return "img/sprites/" + self.actorType + "/" + self.positionName + ".png"
+        return "img/sprites/" + self.actor_type + "/" + self.position_name + ".png"
 
     def update(self):
-        if (self.nextMove != None):
-            self.positionName = self.nextMove
+        if (self.next_move != None):
+            self.position_name = self.next_move
             self.path = self.generatePath()
             self.image = self.loadImage(self.path)
             self.rect = self.image.get_rect()
-            self.x = self.dictPositions.get(self.positionName)[0]
-            self.y = self.dictPositions.get(self.positionName)[1]
+            self.x = self.dict_positions.get(self.position_name)[0]
+            self.y = self.dict_positions.get(self.position_name)[1]
             self.rect.x = self.x
             self.rect.y = self.y
 
