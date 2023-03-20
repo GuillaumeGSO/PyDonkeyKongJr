@@ -11,7 +11,7 @@ class Player():
 
     def __init__(self, game):
         self.game = game
-        self.isNewTurn = True
+        self.is_new_turn = True
         self.all_positions = self.generate_positions()
         self.sprite_position = None
         self.player_move = None
@@ -19,8 +19,8 @@ class Player():
 
     def update(self, player_move):
 
-        if self.start_of_game():
-            return
+        if self.is_new_turn:
+            self.start_of_game()
 
         # TODO print("threat", pg.sprite.spritecollideany(
         #     self.spritePosition, self.game.threat_group))
@@ -59,25 +59,26 @@ class Player():
         if self.sprite_position == None:
             self.sprite_position = self.all_positions.get("L0G")
 
-        if self.sprite_position.position_name == "L0G" and self.isNewTurn:
+        if self.sprite_position.position_name == "L0G" and self.is_new_turn:
             self.game.init_objects()
             self.game.player_group.add(self.sprite_position)
-            self.isNewTurn = False
-            return True
-        return False
+            self.is_new_turn = False
 
     def handle_key(self):
         if self.sprite_position.position_name == "H4J":
             if self.game.key.is_grabable:
                 self.game.catch_key()
+                # Grab key
                 return self.all_positions.get("H5O")
+            # miss key
             return self.all_positions.get("H7F")
+        # do nothing
         return None
 
     def handle_fall(self):
         if self.sprite_position.position_name == "H7L":
             self.game.add_missed()
-        self.isNewTurn = True
+        self.is_new_turn = True
 
     def generate_positions(self):
         d = {}
