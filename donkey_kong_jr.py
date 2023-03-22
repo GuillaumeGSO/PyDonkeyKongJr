@@ -68,6 +68,8 @@ class DonkeyKongJr:
         self.score.add_points(points)
 
     def add_missed(self):
+        if INVINCIBLE:
+            self.number_of_life = 0
         self.missed.miss(self.number_of_life)
         self.number_of_life += 1
         self.init_objects()

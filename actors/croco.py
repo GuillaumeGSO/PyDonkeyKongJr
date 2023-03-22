@@ -1,6 +1,7 @@
 import pygame as pg
 
 from positions.SpritePosition import *
+from settings import ANIMATION_DELAY
 
 
 class Croco():
@@ -12,13 +13,25 @@ class Croco():
         self.game = game
         self.allPositions = self.generate_positions()
         self.init_croco()
+        self.last_time = pg.time.get_ticks()
         # self.sound=makeSound("sounds/Croco.wav")
 
     def init_croco(self):
         self.is_killed = False
         self.spritePosition = None
 
+    def can_update(self):
+        current_time = pg.time.get_ticks()
+        if (current_time - self.last_time) > ANIMATION_DELAY:
+            self.last_time = current_time
+            return True
+        return False
+
     def update(self):
+
+        if not self.can_update():
+            return
+
         if self.spritePosition == None:
             self.spritePosition = self.allPositions.get("C00")
             return

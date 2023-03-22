@@ -1,6 +1,7 @@
 import pygame as pg
 
 from positions.SpritePosition import *
+from settings import ANIMATION_DELAY, INVINCIBLE
 
 
 class Player():
@@ -15,7 +16,15 @@ class Player():
         self.all_positions = self.generate_positions()
         self.sprite_position = None
         self.player_move = None
+        self.last_time = pg.time.get_ticks()
         # self.sound = makeSound("sounds/Monkey.wav")
+
+    def can_update(self):
+        current_time = pg.time.get_ticks()
+        if (current_time - self.last_time) > ANIMATION_DELAY / 4:
+            self.last_time = current_time
+            return True
+        return False
 
     def update(self, player_move):
 
@@ -49,6 +58,8 @@ class Player():
         self.handle_threats()
 
         if newPosition != None:
+            if not self.can_update():
+                return
             self.sprite_position.kill()
             self.sprite_position = newPosition
             self.game.player_group.add(self.sprite_position)
@@ -85,8 +96,9 @@ class Player():
             self.sprite_position, self.game.threat_group)
         if collider != None and collider.position_name == self.sprite_position.eater_name:
             self.game.add_missed()
-            self.sprite_position = None
-            self.start_of_game()
+            if not INVINCIBLE:
+                self.sprite_position = None
+                self.start_of_game()
 
     def generate_positions(self):
         d = {}

@@ -1,6 +1,7 @@
 import pygame as pg
 
 from positions.SpritePosition import *
+from settings import ANIMATION_DELAY
 
 
 class Key():
@@ -14,8 +15,20 @@ class Key():
         self.is_grabable = False
         self.allPositions = self.generate_positions()
         self.spritePosition = None
+        self.last_time = pg.time.get_ticks()
+
+    def can_update(self):
+        current_time = pg.time.get_ticks()
+        if (current_time - self.last_time) > ANIMATION_DELAY:
+            self.last_time = current_time
+            return True
+        return False
 
     def update(self):
+
+        if not self.can_update():
+            return
+
         if self.spritePosition == None:
             self.spritePosition = self.allPositions.get("K00")
             return
