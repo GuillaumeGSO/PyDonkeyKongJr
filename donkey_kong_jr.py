@@ -70,6 +70,7 @@ class DonkeyKongJr:
     def add_missed(self):
         self.missed.miss(self.number_of_life)
         self.number_of_life += 1
+        self.init_objects()
         if self.number_of_life == NUMBER_OF_LIFE:
             self.is_playing = False
 

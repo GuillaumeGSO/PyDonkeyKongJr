@@ -49,7 +49,7 @@ class Bird():
         d["B06"] = SpritePosition("B06", b)
         d["B07"] = SpritePosition("B07", b)
 
-        d["B00"].next_move = "B00"
+        d["B00"].next_move = "B01"
         d["B01"].next_move = "B02"
         d["B02"].next_move = "B03"
         d["B03"].next_move = "B04"

@@ -15,15 +15,6 @@ class Player():
         self.all_positions = self.generate_positions()
         self.sprite_position = None
         self.player_move = None
-        # Eater positions
-        self.eater_names = ["C11",      "B01",
-                            "C10",      "B02",
-                            "C09",      "B03",
-                            "C08",      "B04",
-                            "C07",      "B05",
-                            "C06",      "B06",
-                            "C04",      "C03",
-                            "C02",      "C01"]
         # self.sound = makeSound("sounds/Monkey.wav")
 
     def update(self, player_move):
@@ -66,6 +57,7 @@ class Player():
     def start_of_game(self):
         if self.sprite_position == None:
             self.sprite_position = self.all_positions.get("L0G")
+            self.game.player_group.empty()
 
         if self.sprite_position.position_name == "L0G" and self.is_new_turn:
             self.game.init_objects()
@@ -91,8 +83,10 @@ class Player():
     def handle_threats(self):
         collider = pg.sprite.spritecollideany(
             self.sprite_position, self.game.threat_group)
-        if collider != None and collider.position_name in self.eater_names:
-            print("MISS", collider.position_name)
+        if collider != None and collider.position_name == self.sprite_position.eater_name:
+            self.game.add_missed()
+            self.sprite_position = None
+            self.start_of_game()
 
     def generate_positions(self):
         d = {}
@@ -205,5 +199,23 @@ class Player():
         # Fail to get the key and loose
         d["H7F"].next_move = "H7L"
         d["H7L"].next_move = "L0G"
+
+        # Threats
+        d["L0G"].eater_name = "C11"
+        d["L0H"].eater_name = "B01"
+        d["L1G"].eater_name = "C10"
+        d["L1J"].eater_name = "B02"
+        d["L2G"].eater_name = "C09"
+        d["L2H"].eater_name = "B03"
+        d["L3G"].eater_name = "C08"
+        d["L3H"].eater_name = "B04"
+        d["L4G"].eater_name = "C07"
+        d["L4J"].eater_name = "B05"
+        d["L5G"].eater_name = "C06"
+        d["L5H"].eater_name = "B06"
+        d["H0G"].eater_name = "C04"
+        d["H1G"].eater_name = "C03"
+        d["H2G"].eater_name = "C02"
+        d["H3G"].eater_name = "C01"
 
         return d
