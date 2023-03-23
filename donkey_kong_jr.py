@@ -82,8 +82,8 @@ class DonkeyKongJr:
         if not self.coco.is_visible:
             self.coco.init_coco()
         if self.bird.is_killed:
-            self.bird.init_bird()
+            self.bird.init()
         if self.croco.is_killed:
-            self.croco.init_croco()
+            self.croco.init()
         if self.cage.fully_opened:
             self.cage.init_cage()

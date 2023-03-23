@@ -1,52 +1,25 @@
 # from pygame_functions import *
 import pygame as pg
+from actors.threat import Threat
 
 from positions.SpritePosition import *
 from settings import ANIMATION_DELAY
 
 
-class Bird():
+class Bird(Threat):
     """
     Bird crossing from left to right high, from right to left lower
     """
 
-    def __init__(self, game):
-        self.game = game
-        self.allPositions = self.generate_positions()
-        self.init_bird()
-        self.last_time = pg.time.get_ticks()
-
-    def init_bird(self):
+    def init(self):
+        super()
         self.is_killed = False
-        self.spritePosition = None
 
-    def can_update(self):
-        current_time = pg.time.get_ticks()
-        if (current_time - self.last_time) > ANIMATION_DELAY:
-            self.last_time = current_time
-            return True
-        return False
+    def get_start_position(self):
+        return "B00"
 
-    def update(self):
-
-        if self.is_killed:
-            return
-        if not self.can_update():
-            return
-        if self.spritePosition == None:
-            self.spritePosition = self.allPositions.get("B00")
-            return
-        newPosition = self.allPositions.get(self.spritePosition.next_move)
-        self.spritePosition.kill()
-        if newPosition != None:
-            self.spritePosition = newPosition
-        self.game.threat_group.add(self.spritePosition)
-
-    def do_kill(self):
-        self.is_killed = True
-        self.game.threat_group.remove(self.spritePosition)
-        self.game.add_to_score(10)
-        self.spritePosition == None
+    def get_points_for_kill(self):
+        return 10
 
     def generate_positions(self):
         d = {}

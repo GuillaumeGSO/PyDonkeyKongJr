@@ -1,53 +1,31 @@
 import pygame as pg
+from actors.threat import Threat
 
 from positions.SpritePosition import *
 from settings import ANIMATION_DELAY
 
 
-class Croco():
+class Croco(Threat):
     """
     Crocodile that starts from top and all the way down
     """
 
     def __init__(self, game):
-        self.game = game
-        self.allPositions = self.generate_positions()
-        self.init_croco()
-        self.last_time = pg.time.get_ticks()
+        super().__init__(game)
         # self.sound=makeSound("sounds/Croco.wav")
 
-    def init_croco(self):
+    def init(self):
+        super()
         self.is_killed = False
-        self.spritePosition = None
 
-    def can_update(self):
-        current_time = pg.time.get_ticks()
-        if (current_time - self.last_time) > ANIMATION_DELAY:
-            self.last_time = current_time
-            return True
-        return False
+    def get_start_position(self):
+        return "C00"
 
-    def update(self):
-
-        if not self.can_update():
-            return
-
-        if self.spritePosition == None:
-            self.spritePosition = self.allPositions.get("C00")
-            return
-        if self.is_killed:
-            self.spritePosition.kill()
-            return
-        newPosition = self.allPositions.get(self.spritePosition.next_move)
-        self.spritePosition.kill()
-        if newPosition != None:
-            self.spritePosition = newPosition
-        self.game.threat_group.add(self.spritePosition)
-
-    def do_kill(self):
-        self.is_killed = True
-        # FIXME crocodile points are different at top and bottom
-        self.game.add_to_score(5)
+    def get_points_for_kill(self):
+        if self.spritePosition.position_name == "C02":
+            return 5
+        else:
+            return 15
 
     def generate_positions(self):
         d = {}

@@ -26,15 +26,17 @@ class Key():
 
     def update(self):
 
+        if not self.is_visible:
+            self.spritePosition.kill()
+            return
+
         if not self.can_update():
             return
 
         if self.spritePosition == None:
             self.spritePosition = self.allPositions.get("K00")
             return
-        if not self.is_visible:
-            self.spritePosition.kill()
-            return
+
         newPosition = self.allPositions.get(self.spritePosition.next_move)
 
         self.spritePosition.kill()
