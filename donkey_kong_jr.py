@@ -33,28 +33,23 @@ class DonkeyKongJr:
         self.player_move = None
 
     def update(self):
+        self.player.update(self.player_move)
         self.croco.update()
         self.bird.update()
         self.coco.update()
-        if self.is_playing:
-            self.player.update(self.player_move)
         self.key.update()
         self.score.update()
         self.missed.update()
         self.cage.update()
 
     def draw(self):
-        if self.is_playing:
-            self.player_group.clear(self.app.screen, self.app.bg)
-
+        self.player_group.clear(self.app.screen, self.app.bg)
         self.info_group.clear(self.app.screen, self.app.bg)
         self.threat_group.clear(self.app.screen, self.app.bg)
         self.cage_group.clear(self.app.screen, self.app.bg)
         self.weapon_group.clear(self.app.screen, self.app.bg)
 
-        if self.is_playing:
-            self.player_group.draw(self.app.screen)
-
+        self.player_group.draw(self.app.screen)
         self.info_group.draw(self.app.screen)
         self.threat_group.draw(self.app.screen)
         self.weapon_group.draw(self.app.screen)

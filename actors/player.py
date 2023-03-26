@@ -28,6 +28,9 @@ class Player():
 
     def update(self, player_move):
 
+        if not self.game.is_playing:
+            return
+
         if self.is_new_turn:
             self.start_of_game()
 
@@ -66,13 +69,13 @@ class Player():
             player_move = None
 
     def start_of_game(self):
-        if self.sprite_position == None:
-            self.sprite_position = self.all_positions.get("L0G")
-            self.game.player_group.empty()
+
+        self.game.player_group.empty()
+        self.sprite_position = self.all_positions.get("L0G")
+        self.game.player_group.add(self.sprite_position)
 
         if self.sprite_position.position_name == "L0G" and self.is_new_turn:
             self.game.init_objects()
-            self.game.player_group.add(self.sprite_position)
             self.is_new_turn = False
 
     def handle_key(self):
@@ -89,15 +92,14 @@ class Player():
     def handle_fall(self):
         if self.sprite_position.position_name == "H7L":
             self.game.add_missed()
-        self.is_new_turn = True
 
     def handle_threats(self):
         collider = pg.sprite.spritecollideany(
             self.sprite_position, self.game.threat_group)
         if collider != None and collider.position_name == self.sprite_position.eater_name:
             self.game.add_missed()
-            if not INVINCIBLE:
-                self.sprite_position = None
+
+            if not INVINCIBLE and self.game.is_playing:
                 self.start_of_game()
 
     def generate_positions(self):
