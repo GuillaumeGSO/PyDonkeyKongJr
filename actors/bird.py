@@ -1,4 +1,3 @@
-# from pygame_functions import *
 import pygame as pg
 from actors.threat import Threat
 
