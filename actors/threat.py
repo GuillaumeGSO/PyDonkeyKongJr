@@ -42,7 +42,7 @@ class Threat(ABC):
         self.is_killed = True
         self.game.threat_group.remove(self.spritePosition)
         self.game.add_to_score(self.get_points_for_kill())
-        self.spritePosition: SpritePosition == None
+        self.spritePosition: SpritePosition = None
 
     def update(self):
         if self.is_killed:
