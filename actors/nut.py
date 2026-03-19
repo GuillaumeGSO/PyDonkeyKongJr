@@ -74,9 +74,10 @@ class Nut():
         self.game.weapon_group.add(self.spritePosition)
 
     def mustFall(self) -> bool:
-        collider = pg.sprite.spritecollideany(
-            self.spritePosition, self.game.player_group)
-        return collider is not None and collider.position_name == "H2J" and self.spritePosition == self.allPositions.get("N00")
+        player = self.game.player
+        return (player.sprite_position is not None
+                and player.sprite_position.position_name == "H2J"
+                and self.spritePosition == self.allPositions.get("N00"))
 
     def handleBottom(self):
         if self.spritePosition.position_name == "N03":
@@ -85,7 +86,7 @@ class Nut():
     # Maps nut position → (actor type, target position name to kill)
     KILL_MAP = {
         "N01": ("Croco", "C02"),
-        "N02": ("Bird",  "B03"),
+        "N02": ("Bird",  "B04"),
         "N03": ("Croco", "C09"),
     }
 

@@ -1,8 +1,13 @@
 import glob
 import os
 import pickle
+import sys
 
 import pygame
+
+ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.insert(0, ROOT)
+os.chdir(ROOT)
 
 from settings import *
 
@@ -19,13 +24,13 @@ class PositioningTool:
         screen = pygame.display.set_mode((WIDTH, HEIGHT))
         clock = pygame.time.Clock()
 
-        bg = pygame.image.load("positions/FullScreen.png").convert()
+        bg = pygame.image.load("tools/img/FullScreen.png").convert()
 
         INCREMENT = 1
         ALL_PREFIX = ["Bird", "Cage", "Nut", "Croco", "Key", "Missed", "Monkey"]
 
         for prefix in ALL_PREFIX:
-            positionFileName = prefix + "Positions"
+            positionFileName = "positions/" + prefix + "Positions"
             all_positions = PositioningTool.getAllPositions(positionFileName)
             print(all_positions)
 
