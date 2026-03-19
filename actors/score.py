@@ -1,5 +1,4 @@
 import pygame as pg
-from settings import SCORE_DELAY
 
 
 class Score():
@@ -7,11 +6,11 @@ class Score():
     Display the score with sound
     """
 
-    def __init__(self, screen):
+    def __init__(self, screen, sound):
         self.screen = screen
         self.score = 0
         self.score_font = pg.font.Font("fonts/Open 24 Display St.ttf", 72)
-        # self.sound = makeSound("sounds/Score.wav")
+        self.sound = sound
 
     def update(self):
         self.score_surface = self.score_font.render(
@@ -27,6 +26,8 @@ class Score():
             self.score += 1
             self.update()
             self.draw()
-            pg.time.delay(SCORE_DELAY)
             pg.display.update()
-        # self.game.playSound(self.sound)
+            channel = self.sound.play()
+            if channel:
+                while channel.get_busy():
+                    pg.time.wait(10)

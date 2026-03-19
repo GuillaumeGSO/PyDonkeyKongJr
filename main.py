@@ -20,6 +20,7 @@ class App:
 
     def __init__(self):
         pg.init()
+        pg.mixer.init()
         pg.display.set_caption(SCREEN_NAME)
         self.screen = pg.display.set_mode((WIDTH, HEIGHT))
         self.bg = pg.image.load(os.path.join(
@@ -34,6 +35,11 @@ class App:
         # This hides bachground
         # color = (0, 255, 0)
         # self.screen.fill(color)
+
+        self.missed_sound = pg.mixer.Sound(os.path.join("sounds", "Missed.wav"))
+        self.croco_sound  = pg.mixer.Sound(os.path.join("sounds", "Croco.wav"))
+        self.monkey_sound = pg.mixer.Sound(os.path.join("sounds", "Monkey.wav"))
+        self.score_sound  = pg.mixer.Sound(os.path.join("sounds", "Score.wav"))
 
         self.clock = pg.time.Clock()
         self.game = DonkeyKongJr(self)
@@ -53,7 +59,10 @@ class App:
                 pg.quit()
                 sys.exit()
             if event.type == pg.KEYDOWN:
-                if event.key == pg.K_LEFT:
+                if event.key == pg.K_r:
+                    self.screen.blit(self.bg, [0, 0])
+                    self.game = DonkeyKongJr(self)
+                elif event.key == pg.K_LEFT:
                     self.game.player_move = "LEFT"
                 elif event.key == pg.K_RIGHT:
                     self.game.player_move = "RIGHT"
