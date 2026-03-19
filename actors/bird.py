@@ -2,8 +2,6 @@ import pygame as pg
 from actors.threat import Threat
 
 from positions.SpritePosition import *
-from settings import ANIMATION_DELAY
-
 
 class Bird(Threat):
     """
@@ -18,7 +16,7 @@ class Bird(Threat):
         return "B00"
 
     def get_points_for_kill(self):
-        return 10
+        return 6
 
     def generate_positions(self):
         d = {}

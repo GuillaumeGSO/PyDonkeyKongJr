@@ -2,8 +2,6 @@ import pygame as pg
 from actors.threat import Threat
 
 from positions.SpritePosition import *
-from settings import ANIMATION_DELAY
-
 
 class Croco(Threat):
     """
@@ -21,11 +19,12 @@ class Croco(Threat):
     def get_start_position(self):
         return "C00"
 
+    UP_POSITIONS = {"C00", "C01", "C02", "C03", "C04"}
+
     def get_points_for_kill(self):
-        if self.spritePosition.position_name == "C02":
-            return 5
-        else:
-            return 15
+        if self.spritePosition.position_name in self.UP_POSITIONS:
+            return 3
+        return 9
 
     def generate_positions(self):
         d = {}

@@ -9,9 +9,10 @@ pip install -r requirements.txt
 python main.py
 ```
 
-To run the sprite positioning calibration tool:
+To run the dev tools:
 ```bash
-python positioning_tool.py
+python tools/positioning_tool.py   # calibrate sprite positions
+python tools/sprite_viewer.py      # view all sprites at their positions
 ```
 
 ## Project Structure
@@ -20,21 +21,23 @@ python positioning_tool.py
 main.py                  # Entry point and game loop (App class)
 donkey_kong_jr.py        # Central game state manager (DonkeyKongJr class)
 settings.py              # Configuration constants
-positioning_tool.py      # Dev tool for calibrating sprite positions
+tools/
+  positioning_tool.py    # Dev tool for calibrating sprite positions
+  sprite_viewer.py       # Dev tool for viewing all sprites at their positions
+  img/FullScreen.png     # Reference arcade screenshot (for dev tools)
 actors/
   threat.py              # Abstract base class for enemies
   bird.py                # Bird enemy (B00–B07 path)
   croco.py               # Crocodile enemy (C00–C12 path)
   player.py              # Player character (40 positions)
   cage.py                # Cage + mom sprite (win condition)
-  coco.py                # Coconut weapon
+  nut.py                 # Coconut weapon
   key.py                 # Collectible key
   missed.py              # Lives indicator display
   score.py               # Score tracker and renderer
 positions/
   SpritePosition.py      # Base sprite class with position-graph support
   {Type}Positions        # Pickle files: position name → (x, y) coords
-  FullScreen.png         # Reference arcade screenshot (for positioning tool)
 img/
   EmptyScreen.png        # Game background
   sprites/{Type}/*.png   # Sprite frames per actor type
@@ -83,7 +86,7 @@ Actors advance by setting `current_position = positions[current_position.next_mo
 
 ### Player (actors/player.py)
 - 40 named positions covering lower (L0–L5) and upper (H0–H7) platforms
-- Key positions: `L0G` (start), `H2J` (drop coconut), `H4J` (grab key), `H5O` (open cage), `H7F`/`H7L` (fall/lose life)
+- Key positions: `L0G` (start), `H2J` (drop nut), `H4J` (grab key), `H5O` (open cage), `H7F`/`H7L` (fall/lose life)
 - Collision with threats is position-gated: only triggers if current position name matches threat's `eater_name`
 
 ### Threats (actors/threat.py + bird.py + croco.py)
@@ -92,9 +95,9 @@ Actors advance by setting `current_position = positions[current_position.next_mo
 - Bird: 10 pts, loops B00–B07
 - Croco: 5–15 pts depending on position, loops C00–C12
 
-### Coconut (actors/coco.py)
+### Nut (actors/nut.py)
 - Spawned when player jumps at H2J
-- Falls C00→C01→C02→C03, kills any threat it collides with
+- Falls N00→N01→N02→N03, kills any threat it collides with
 
 ### Key (actors/key.py)
 - Oscillates K00→K01→K02→K03→K02b→K01b→K00
@@ -113,14 +116,20 @@ Actors advance by setting `current_position = positions[current_position.next_mo
 
 **Win:** Grab key (at K03, position H4J) → cage opens 4× → level resets
 
-**Lose life:** Collide with threat OR fall at H7L → respawn at L0G → `init_objects()` resets key, coconut, threats
+**Lose life:** Collide with threat OR fall at H7L → respawn at L0G → `init_objects()` resets key, nut, threats
 
 **Game over:** Lose `NUMBER_OF_LIFE` (3) lives → `is_playing = False`
 
-## Positioning Tool (positioning_tool.py)
+## Dev Tools (tools/)
 
-Developer utility to calibrate sprite (x, y) positions against the original arcade reference image. Run it when adding new sprites or adjusting positions:
+### Positioning Tool (`tools/positioning_tool.py`)
+Calibrate sprite (x, y) positions against the original arcade reference image. Run it when adding new sprites or adjusting positions:
 - Arrow keys: move sprite
 - Space: confirm and save position
 - Saves to `positions/{Type}Positions` pickle file
+
+### Sprite Viewer (`tools/sprite_viewer.py`)
+Shows all sprites placed at their calibrated positions on the empty game background. Useful for verifying the full layout at a glance:
+- Space: toggle between sprite layout and `tools/img/FullScreen.png` arcade reference
+- ESC: quit
 

@@ -1,8 +1,6 @@
 import pygame as pg
 
 from positions.SpritePosition import *
-from settings import ANIMATION_DELAY
-
 
 class Key():
     """
@@ -19,7 +17,7 @@ class Key():
 
     def can_update(self):
         current_time = pg.time.get_ticks()
-        if (current_time - self.last_time) > ANIMATION_DELAY:
+        if (current_time - self.last_time) > self.game.animation_delay:
             self.last_time = current_time
             return True
         return False
@@ -27,7 +25,6 @@ class Key():
     def update(self):
 
         if not self.is_visible:
-            self.spritePosition.kill()
             return
 
         if not self.can_update():
@@ -47,7 +44,9 @@ class Key():
         self.game.cage_group.add(self.spritePosition)
 
     def catch_key(self):
+        self.spritePosition.kill()
         self.is_visible = False
+        self.is_grabable = False
         self.game.cage.open_cage()
 
     def init_key(self):

@@ -1,8 +1,6 @@
 import pygame as pg
 
 from positions.SpritePosition import *
-from settings import SCORE_DELAY
-
 
 class Cage():
     """
@@ -28,19 +26,20 @@ class Cage():
         ]
         self.game.cage_group.add(self.sprite_positions)
 
+    CAGE_SCORES = {3: 9, 2: 13, 1: 7, 0: 15}
+
     def open_cage(self):
         cage_to_remove = self.sprite_positions.pop()
         self.game.cage_group.remove(cage_to_remove)
         self.remaining_cage -= 1
-        self.game.add_to_score(25)
+        self.game.add_to_score(self.CAGE_SCORES[self.remaining_cage])
         if self.remaining_cage == 0:
             self.show_smile()
             self.fully_opened = True
 
     def show_smile(self):
         self.game.cage_group.add(self.smile_postion)
-        pg.time.delay(SCORE_DELAY*2)
-        self.game.add_to_score(50)
+        self.game.add_to_score(25)
 
     def update(self):
         pass

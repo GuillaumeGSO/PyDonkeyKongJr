@@ -2,8 +2,6 @@ from abc import ABC, abstractmethod
 import pygame as pg
 from positions.SpritePosition import SpritePosition
 
-from settings import ANIMATION_DELAY
-
 
 class Threat(ABC):
 
@@ -33,7 +31,7 @@ class Threat(ABC):
 
     def can_update(self):
         current_time = pg.time.get_ticks()
-        if (current_time - self.last_time) > ANIMATION_DELAY:
+        if (current_time - self.last_time) > self.game.animation_delay:
             self.last_time = current_time
             return True
         return False
@@ -48,6 +46,9 @@ class Threat(ABC):
         if self.is_killed:
             return
 
+        if self.game.player.is_dying:
+            return
+
         if not self.can_update():
             return
 
@@ -60,3 +61,4 @@ class Threat(ABC):
         if newPosition != None:
             self.spritePosition = newPosition
         self.game.threat_group.add(self.spritePosition)
+        self.game.croco_sound.play()
