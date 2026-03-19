@@ -86,14 +86,15 @@ def _draw_hud(screen, game, step_mode, frame_count, queued_move):
     step_label = "ON (SPACE=step)" if step_mode else "OFF"
 
     lines = [
-        f"Frame: {frame_count}   Step: {step_label}",
-        f"Player: {player_pos}   Dying: {p.is_dying}",
+        f"Frame: {frame_count}       Step: {step_label}",
+        f"Player: {player_pos}    Dying: {p.is_dying}",
         f"Crocos: {croco_list}",
         f"Birds:  {bird_list}",
-        f"Key: {key_pos}{key_grab}   Nut: {nut_pos}",
+        f"Key: {key_pos}{key_grab}    Nut: {nut_pos}",
         f"Cage: {cage.remaining_cage}/4   Score: {game.score.score} (+{game.score._pending})",
         f"Lives lost: {game.number_of_life}",
-        f"Queued: {queued_move or 'none'}   T=step R=reload S=save ESC=quit",
+        f"Queued: {queued_move or 'none'}",
+        f"T=step R=reload S=save ESC=quit",
     ]
 
     font = pg.font.SysFont("monospace", 13)

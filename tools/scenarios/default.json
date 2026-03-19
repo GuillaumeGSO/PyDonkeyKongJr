@@ -8,5 +8,5 @@
   "key":    { "position": "K00", "is_visible": true, "is_grabable": false },
   "cage":   { "remaining_cage": 4, "fully_opened": false },
   "score":  { "score": 0, "pending": 0 },
-  "step_mode": false
+  "step_mode": true
 }
