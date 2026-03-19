@@ -1,8 +1,6 @@
 import pygame as pg
 
 from positions.SpritePosition import *
-from settings import SCORE_DELAY
-
 
 class Cage():
     """
@@ -41,7 +39,6 @@ class Cage():
 
     def show_smile(self):
         self.game.cage_group.add(self.smile_postion)
-        pg.time.delay(SCORE_DELAY*2)
         self.game.add_to_score(25)
 
     def update(self):

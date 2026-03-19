@@ -38,8 +38,16 @@ class DonkeyKongJr:
         self.score = Score(self.app.screen, self.app.score_sound)
         self.player = Player(self)
         self.player_move = None
+        self.is_score_paused = False
 
     def update(self):
+        if self.is_score_paused:
+            self.score.update()
+            if not self.score.is_counting:
+                self.is_score_paused = False
+            self.nut.update()
+            return
+
         self.player.update(self.player_move)
         for croco in self.crocos:
             croco.update()
@@ -77,6 +85,7 @@ class DonkeyKongJr:
 
     def add_to_score(self, points):
         self.score.add_points(points)
+        self.is_score_paused = True
 
     def add_missed(self):
         if INVINCIBLE:

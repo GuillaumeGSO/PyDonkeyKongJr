@@ -17,10 +17,11 @@ class Nut():
 
     def init_nut(self):
         self.is_visible = True
-        self.is_paused = False
-        self.pause_start_time = None
         self.spritePosition = None
         self.last_time = pg.time.get_ticks()
+        self._instant_mode = False
+        self._killed_at_bottom = False
+        self._bottom_arrival_time = None
 
     def can_update(self):
         now = pg.time.get_ticks()
@@ -34,42 +35,59 @@ class Nut():
             self.spritePosition = self.allPositions.get("N00")
             return
         if not self.is_visible:
-            self.spritePosition.kill()
             return
 
-        # Paused after a kill — wait one rhythm period then continue falling
-        if self.is_paused:
-            if pg.time.get_ticks() - self.pause_start_time >= self.game.animation_delay:
-                self.is_paused = False
+        # Score pause: keep nut visible; game handles the unpause
+        if self.game.is_score_paused:
             self.game.weapon_group.add(self.spritePosition)
             return
 
-        # Check threats at current position before advancing (closest stop point)
-        if self.spritePosition.position_name not in ("N00", "N03"):
-            if self.handleThreats():
-                self.game.weapon_group.add(self.spritePosition)
-                return
+        # After any kill: instantly traverse remaining positions
+        if self._instant_mode:
+            self._advance_instant()
+            return
 
-        # Advance at player speed
+        # Normal animated fall
         if self.mustFall():
             if self.can_update():
-                newPosition = self.allPositions.get("N01")
                 self.spritePosition.kill()
-                self.spritePosition = newPosition
+                self.spritePosition = self.allPositions.get("N01")
         elif self.spritePosition.position_name != "N00":
             if self.can_update():
-                newPosition = self.allPositions.get(self.spritePosition.next_move)
-                self.spritePosition.kill()
-                if newPosition is not None:
-                    self.spritePosition = newPosition
+                next_name = self.spritePosition.next_move
+                if next_name is not None:       # guard: N03 has no next_move
+                    new_pos = self.allPositions.get(next_name)
+                    self.spritePosition.kill()
+                    if new_pos is not None:
+                        self.spritePosition = new_pos
 
-        # Check threats at N03 before disappearing (lower platform crocs)
-        if self.spritePosition.position_name == "N03":
-            if self.handleThreats():
-                self.game.weapon_group.add(self.spritePosition)
-                return
+        if self.handleThreats():
+            self.game.weapon_group.add(self.spritePosition)
+            return
 
         self.handleBottom()
+        if not self.is_visible:
+            self.spritePosition.kill()
+            return
+
+        self.game.weapon_group.add(self.spritePosition)
+
+    def _advance_instant(self):
+        """After a kill: move one position forward (no timer), check for more kills."""
+        next_name = self.spritePosition.next_move
+        if next_name is not None:
+            self.spritePosition.kill()
+            self.spritePosition = self.allPositions[next_name]
+
+        if self.handleThreats():
+            self.game.weapon_group.add(self.spritePosition)
+            return
+
+        self.handleBottom()
+        if not self.is_visible:
+            self._instant_mode = False
+            self.spritePosition.kill()
+            return
 
         self.game.weapon_group.add(self.spritePosition)
 
@@ -80,7 +98,17 @@ class Nut():
                 and self.spritePosition == self.allPositions.get("N00"))
 
     def handleBottom(self):
-        if self.spritePosition.position_name == "N03":
+        if self.spritePosition.position_name != "N03":
+            return
+        if self._killed_at_bottom:
+            # Score finished for C09 kill: disappear immediately
+            self.is_visible = False
+            return
+        # No kill at N03: wait one rhythm beat before disappearing
+        now = pg.time.get_ticks()
+        if self._bottom_arrival_time is None:
+            self._bottom_arrival_time = now
+        elif now - self._bottom_arrival_time >= self.game.animation_delay / 4:
             self.is_visible = False
 
     # Maps nut position → (actor type, target position name to kill)
@@ -98,11 +126,10 @@ class Nut():
         victims = self.game.crocos if actor_type == "Croco" else self.game.birds
         for victim in victims:
             if victim.spritePosition and victim.spritePosition.position_name == target_pos:
-                self.spritePosition.rect.x = victim.spritePosition.rect.x
-                self.spritePosition.rect.y = victim.spritePosition.rect.y
-                victim.do_kill()
-                self.is_paused = True
-                self.pause_start_time = pg.time.get_ticks()
+                victim.do_kill()        # do_kill() → add_to_score() → is_score_paused = True
+                self._instant_mode = True
+                if self.spritePosition.position_name == "N03":
+                    self._killed_at_bottom = True
                 return True
         return False
 

@@ -2,8 +2,6 @@ import pygame as pg
 from actors.threat import Threat
 
 from positions.SpritePosition import *
-from settings import ANIMATION_DELAY
-
 
 class Croco(Threat):
     """

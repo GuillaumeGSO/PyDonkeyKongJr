@@ -106,7 +106,8 @@ class Player():
             self.jump_apex_time = None
 
         temp = self.handle_key()
-        if temp != None:
+        key_triggered = temp is not None
+        if key_triggered:
             newPosition = temp
 
         self.handle_fall()
@@ -133,7 +134,7 @@ class Player():
                 )
             else:
                 croco_jumped = False
-                if not self.can_update():
+                if not key_triggered and not self.can_update():
                     return
             prev_position_name = self.sprite_position.position_name
             self.sprite_position.kill()
