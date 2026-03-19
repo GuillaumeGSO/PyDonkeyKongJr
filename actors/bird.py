@@ -18,7 +18,7 @@ class Bird(Threat):
         return "B00"
 
     def get_points_for_kill(self):
-        return 10
+        return 6
 
     def generate_positions(self):
         d = {}
