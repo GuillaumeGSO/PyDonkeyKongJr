@@ -22,7 +22,7 @@ class PositioningTool:
         bg = pygame.image.load("positions/FullScreen.png").convert()
 
         INCREMENT = 1
-        ALL_PREFIX = ["Bird", "Cage", "Coco", "Croco", "Key", "Missed", "Monkey"]
+        ALL_PREFIX = ["Bird", "Cage", "Nut", "Croco", "Key", "Missed", "Monkey"]
 
         for prefix in ALL_PREFIX:
             positionFileName = prefix + "Positions"

@@ -314,8 +314,8 @@ class Player():
         d["L5G"].eater_name = "C06"
         d["L5H"].eater_name = "B06"
         d["H0G"].eater_name = "C04"
-        d["H1G"].eater_name = "C03"
-        d["H2G"].eater_name = "C02"
-        d["H3G"].eater_name = "C01"
+        d["H1G"].eater_name = "N03"
+        d["H2G"].eater_name = "N02"
+        d["H3G"].eater_name = "N01"
 
         return d

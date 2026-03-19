@@ -3,7 +3,7 @@ import pygame as pg
 from positions.SpritePosition import *
 
 
-class Coco():
+class Nut():
     """
     The coconut falls when touched by monkey and respawn when monkey starts.
     Falls at player speed. Pauses on each kill to score, then continues falling.
@@ -13,9 +13,9 @@ class Coco():
     def __init__(self, game):
         self.game = game
         self.allPositions = self.generate_positions()
-        self.init_coco()
+        self.init_nut()
 
-    def init_coco(self):
+    def init_nut(self):
         self.is_visible = True
         self.is_paused = False
         self.pause_start_time = None
@@ -31,7 +31,7 @@ class Coco():
 
     def update(self):
         if self.spritePosition is None:
-            self.spritePosition = self.allPositions.get("C00")
+            self.spritePosition = self.allPositions.get("N00")
             return
         if not self.is_visible:
             self.spritePosition.kill()
@@ -45,7 +45,7 @@ class Coco():
             return
 
         # Check threats at current position before advancing (closest stop point)
-        if self.spritePosition.position_name not in ("C00", "C03"):
+        if self.spritePosition.position_name not in ("N00", "N03"):
             if self.handleThreats():
                 self.game.weapon_group.add(self.spritePosition)
                 return
@@ -53,18 +53,18 @@ class Coco():
         # Advance at player speed
         if self.mustFall():
             if self.can_update():
-                newPosition = self.allPositions.get("C01")
+                newPosition = self.allPositions.get("N01")
                 self.spritePosition.kill()
                 self.spritePosition = newPosition
-        elif self.spritePosition.position_name != "C00":
+        elif self.spritePosition.position_name != "N00":
             if self.can_update():
                 newPosition = self.allPositions.get(self.spritePosition.next_move)
                 self.spritePosition.kill()
                 if newPosition is not None:
                     self.spritePosition = newPosition
 
-        # Check threats at C03 before disappearing (lower platform crocs)
-        if self.spritePosition.position_name == "C03":
+        # Check threats at N03 before disappearing (lower platform crocs)
+        if self.spritePosition.position_name == "N03":
             if self.handleThreats():
                 self.game.weapon_group.add(self.spritePosition)
                 return
@@ -76,17 +76,17 @@ class Coco():
     def mustFall(self) -> bool:
         collider = pg.sprite.spritecollideany(
             self.spritePosition, self.game.player_group)
-        return collider is not None and collider.position_name == "H2J" and self.spritePosition == self.allPositions.get("C00")
+        return collider is not None and collider.position_name == "H2J" and self.spritePosition == self.allPositions.get("N00")
 
     def handleBottom(self):
-        if self.spritePosition.position_name == "C03":
+        if self.spritePosition.position_name == "N03":
             self.is_visible = False
 
-    # Maps coco position → (actor type, target position name to kill)
+    # Maps nut position → (actor type, target position name to kill)
     KILL_MAP = {
-        "C01": ("Croco", "C02"),
-        "C02": ("Bird",  "B03"),
-        "C03": ("Croco", "C09"),
+        "N01": ("Croco", "C02"),
+        "N02": ("Bird",  "B03"),
+        "N03": ("Croco", "C09"),
     }
 
     def handleThreats(self) -> bool:
@@ -107,13 +107,13 @@ class Coco():
 
     def generate_positions(self):
         d = {}
-        c = "Coco"
-        d["C00"] = SpritePosition("C00", c)
-        d["C01"] = SpritePosition("C01", c)
-        d["C02"] = SpritePosition("C02", c)
-        d["C03"] = SpritePosition("C03", c)
+        c = "Nut"
+        d["N00"] = SpritePosition("N00", c)
+        d["N01"] = SpritePosition("N01", c)
+        d["N02"] = SpritePosition("N02", c)
+        d["N03"] = SpritePosition("N03", c)
         # No next move in position 0 : not falling without being touched
-        d["C01"].next_move = "C02"
-        d["C02"].next_move = "C03"
+        d["N01"].next_move = "N02"
+        d["N02"].next_move = "N03"
 
         return d

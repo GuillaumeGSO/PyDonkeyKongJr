@@ -2,7 +2,7 @@ import pygame as pg
 
 from actors.bird import Bird
 from actors.cage import Cage
-from actors.coco import Coco
+from actors.nut import Nut
 from actors.croco import Croco
 from actors.key import Key
 from actors.missed import Missed
@@ -32,7 +32,7 @@ class DonkeyKongJr:
         self.birds = [Bird(self)]
         self.crocos = [Croco(self)]
         self.cage = Cage(self)
-        self.coco = Coco(self)
+        self.nut = Nut(self)
         self.key = Key(self)
         self.missed = Missed(self)
         self.score = Score(self.app.screen, self.app.score_sound)
@@ -45,7 +45,7 @@ class DonkeyKongJr:
             croco.update()
         for bird in self.birds:
             bird.update()
-        self.coco.update()
+        self.nut.update()
         self.key.update()
         self.score.update()
         self.missed.update()
@@ -94,8 +94,8 @@ class DonkeyKongJr:
             self._maybe_spawn_enemy()
         if not self.key.is_visible:
             self.key.init_key()
-        if not self.coco.is_visible:
-            self.coco.init_coco()
+        if not self.nut.is_visible:
+            self.nut.init_nut()
         for croco in self.crocos:
             if croco.is_killed:
                 croco.init()

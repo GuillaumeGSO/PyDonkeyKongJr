@@ -27,7 +27,7 @@ actors/
   croco.py               # Crocodile enemy (C00–C12 path)
   player.py              # Player character (40 positions)
   cage.py                # Cage + mom sprite (win condition)
-  coco.py                # Coconut weapon
+  nut.py                 # Coconut weapon
   key.py                 # Collectible key
   missed.py              # Lives indicator display
   score.py               # Score tracker and renderer
@@ -83,7 +83,7 @@ Actors advance by setting `current_position = positions[current_position.next_mo
 
 ### Player (actors/player.py)
 - 40 named positions covering lower (L0–L5) and upper (H0–H7) platforms
-- Key positions: `L0G` (start), `H2J` (drop coconut), `H4J` (grab key), `H5O` (open cage), `H7F`/`H7L` (fall/lose life)
+- Key positions: `L0G` (start), `H2J` (drop nut), `H4J` (grab key), `H5O` (open cage), `H7F`/`H7L` (fall/lose life)
 - Collision with threats is position-gated: only triggers if current position name matches threat's `eater_name`
 
 ### Threats (actors/threat.py + bird.py + croco.py)
@@ -92,9 +92,9 @@ Actors advance by setting `current_position = positions[current_position.next_mo
 - Bird: 10 pts, loops B00–B07
 - Croco: 5–15 pts depending on position, loops C00–C12
 
-### Coconut (actors/coco.py)
+### Nut (actors/nut.py)
 - Spawned when player jumps at H2J
-- Falls C00→C01→C02→C03, kills any threat it collides with
+- Falls N00→N01→N02→N03, kills any threat it collides with
 
 ### Key (actors/key.py)
 - Oscillates K00→K01→K02→K03→K02b→K01b→K00
@@ -113,7 +113,7 @@ Actors advance by setting `current_position = positions[current_position.next_mo
 
 **Win:** Grab key (at K03, position H4J) → cage opens 4× → level resets
 
-**Lose life:** Collide with threat OR fall at H7L → respawn at L0G → `init_objects()` resets key, coconut, threats
+**Lose life:** Collide with threat OR fall at H7L → respawn at L0G → `init_objects()` resets key, nut, threats
 
 **Game over:** Lose `NUMBER_OF_LIFE` (3) lives → `is_playing = False`
 
