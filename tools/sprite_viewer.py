@@ -32,7 +32,7 @@ class SpriteViewer:
 
     def _load_all_sprites(self):
         for actor_type in ACTOR_TYPES:
-            positions = SpritePosition.getAllPositions(actor_type)
+            positions = SpritePosition.get_all_positions(actor_type)
             for name, (x, y) in positions.items():
                 img_path = f"img/sprites/{actor_type}/{name}.png"
                 if os.path.isfile(img_path):

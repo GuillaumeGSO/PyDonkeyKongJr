@@ -1,0 +1,44 @@
+{
+  "actor_type": "Croco",
+  "positions": {
+    "C00": {
+      "next_move": "C01"
+    },
+    "C01": {
+      "next_move": "C02"
+    },
+    "C02": {
+      "next_move": "C03"
+    },
+    "C03": {
+      "next_move": "C04"
+    },
+    "C04": {
+      "next_move": "C05"
+    },
+    "C05": {
+      "next_move": "C06"
+    },
+    "C06": {
+      "next_move": "C07"
+    },
+    "C07": {
+      "next_move": "C08"
+    },
+    "C08": {
+      "next_move": "C09"
+    },
+    "C09": {
+      "next_move": "C10"
+    },
+    "C10": {
+      "next_move": "C11"
+    },
+    "C11": {
+      "next_move": "C12"
+    },
+    "C12": {
+      "next_move": "C00"
+    }
+  }
+}

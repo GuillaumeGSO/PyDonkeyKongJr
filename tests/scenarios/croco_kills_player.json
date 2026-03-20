@@ -1,0 +1,12 @@
+{
+  "description": "Player at L1G with croco at C10 (eater for L1G). Collision grace period then death.",
+  "game": { "number_of_life": 0, "level": 0, "is_playing": true },
+  "player": { "position": "L1G", "is_new_turn": false, "is_dying": false },
+  "crocos": [ { "position": "C10" } ],
+  "birds":  [  ],
+  "nut":    { "position": "N00", "is_visible": true },
+  "key":    { "position": "K00", "is_visible": true, "is_grabable": false },
+  "cage":   { "remaining_cage": 4, "fully_opened": false },
+  "score":  { "score": 0, "pending": 0 },
+  "step_mode": false
+}

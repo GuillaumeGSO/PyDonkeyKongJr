@@ -11,8 +11,15 @@ python main.py
 
 To run the dev tools:
 ```bash
-python tools/positioning_tool.py   # calibrate sprite positions
-python tools/sprite_viewer.py      # view all sprites at their positions
+python tools/positioning_tool.py                              # calibrate sprite positions
+python tools/sprite_viewer.py                                 # view all sprites at their positions
+python tools/scenario_tool.py [scenario.json]                 # load a game state and play/step through it
+```
+
+To run the tests:
+```bash
+pip install pytest
+python -m pytest tests/ -v
 ```
 
 ## Project Structure
@@ -20,11 +27,18 @@ python tools/sprite_viewer.py      # view all sprites at their positions
 ```
 main.py                  # Entry point and game loop (App class)
 donkey_kong_jr.py        # Central game state manager (DonkeyKongJr class)
+scenario.py              # load_scenario() / dump_state() — shared by tool and tests
 settings.py              # Configuration constants
 tools/
   positioning_tool.py    # Dev tool for calibrating sprite positions
   sprite_viewer.py       # Dev tool for viewing all sprites at their positions
+  scenario_tool.py       # Dev tool for loading a scenario JSON and playing/stepping through it
+  scenarios/             # JSON scenario files for the interactive tool
   img/FullScreen.png     # Reference arcade screenshot (for dev tools)
+tests/
+  conftest.py            # Headless pygame fixtures + advance_frame() helper
+  test_scenarios.py      # Integration tests (14 scenarios)
+  scenarios/             # JSON scenario files used by tests
 actors/
   threat.py              # Abstract base class for enemies
   bird.py                # Bird enemy (B00–B07 path)
@@ -37,7 +51,9 @@ actors/
   score.py               # Score tracker and renderer
 positions/
   SpritePosition.py      # Base sprite class with position-graph support
-  {Type}Positions        # Pickle files: position name → (x, y) coords
+  graph_loader.py        # Loads position graphs from JSON, builds SpritePosition objects
+  {Type}Positions.json   # JSON files: position name → [x, y] coords
+  graphs/{Type}.json     # JSON files: position graph topology (links between positions)
 img/
   EmptyScreen.png        # Game background
   sprites/{Type}/*.png   # Sprite frames per actor type
@@ -55,7 +71,13 @@ sounds/                  # WAV files (currently unused — playback is commented
 | `ANIMATION_DELAY` | 500ms | Sprite update rate (threats) |
 | `SCORE_DELAY` | 10ms | Points increment interval |
 | `NUMBER_OF_LIFE` | 3 | Starting lives |
+| `MIN_ANIMATION_DELAY` | 150ms | Fastest threat update rate |
+| `DIFFICULTY_STEP` | 10 | Score threshold for speed increase |
+| `MAX_CROCOS` | 3 | Max simultaneous crocodiles |
+| `MAX_BIRDS` | 2 | Max simultaneous birds |
 | `INVINCIBLE` | False | Cheat mode toggle |
+| `DEATH_BLINK_INTERVAL` | 200ms | Blink rate during death animation |
+| `DEATH_ANIMATION_DURATION` | 2000ms | Total death animation length |
 
 ## Architecture
 
@@ -66,14 +88,16 @@ sounds/                  # WAV files (currently unused — playback is commented
 3. `game.draw()` — blits background then all sprite groups
 
 ### Sprite Groups (in DonkeyKongJr)
-Draw order: `cage_group` → `weapon_group` → `threat_group` → `player_group` → `info_group`
+Draw order: `player_group` → `info_group` → `threat_group` → `weapon_group` → `cage_group` → `score`
 
 ### Position Graph System
 Every actor navigates a graph of named `SpritePosition` objects. Each node holds:
 - The sprite image loaded from `img/sprites/{Type}/{name}.png`
-- Screen coordinates loaded from a pickle file in `positions/`
+- Screen coordinates loaded from JSON files in `positions/` (e.g. `positions/MonkeyPositions.json`)
 - Transition links: `next_move`, `left_move`, `right_move`, `up_move`, `down_move`, `jump_move`
 - `eater_name` — the position name that can collide with a threat
+
+Graph topology (which positions link to which) is defined in JSON files under `positions/graphs/{ActorType}.json` and loaded by `positions/graph_loader.py`. Each actor's `generate_positions()` delegates to `load_position_graph()`.
 
 Actors advance by setting `current_position = positions[current_position.next_move]`.
 
@@ -92,8 +116,8 @@ Actors advance by setting `current_position = positions[current_position.next_mo
 ### Threats (actors/threat.py + bird.py + croco.py)
 - Follow predetermined cyclic paths
 - `do_kill()` removes from group and awards points
-- Bird: 10 pts, loops B00–B07
-- Croco: 5–15 pts depending on position, loops C00–C12
+- Bird: 6 pts, loops B00–B07
+- Croco: 3 pts (C00–C04) or 9 pts (lower positions), loops C00–C12
 
 ### Nut (actors/nut.py)
 - Spawned when player jumps at H2J
@@ -126,10 +150,70 @@ Actors advance by setting `current_position = positions[current_position.next_mo
 Calibrate sprite (x, y) positions against the original arcade reference image. Run it when adding new sprites or adjusting positions:
 - Arrow keys: move sprite
 - Space: confirm and save position
-- Saves to `positions/{Type}Positions` pickle file
+- Saves to `positions/{Type}Positions.json`
 
 ### Sprite Viewer (`tools/sprite_viewer.py`)
 Shows all sprites placed at their calibrated positions on the empty game background. Useful for verifying the full layout at a glance:
 - Space: toggle between sprite layout and `tools/img/FullScreen.png` arcade reference
 - ESC: quit
+
+### Scenario Tool (`tools/scenario_tool.py`)
+Load any game state from a JSON file and play or step through it. Useful for reproducing specific situations without playing through the game:
+```bash
+python tools/scenario_tool.py tools/scenarios/grab_key.json
+python tools/scenario_tool.py tools/scenarios/croco_gauntlet.json
+```
+- Arrow keys / Space: move player (normal mode) or queue next move (step mode)
+- **T**: toggle step mode — Space advances exactly one frame at a time
+- **R**: reload scenario from JSON
+- **S**: save current state as a timestamped JSON snapshot
+- **ESC**: quit (also saves snapshot if `--save-on-quit FILE` was specified)
+
+A debug HUD overlays the current player position, live croco/bird positions, key/nut/cage state, score and frame count.
+
+## Testing
+
+Tests run headlessly (no window, no audio) via `SDL_VIDEODRIVER=dummy`:
+```bash
+python -m pytest tests/ -v
+```
+
+### Scenario system (`scenario.py`)
+The shared foundation for both the interactive tool and tests:
+- `load_scenario(game, data)` — teleports all actors to positions from a JSON dict, rebuilds sprite groups, resets timers
+- `dump_state(game) → dict` — serializes current game state back to the same format
+
+### JSON scenario format
+```json
+{
+  "game":   { "number_of_life": 0, "level": 0, "is_playing": true },
+  "player": { "position": "H3G", "is_new_turn": false, "is_dying": false },
+  "crocos": [ { "position": "C06" } ],
+  "birds":  [ { "position": "B03" } ],
+  "nut":    { "position": "N00", "is_visible": true },
+  "key":    { "position": "K03", "is_visible": true, "is_grabable": true },
+  "cage":   { "remaining_cage": 4, "fully_opened": false },
+  "score":  { "score": 0, "pending": 0 },
+  "step_mode": false
+}
+```
+`number_of_life` = lives **lost** so far (0 = none, 3 = game over). `null` or absent entries in `crocos`/`birds` disable that slot.
+
+### `advance_frame()` helper (`tests/conftest.py`)
+`pg.time.get_ticks()` advances ~2ms between Python calls — well below every cooldown threshold (125ms player, 500ms threats). The helper backdates actor `last_time` by 10s so `can_update()` always returns True. Selective expiry via kwargs matters:
+
+| kwarg | When to set `False` |
+|---|---|
+| `expire_player` | Player must stay at a position (e.g. H2J for nut trigger tests) |
+| `expire_threats` | Threat must stay at its kill position across frames |
+| `expire_key` | Key must stay at K03 (grabable) for key-grab tests |
+
+### Test coverage
+| Category | Tests |
+|---|---|
+| Key grab / miss | grab succeeds, miss falls to H7F, cage last open → fully_opened |
+| Collision | grace period starts, player dies after grace, game over on 3rd life |
+| Nut kills | croco@C02 (via N01), bird@B04 (via N02), croco@C09 (via N03) |
+| Nut passes | N01→N02 no bird, N02→N03 no croco, bottom wait, bottom disappear |
+| Nut trigger | player@H2J starts fall, player elsewhere = no fall |
 

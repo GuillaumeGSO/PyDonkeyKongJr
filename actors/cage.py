@@ -1,6 +1,5 @@
-import pygame as pg
+from positions.graph_loader import load_position_graph
 
-from positions.SpritePosition import *
 
 class Cage():
     """
@@ -9,13 +8,13 @@ class Cage():
 
     def __init__(self, game):
         self.game = game
-        self.all_positions = self.generate_positions()
-        self.smile_postion = self.all_positions.get("CSM")
+        self.all_positions = load_position_graph("Cage")
+        self.smile_position = self.all_positions.get("CSM")
         self.fully_opened = False
         self.init_cage()
 
     def init_cage(self):
-        self.game.cage_group.remove(self.smile_postion)
+        self.game.cage_group.remove(self.smile_position)
         self.remaining_cage = 4
         self.fully_opened = False
         self.sprite_positions = [
@@ -38,19 +37,9 @@ class Cage():
             self.fully_opened = True
 
     def show_smile(self):
-        self.game.cage_group.add(self.smile_postion)
+        self.game.cage_group.add(self.smile_position)
         self.game.add_to_score(25)
 
     def update(self):
         pass
 
-    def generate_positions(self):
-        d = {}
-        b = "Cage"
-        d["C00"] = SpritePosition("C00", b)
-        d["C01"] = SpritePosition("C01", b)
-        d["C02"] = SpritePosition("C02", b)
-        d["C03"] = SpritePosition("C03", b)
-        # smiling Mom
-        d["CSM"] = SpritePosition("CSM", b)
-        return d

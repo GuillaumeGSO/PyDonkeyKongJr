@@ -1,0 +1,12 @@
+{
+  "description": "Nut at N02, croco at C09. Nut advances N02→N03, handleThreats at N03 kills croco.",
+  "game": { "number_of_life": 0, "level": 0, "is_playing": true },
+  "player": { "position": "L0G", "is_new_turn": false, "is_dying": false },
+  "crocos": [ { "position": "C09" } ],
+  "birds":  [ ],
+  "nut":    { "position": "N02", "is_visible": true },
+  "key":    { "position": "K00", "is_visible": true, "is_grabable": false },
+  "cage":   { "remaining_cage": 4, "fully_opened": false },
+  "score":  { "score": 0, "pending": 0 },
+  "step_mode": false
+}

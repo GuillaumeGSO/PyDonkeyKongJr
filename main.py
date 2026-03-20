@@ -13,7 +13,7 @@ import sys
 import pygame as pg
 
 from donkey_kong_jr import DonkeyKongJr
-from settings import *
+from settings import SCREEN_NAME, WIDTH, HEIGHT, FPS
 
 
 class App:
@@ -27,10 +27,6 @@ class App:
             "img", "EmptyScreen.png")).convert()
 
         self.screen.blit(self.bg, [0, 0])
-
-        # This hides bachground
-        # color = (0, 255, 0)
-        # self.screen.fill(color)
 
         self.missed_sound = pg.mixer.Sound(os.path.join("sounds", "Missed.wav"))
         self.croco_sound  = pg.mixer.Sound(os.path.join("sounds", "Croco.wav"))

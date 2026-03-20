@@ -1,6 +1,6 @@
 import pygame as pg
 
-from positions.SpritePosition import *
+from positions.graph_loader import load_position_graph
 
 class Key():
     """
@@ -11,8 +11,8 @@ class Key():
         self.game = game
         self.is_visible = True
         self.is_grabable = False
-        self.allPositions = self.generate_positions()
-        self.spritePosition = None
+        self.all_positions = self.generate_positions()
+        self.sprite_position = None
         self.last_time = pg.time.get_ticks()
 
     def can_update(self):
@@ -30,43 +30,28 @@ class Key():
         if not self.can_update():
             return
 
-        if self.spritePosition == None:
-            self.spritePosition = self.allPositions.get("K00")
+        if self.sprite_position is None:
+            self.sprite_position = self.all_positions.get("K00")
             return
 
-        newPosition = self.allPositions.get(self.spritePosition.next_move)
+        newPosition = self.all_positions.get(self.sprite_position.next_move)
 
-        self.spritePosition.kill()
-        if newPosition != None:
-            self.spritePosition = newPosition
+        self.sprite_position.kill()
+        if newPosition is not None:
+            self.sprite_position = newPosition
 
-        self.is_grabable = self.spritePosition.position_name == "K03"
-        self.game.cage_group.add(self.spritePosition)
+        self.is_grabable = self.sprite_position.position_name == "K03"
+        self.game.cage_group.add(self.sprite_position)
 
     def catch_key(self):
-        self.spritePosition.kill()
+        self.sprite_position.kill()
         self.is_visible = False
         self.is_grabable = False
         self.game.cage.open_cage()
 
     def init_key(self):
         self.is_visible = True
-        self.spritePosition = None
+        self.sprite_position = None
 
     def generate_positions(self):
-        d = {}
-        k = "Key"
-        d["K00"] = SpritePosition("K00", k)
-        d["K01"] = SpritePosition("K01", k)
-        d["K02"] = SpritePosition("K02", k)
-        d["K03"] = SpritePosition("K03", k)
-        d["K02b"] = SpritePosition("K02", k)
-        d["K01b"] = SpritePosition("K01", k)
-
-        d["K00"].next_move = "K01"
-        d["K01"].next_move = "K02"
-        d["K02"].next_move = "K03"
-        d["K03"].next_move = "K02b"
-        d["K02b"].next_move = "K01b"
-        d["K01b"].next_move = "K00"
-        return d
+        return load_position_graph("Key")

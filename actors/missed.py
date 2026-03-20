@@ -1,6 +1,4 @@
-import pygame as pg
-
-from positions.SpritePosition import *
+from positions.graph_loader import load_position_graph
 
 
 class Missed():
@@ -10,21 +8,12 @@ class Missed():
 
     def __init__(self, game):
         self.game = game
-        self.allPositions = self.generate_positions()
-        self.spritePosition = None
-        # self.sound = makeSound("sounds/Missed.wav")
+        self.all_positions = load_position_graph("Missed")
+        self.sprite_position = None
 
     def miss(self, number):
-        self.spritePosition = self.allPositions.get("M0" + str(number))
-        self.game.info_group.add(self.spritePosition)
+        self.sprite_position = self.all_positions.get("M0" + str(number))
+        self.game.info_group.add(self.sprite_position)
 
     def update(self):
         pass
-
-    def generate_positions(self):
-        d = {}
-        b = "Missed"
-        d["M00"] = SpritePosition("M00", b)
-        d["M01"] = SpritePosition("M01", b)
-        d["M02"] = SpritePosition("M02", b)
-        return d

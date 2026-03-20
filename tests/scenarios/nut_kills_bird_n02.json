@@ -1,0 +1,12 @@
+{
+  "description": "Nut at N01, bird at B04. Nut advances N01→N02, handleThreats at N02 kills bird.",
+  "game": { "number_of_life": 0, "level": 0, "is_playing": true },
+  "player": { "position": "L0G", "is_new_turn": false, "is_dying": false },
+  "crocos": [  ],
+  "birds":  [ { "position": "B04" } ],
+  "nut":    { "position": "N01", "is_visible": true },
+  "key":    { "position": "K00", "is_visible": true, "is_grabable": false },
+  "cage":   { "remaining_cage": 4, "fully_opened": false },
+  "score":  { "score": 0, "pending": 0 },
+  "step_mode": false
+}

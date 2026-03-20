@@ -1,0 +1,29 @@
+{
+  "actor_type": "Bird",
+  "positions": {
+    "B00": {
+      "next_move": "B01"
+    },
+    "B01": {
+      "next_move": "B02"
+    },
+    "B02": {
+      "next_move": "B03"
+    },
+    "B03": {
+      "next_move": "B04"
+    },
+    "B04": {
+      "next_move": "B05"
+    },
+    "B05": {
+      "next_move": "B06"
+    },
+    "B06": {
+      "next_move": "B07"
+    },
+    "B07": {
+      "next_move": "B00"
+    }
+  }
+}

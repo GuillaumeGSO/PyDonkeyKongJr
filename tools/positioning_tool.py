@@ -1,6 +1,6 @@
 import glob
+import json
 import os
-import pickle
 import sys
 
 import pygame
@@ -9,7 +9,7 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, ROOT)
 os.chdir(ROOT)
 
-from settings import *
+from settings import WIDTH, HEIGHT
 
 
 class PositioningTool:
@@ -30,8 +30,8 @@ class PositioningTool:
         ALL_PREFIX = ["Bird", "Cage", "Nut", "Croco", "Key", "Missed", "Monkey"]
 
         for prefix in ALL_PREFIX:
-            positionFileName = "positions/" + prefix + "Positions"
-            all_positions = PositioningTool.getAllPositions(positionFileName)
+            position_file = "positions/" + prefix + "Positions.json"
+            all_positions = PositioningTool.get_all_positions(position_file)
             print(all_positions)
 
             for filepath in glob.iglob("img/sprites/" + prefix + "/*.png"):
@@ -65,29 +65,39 @@ class PositioningTool:
                         print(rect.x, rect.y)
                         all_positions[spriteName] = (rect.x, rect.y)
                         positioning = False
+                    if keys[pygame.K_ESCAPE]:
+                        PositioningTool.write_position_in_file(
+                            all_positions, position_file
+                        )
+                        pygame.quit()
+                        return
 
                     screen.blit(bg, (0, 0))
                     screen.blit(surface, rect)
                     pygame.display.flip()
                     clock.tick(10)
 
-            PositioningTool.writePositionInFile(all_positions, positionFileName)
+            PositioningTool.write_position_in_file(all_positions, position_file)
 
         print("End of positionning")
         pygame.quit()
 
     @staticmethod
-    def getAllPositions(spritePositionFile):
-        if os.path.isfile(spritePositionFile):
-            with open(spritePositionFile, "rb") as positionFile:
-                return pickle.Unpickler(positionFile).load()
+    def get_all_positions(json_path):
+        if os.path.isfile(json_path):
+            with open(json_path, "r") as f:
+                return json.load(f)
         return {}
 
     @staticmethod
-    def writePositionInFile(dictPosition, spritePositionFile):
-        with open(spritePositionFile, "wb") as positionFile:
-            myPickler = pickle.Pickler(positionFile)
-            myPickler.dump(dictPosition)
+    def write_position_in_file(positions, json_path):
+        with open(json_path, "w") as f:
+            f.write("{\n")
+            items = sorted(positions.items())
+            for i, (name, coords) in enumerate(items):
+                comma = "," if i < len(items) - 1 else ""
+                f.write(f'  "{name}": [{coords[0]}, {coords[1]}]{comma}\n')
+            f.write("}\n")
 
 
 def main():

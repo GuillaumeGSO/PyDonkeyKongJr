@@ -8,7 +8,7 @@ from actors.key import Key
 from actors.missed import Missed
 from actors.player import Player
 from actors.score import Score
-from settings import *
+from settings import ANIMATION_DELAY, MIN_ANIMATION_DELAY, DIFFICULTY_STEP, NUMBER_OF_LIFE, INVINCIBLE, MAX_CROCOS, MAX_BIRDS
 
 
 class DonkeyKongJr:
@@ -29,8 +29,8 @@ class DonkeyKongJr:
         self.threat_group: pg.sprite.Group = pg.sprite.Group()
         self.info_group: pg.sprite.Group = pg.sprite.Group()
 
-        self.birds = [Bird(self)]
-        self.crocos = [Croco(self)]
+        self.birds = [Bird(self)] #Need to generate at runtime
+        self.crocos = [Croco(self)] #Need to generate at runtime
         self.cage = Cage(self)
         self.nut = Nut(self)
         self.key = Key(self)
@@ -45,6 +45,12 @@ class DonkeyKongJr:
             self.score.update()
             if not self.score.is_counting:
                 self.is_score_paused = False
+                for croco in self.crocos:
+                    if croco.is_killed:
+                        croco.finalize_kill()
+                for bird in self.birds:
+                    if bird.is_killed:
+                        bird.finalize_kill()
             self.nut.update()
             return
 
@@ -77,10 +83,10 @@ class DonkeyKongJr:
         bird_danger = {"B00", "B01", "B02", "B03"}
         croco_danger = {"C10", "C11", "C12"}
         for bird in self.birds:
-            if bird.spritePosition and bird.spritePosition.position_name in bird_danger:
+            if bird.sprite_position and bird.sprite_position.position_name in bird_danger:
                 bird.do_kill()
         for croco in self.crocos:
-            if croco.spritePosition and croco.spritePosition.position_name in croco_danger:
+            if croco.sprite_position and croco.sprite_position.position_name in croco_danger:
                 croco.do_kill()
 
     def add_to_score(self, points):

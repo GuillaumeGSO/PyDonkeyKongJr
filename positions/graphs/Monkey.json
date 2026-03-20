@@ -1,0 +1,120 @@
+{
+  "actor_type": "Monkey",
+  "positions": {
+    "H0G": {
+      "down_move": "L5H",
+      "eater_name": "C04",
+      "left_move": "H1G"
+    },
+    "H1G": {
+      "eater_name": "C03",
+      "jump_move": "H1H",
+      "left_move": "H2G",
+      "right_move": "H0G"
+    },
+    "H1H": {
+      "down_move": "H1G"
+    },
+    "H2G": {
+      "eater_name": "C02",
+      "jump_move": "H2J",
+      "left_move": "H3G",
+      "right_move": "H1G"
+    },
+    "H2J": {
+      "left_move": "H3G",
+      "next_move": "H2G"
+    },
+    "H3G": {
+      "eater_name": "C01",
+      "jump_move": "H3J",
+      "left_move": "H7F",
+      "right_move": "H2G",
+      "up_move": "H4J"
+    },
+    "H3J": {
+      "next_move": "H3G"
+    },
+    "H4J": {},
+    "H5O": {
+      "next_move": "H6W"
+    },
+    "H5T": {
+      "next_move": "H5O"
+    },
+    "H6W": {
+      "next_move": "L0G"
+    },
+    "H7F": {
+      "next_move": "H7L"
+    },
+    "H7L": {
+      "next_move": "L0G"
+    },
+    "L0G": {
+      "eater_name": "C11",
+      "jump_move": "L0H",
+      "right_move": "L1G"
+    },
+    "L0H": {
+      "down_move": "L0G",
+      "eater_name": "B01",
+      "right_move": "L1J"
+    },
+    "L1G": {
+      "eater_name": "C10",
+      "jump_move": "L1J",
+      "left_move": "L0G",
+      "right_move": "L2G"
+    },
+    "L1J": {
+      "eater_name": "B02",
+      "next_move": "L1G"
+    },
+    "L2G": {
+      "eater_name": "C09",
+      "jump_move": "L2H",
+      "left_move": "L1G",
+      "right_move": "L3G"
+    },
+    "L2H": {
+      "down_move": "L2G",
+      "eater_name": "B03",
+      "left_move": "L1J",
+      "right_move": "L3H"
+    },
+    "L3G": {
+      "eater_name": "C08",
+      "jump_move": "L3H",
+      "left_move": "L2G",
+      "right_move": "L4G"
+    },
+    "L3H": {
+      "down_move": "L3G",
+      "eater_name": "B04",
+      "left_move": "L2H",
+      "right_move": "L4J"
+    },
+    "L4G": {
+      "eater_name": "C07",
+      "jump_move": "L4J",
+      "left_move": "L3G",
+      "right_move": "L5G"
+    },
+    "L4J": {
+      "eater_name": "B05",
+      "next_move": "L4G"
+    },
+    "L5G": {
+      "eater_name": "C06",
+      "jump_move": "L5H",
+      "left_move": "L4G"
+    },
+    "L5H": {
+      "down_move": "L5G",
+      "eater_name": "B06",
+      "left_move": "L4J",
+      "up_move": "H0G"
+    }
+  }
+}
