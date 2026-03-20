@@ -77,17 +77,6 @@ class DonkeyKongJr:
 
     def catch_key(self):
         self.key.catch_key()
-        self._clear_path_threats()
-
-    def _clear_path_threats(self):
-        bird_danger = {"B00", "B01", "B02", "B03"}
-        croco_danger = {"C10", "C11", "C12"}
-        for bird in self.birds:
-            if bird.sprite_position and bird.sprite_position.position_name in bird_danger:
-                bird.do_kill()
-        for croco in self.crocos:
-            if croco.sprite_position and croco.sprite_position.position_name in croco_danger:
-                croco.do_kill()
 
     def add_to_score(self, points):
         self.score.add_points(points)
@@ -119,6 +108,22 @@ class DonkeyKongJr:
                 bird.init()
         if self.cage.fully_opened:
             self.cage.init_cage()
+        self._reset_zone_threats()
+
+    _CROCO_RESET_ZONE = {"C10", "C11", "C12"}
+    _BIRD_RESET_ZONE = {"B00", "B01", "B02", "B03"}
+
+    def _reset_zone_threats(self):
+        for croco in self.crocos:
+            if (not croco.is_killed and croco.sprite_position is not None
+                    and croco.sprite_position.position_name in self._CROCO_RESET_ZONE):
+                self.threat_group.remove(croco.sprite_position)
+                croco.sprite_position = None
+        for bird in self.birds:
+            if (not bird.is_killed and bird.sprite_position is not None
+                    and bird.sprite_position.position_name in self._BIRD_RESET_ZONE):
+                self.threat_group.remove(bird.sprite_position)
+                bird.sprite_position = None
 
     def _maybe_spawn_enemy(self):
         if self.level % 2 == 1 and len(self.crocos) < MAX_CROCOS:
