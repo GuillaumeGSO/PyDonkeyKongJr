@@ -5,11 +5,11 @@ Usage:
     python tools/scenario_tool.py [scenario.json] [--save-on-quit FILE]
 
 Controls:
-    Arrow keys  Queue move (step mode) / immediate move (normal mode)
-    SPACE       Step one frame (step mode) / JUMP (normal mode)
+    Arrow keys  Queue move (step mode)
+    S           Step one frame (step mode)
     T           Toggle step mode on/off
     R           Reload scenario from JSON file
-    S           Save current state snapshot to a timestamped JSON file
+    W           Save current state snapshot to a timestamped JSON file
     ESC         Quit (saves to --save-on-quit path if specified)
 """
 
@@ -40,6 +40,7 @@ def _key_to_move(key):
         pg.K_RIGHT: "RIGHT",
         pg.K_UP:    "UP",
         pg.K_DOWN:  "DOWN",
+        pg.K_SPACE: "JUMP",
     }.get(key)
 
 
@@ -47,7 +48,7 @@ def _save_snapshot(game, path=None):
     state = dump_state(game)
     if path is None:
         ts = datetime.now().strftime("%Y%m%d_%H%M%S")
-        path = os.path.join("tools", "scenarios", f"snapshot_{ts}.json")
+        path = os.path.join("tools", "scenarios", "snapshots", f"snapshot_{ts}.json")
     with open(path, "w") as f:
         json.dump(state, f, indent=2)
     print(f"[scenario_tool] saved → {path}")
@@ -83,18 +84,18 @@ def _draw_hud(screen, game, step_mode, frame_count, queued_move):
     croco_list = "  ".join(_croco_positions(game)) or "(none)"
     bird_list = "  ".join(_bird_positions(game)) or "(none)"
 
-    step_label = "ON (SPACE=step)" if step_mode else "OFF"
+    step_label = "ON (T=toggle)" if step_mode else "OFF"
 
     lines = [
         f"Frame: {frame_count}       Step: {step_label}",
-        f"Player: {player_pos}    Dying: {p.is_dying}",
+        f"Player: {player_pos}      Dying: {p.is_dying}",
         f"Crocos: {croco_list}",
         f"Birds:  {bird_list}",
         f"Key: {key_pos}{key_grab}    Nut: {nut_pos}",
         f"Cage: {cage.remaining_cage}/4   Score: {game.score.score} (+{game.score._pending})",
         f"Lives lost: {game.number_of_life}",
         f"Queued: {queued_move or 'none'}",
-        f"T=step R=reload S=save ESC=quit",
+        "S=step R=reload W=write ESC=quit",
     ]
 
     font = pg.font.SysFont("monospace", 13)
@@ -151,8 +152,7 @@ def main():
 
             if event.type != pg.KEYDOWN:
                 continue
-
-            if event.key == pg.K_ESCAPE:
+            elif event.key == pg.K_ESCAPE:
                 _save_snapshot(app.game, args.save_on_quit)
                 pg.quit()
                 sys.exit()
@@ -169,11 +169,11 @@ def main():
                 queued_move = None
                 frame_count = 0
 
-            elif event.key == pg.K_s:
+            elif event.key == pg.K_w:
                 _save_snapshot(app.game)
 
             elif step_mode:
-                if event.key == pg.K_SPACE:
+                if event.key == pg.K_s:
                     # Advance exactly one frame, consuming the queued move
                     app.game.player_move = queued_move
                     queued_move = None
@@ -185,13 +185,9 @@ def main():
                         queued_move = move
 
             else:
-                # Normal mode: arrow keys act immediately, SPACE = jump
-                if event.key == pg.K_SPACE:
-                    app.game.player_move = "JUMP"
-                else:
-                    move = _key_to_move(event.key)
-                    if move:
-                        app.game.player_move = move
+                move = _key_to_move(event.key)
+                if move:
+                    app.game.player_move = move
 
         if not step_mode:
             app.game.update()

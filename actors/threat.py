@@ -53,8 +53,7 @@ class Threat(ABC):
             return
 
         if self.spritePosition == None:
-            self.spritePosition = self.all_positions.get(
-                self.get_start_position())
+            self.spritePosition = self.all_positions.get(self.get_start_position())
             return
         newPosition = self.all_positions.get(self.spritePosition.next_move)
         self.spritePosition.kill()

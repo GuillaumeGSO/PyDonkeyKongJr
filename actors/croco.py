@@ -1,7 +1,6 @@
-import pygame as pg
 from actors.threat import Threat
-
 from positions.SpritePosition import *
+
 
 class Croco(Threat):
     """

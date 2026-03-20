@@ -29,8 +29,8 @@ class DonkeyKongJr:
         self.threat_group: pg.sprite.Group = pg.sprite.Group()
         self.info_group: pg.sprite.Group = pg.sprite.Group()
 
-        self.birds = [Bird(self)]
-        self.crocos = [Croco(self)]
+        self.birds = [Bird(self)] #Need to generate at runtime
+        self.crocos = [Croco(self)] #Need to generate at runtime
         self.cage = Cage(self)
         self.nut = Nut(self)
         self.key = Key(self)

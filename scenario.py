@@ -10,8 +10,8 @@ JSON schema:
   "description": "...",
   "game":   { "number_of_life": 0, "level": 0, "is_playing": true },
   "player": { "position": "L0G", "is_new_turn": false, "is_dying": false },
-  "crocos": [ { "position": "C06" }, null ],   # null = disabled
-  "birds":  [ { "position": "B03" }, null ],
+  "crocos": [ { "position": "C06" }, { "position": "C00" } ],
+  "birds":  [ { "position": "B03" }],
   "nut":    { "position": "N00", "is_visible": true },
   "key":    { "position": "K03", "is_visible": true, "is_grabable": true },
   "cage":   { "remaining_cage": 4, "fully_opened": false },
@@ -20,7 +20,9 @@ JSON schema:
 }
 """
 
-from settings import ANIMATION_DELAY, MIN_ANIMATION_DELAY, DIFFICULTY_STEP
+from actors.bird import Bird
+from actors.croco import Croco
+from settings import ANIMATION_DELAY, DIFFICULTY_STEP, MIN_ANIMATION_DELAY
 
 
 def load_scenario(game, data):
@@ -70,33 +72,21 @@ def load_scenario(game, data):
 
     # 5. Threats: clear all, then re-enable requested slots
     game.threat_group.empty()
-    for croco in game.crocos:
-        if croco.spritePosition is not None:
-            croco.spritePosition.kill()
-        croco.is_killed = True
-        croco.spritePosition = None
-    for i, entry in enumerate(data["crocos"]):
-        if entry is None or i >= len(game.crocos):
-            continue
-        c = game.crocos[i]
+    game.crocos = []
+    for croco_position in data["crocos"]:
+        c = Croco(game)
+        c.spritePosition = c.all_positions[croco_position["position"]]
         c.is_killed = False
-        pos = c.all_positions[entry["position"]]
-        c.spritePosition = pos
-        game.threat_group.add(pos)
+        game.crocos.append(c)
+        game.threat_group.add(c.spritePosition)
 
-    for bird in game.birds:
-        if bird.spritePosition is not None:
-            bird.spritePosition.kill()
-        bird.is_killed = True
-        bird.spritePosition = None
-    for i, entry in enumerate(data["birds"]):
-        if entry is None or i >= len(game.birds):
-            continue
-        b = game.birds[i]
-        b.is_killed = False
-        pos = b.all_positions[entry["position"]]
-        b.spritePosition = pos
-        game.threat_group.add(pos)
+    game.birds = []
+    for bird_position in data["birds"]:
+        c = Bird(game)
+        c.spritePosition = c.all_positions[bird_position["position"]]
+        c.is_killed = False
+        game.birds.append(c)
+        game.threat_group.add(c.spritePosition)
 
     # 6. Nut
     n = game.nut
