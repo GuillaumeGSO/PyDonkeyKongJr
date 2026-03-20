@@ -21,6 +21,8 @@ class Player():
         self.last_blink_time = 0
         self.blink_visible = True
         self.collision_start_time = None
+        self._collision_position_name = None
+        self._had_collision_pre_move = False
         self.h7f_entry_time = None
         self.last_jump_time = 0
         self.jump_apex_time = None
@@ -145,6 +147,7 @@ class Player():
             if prev_position_name == "H6W":
                 self.game.init_objects()
             player_move = None
+            self.handle_threats(post_move=True)  # re-check at new position
 
     def start_of_game(self):
 
@@ -152,6 +155,8 @@ class Player():
         self.sprite_position = self.all_positions.get("L0G")
         self.game.player_group.add(self.sprite_position)
         self.collision_start_time = None
+        self._collision_position_name = None
+        self._had_collision_pre_move = False
         self.jump_apex_time = None
 
         if self.sprite_position.position_name == "L0G" and self.is_new_turn:
@@ -176,17 +181,40 @@ class Player():
     def grace_period(self):
         return max(0, self.game.animation_delay - 1000 // FPS)
 
-    def handle_threats(self):
+    def handle_threats(self, post_move=False):
         eater = self.sprite_position.eater_name
         collider = next((t for t in self.game.threat_group if t.position_name == eater), None) if eater else None
+
+        if INVINCIBLE:
+            return
+
+        if post_move:
+            # Player just moved to a new position
+            if collider is not None:
+                # Moved INTO a threat (Case 2: catching up, or escaping toward) → instant kill
+                self.trigger_death()
+            elif self._had_collision_pre_move and self.collision_start_time is not None:
+                # Was in collision, moved AWAY → safe, cancel timer
+                self.collision_start_time = None
+                self._collision_position_name = None
+            return
+
+        # Pre-move check: threat arrived at player's position
+        self._had_collision_pre_move = collider is not None
         if collider is not None:
-            if not INVINCIBLE:
-                if self.collision_start_time is None:
-                    self.collision_start_time = pg.time.get_ticks()
-                elif pg.time.get_ticks() - self.collision_start_time >= self.grace_period():
-                    self.trigger_death()
-        else:
-            self.collision_start_time = None
+            if self.collision_start_time is None:
+                self.collision_start_time = pg.time.get_ticks()
+                self._collision_position_name = self.sprite_position.position_name
+            elif pg.time.get_ticks() - self.collision_start_time >= self.grace_period():
+                self.trigger_death()
+        elif self.collision_start_time is not None:
+            if self.sprite_position.position_name != self._collision_position_name:
+                # Player drifted away without the post-move check catching it (croco moved away too)
+                self.collision_start_time = None
+                self._collision_position_name = None
+            elif pg.time.get_ticks() - self.collision_start_time >= self.grace_period():
+                # Croco passed through, player stood still, grace expired → die
+                self.trigger_death()
 
     def generate_positions(self):
         return load_position_graph("Monkey")
