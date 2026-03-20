@@ -71,6 +71,10 @@ sounds/                  # WAV files (currently unused — playback is commented
 | `ANIMATION_DELAY` | 500ms | Sprite update rate (threats) |
 | `SCORE_DELAY` | 10ms | Points increment interval |
 | `NUMBER_OF_LIFE` | 3 | Starting lives |
+| `MIN_ANIMATION_DELAY` | 150ms | Fastest threat update rate |
+| `DIFFICULTY_STEP` | 10 | Score threshold for speed increase |
+| `MAX_CROCOS` | 3 | Max simultaneous crocodiles |
+| `MAX_BIRDS` | 2 | Max simultaneous birds |
 | `INVINCIBLE` | False | Cheat mode toggle |
 | `DEATH_BLINK_INTERVAL` | 200ms | Blink rate during death animation |
 | `DEATH_ANIMATION_DURATION` | 2000ms | Total death animation length |
@@ -112,8 +116,8 @@ Actors advance by setting `current_position = positions[current_position.next_mo
 ### Threats (actors/threat.py + bird.py + croco.py)
 - Follow predetermined cyclic paths
 - `do_kill()` removes from group and awards points
-- Bird: 10 pts, loops B00–B07
-- Croco: 5–15 pts depending on position, loops C00–C12
+- Bird: 6 pts, loops B00–B07
+- Croco: 3 pts (C00–C04) or 9 pts (lower positions), loops C00–C12
 
 ### Nut (actors/nut.py)
 - Spawned when player jumps at H2J
@@ -146,7 +150,7 @@ Actors advance by setting `current_position = positions[current_position.next_mo
 Calibrate sprite (x, y) positions against the original arcade reference image. Run it when adding new sprites or adjusting positions:
 - Arrow keys: move sprite
 - Space: confirm and save position
-- Saves to `positions/{Type}Positions` pickle file
+- Saves to `positions/{Type}Positions.json`
 
 ### Sprite Viewer (`tools/sprite_viewer.py`)
 Shows all sprites placed at their calibrated positions on the empty game background. Useful for verifying the full layout at a glance:

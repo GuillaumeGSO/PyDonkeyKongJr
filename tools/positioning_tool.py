@@ -65,6 +65,12 @@ class PositioningTool:
                         print(rect.x, rect.y)
                         all_positions[spriteName] = (rect.x, rect.y)
                         positioning = False
+                    if keys[pygame.K_ESCAPE]:
+                        PositioningTool.write_position_in_file(
+                            all_positions, position_file
+                        )
+                        pygame.quit()
+                        return
 
                     screen.blit(bg, (0, 0))
                     screen.blit(surface, rect)
@@ -86,7 +92,12 @@ class PositioningTool:
     @staticmethod
     def write_position_in_file(positions, json_path):
         with open(json_path, "w") as f:
-            json.dump(positions, f, indent=2, sort_keys=True)
+            f.write("{\n")
+            items = sorted(positions.items())
+            for i, (name, coords) in enumerate(items):
+                comma = "," if i < len(items) - 1 else ""
+                f.write(f'  "{name}": [{coords[0]}, {coords[1]}]{comma}\n')
+            f.write("}\n")
 
 
 def main():
