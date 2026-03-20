@@ -56,17 +56,17 @@ def _save_snapshot(game, path=None):
 
 def _croco_positions(game):
     return [
-        c.spritePosition.position_name
+        c.sprite_position.position_name
         for c in game.crocos
-        if not c.is_killed and c.spritePosition is not None
+        if not c.is_killed and c.sprite_position is not None
     ]
 
 
 def _bird_positions(game):
     return [
-        b.spritePosition.position_name
+        b.sprite_position.position_name
         for b in game.birds
-        if not b.is_killed and b.spritePosition is not None
+        if not b.is_killed and b.sprite_position is not None
     ]
 
 
@@ -77,8 +77,8 @@ def _draw_hud(screen, game, step_mode, frame_count, queued_move):
     cage = game.cage
 
     player_pos = p.sprite_position.position_name if p.sprite_position else "None"
-    nut_pos = n.spritePosition.position_name if n.spritePosition else "None"
-    key_pos = k.spritePosition.position_name if k.spritePosition else "None"
+    nut_pos = n.sprite_position.position_name if n.sprite_position else "None"
+    key_pos = k.sprite_position.position_name if k.sprite_position else "None"
     key_grab = " [GRAB]" if k.is_grabable else ""
 
     croco_list = "  ".join(_croco_positions(game)) or "(none)"

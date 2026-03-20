@@ -51,7 +51,9 @@ actors/
   score.py               # Score tracker and renderer
 positions/
   SpritePosition.py      # Base sprite class with position-graph support
-  {Type}Positions        # Pickle files: position name → (x, y) coords
+  graph_loader.py        # Loads position graphs from JSON, builds SpritePosition objects
+  {Type}Positions.json   # JSON files: position name → [x, y] coords
+  graphs/{Type}.json     # JSON files: position graph topology (links between positions)
 img/
   EmptyScreen.png        # Game background
   sprites/{Type}/*.png   # Sprite frames per actor type
@@ -70,6 +72,8 @@ sounds/                  # WAV files (currently unused — playback is commented
 | `SCORE_DELAY` | 10ms | Points increment interval |
 | `NUMBER_OF_LIFE` | 3 | Starting lives |
 | `INVINCIBLE` | False | Cheat mode toggle |
+| `DEATH_BLINK_INTERVAL` | 200ms | Blink rate during death animation |
+| `DEATH_ANIMATION_DURATION` | 2000ms | Total death animation length |
 
 ## Architecture
 
@@ -80,14 +84,16 @@ sounds/                  # WAV files (currently unused — playback is commented
 3. `game.draw()` — blits background then all sprite groups
 
 ### Sprite Groups (in DonkeyKongJr)
-Draw order: `cage_group` → `weapon_group` → `threat_group` → `player_group` → `info_group`
+Draw order: `player_group` → `info_group` → `threat_group` → `weapon_group` → `cage_group` → `score`
 
 ### Position Graph System
 Every actor navigates a graph of named `SpritePosition` objects. Each node holds:
 - The sprite image loaded from `img/sprites/{Type}/{name}.png`
-- Screen coordinates loaded from a pickle file in `positions/`
+- Screen coordinates loaded from JSON files in `positions/` (e.g. `positions/MonkeyPositions.json`)
 - Transition links: `next_move`, `left_move`, `right_move`, `up_move`, `down_move`, `jump_move`
 - `eater_name` — the position name that can collide with a threat
+
+Graph topology (which positions link to which) is defined in JSON files under `positions/graphs/{ActorType}.json` and loaded by `positions/graph_loader.py`. Each actor's `generate_positions()` delegates to `load_position_graph()`.
 
 Actors advance by setting `current_position = positions[current_position.next_move]`.
 

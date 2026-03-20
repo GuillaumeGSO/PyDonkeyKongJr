@@ -1,0 +1,13 @@
+{
+  "actor_type": "Nut",
+  "positions": {
+    "N00": {},
+    "N01": {
+      "next_move": "N02"
+    },
+    "N02": {
+      "next_move": "N03"
+    },
+    "N03": {}
+  }
+}

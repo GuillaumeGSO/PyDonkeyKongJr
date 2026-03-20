@@ -45,10 +45,10 @@ def load_scenario(game, data):
 
     # 3. Missed display — number_of_life lives lost → show M00…M0(N-1)
     game.info_group.empty()
-    game.missed.spritePosition = None
+    game.missed.sprite_position = None
     for i in range(data["game"]["number_of_life"]):
-        sp = game.missed.allPositions.get(f"M0{i}")
-        game.missed.spritePosition = sp
+        sp = game.missed.all_positions.get(f"M0{i}")
+        game.missed.sprite_position = sp
         game.info_group.add(sp)
 
     # 4. Player teleport
@@ -75,51 +75,51 @@ def load_scenario(game, data):
     game.crocos = []
     for croco_position in data["crocos"]:
         c = Croco(game)
-        c.spritePosition = c.all_positions[croco_position["position"]]
+        c.sprite_position = c.all_positions[croco_position["position"]]
         c.is_killed = False
         game.crocos.append(c)
-        game.threat_group.add(c.spritePosition)
+        game.threat_group.add(c.sprite_position)
 
     game.birds = []
     for bird_position in data["birds"]:
         c = Bird(game)
-        c.spritePosition = c.all_positions[bird_position["position"]]
+        c.sprite_position = c.all_positions[bird_position["position"]]
         c.is_killed = False
         game.birds.append(c)
-        game.threat_group.add(c.spritePosition)
+        game.threat_group.add(c.sprite_position)
 
     # 6. Nut
     n = game.nut
     game.weapon_group.empty()
-    if n.spritePosition is not None:
-        n.spritePosition.kill()
+    if n.sprite_position is not None:
+        n.sprite_position.kill()
     n.is_visible = data["nut"]["is_visible"]
     n._instant_mode = False
     n._killed_at_bottom = False
     n._bottom_arrival_time = None
-    pos = n.allPositions[data["nut"]["position"]]
-    n.spritePosition = pos
+    pos = n.all_positions[data["nut"]["position"]]
+    n.sprite_position = pos
     if n.is_visible:
         game.weapon_group.add(pos)
 
     # 7. Key
     k = game.key
-    if k.spritePosition is not None:
-        k.spritePosition.kill()
+    if k.sprite_position is not None:
+        k.sprite_position.kill()
     k.is_visible = data["key"]["is_visible"]
     k.is_grabable = data["key"]["is_grabable"]
     if k.is_visible:
-        pos = k.allPositions[data["key"]["position"]]
-        k.spritePosition = pos
+        pos = k.all_positions[data["key"]["position"]]
+        k.sprite_position = pos
         game.cage_group.add(pos)
     else:
-        k.spritePosition = None
+        k.sprite_position = None
 
     # 8. Cage reconstruction
     #    init_cage() builds [C03, C02, C01, C00]; open_cage() pops from the
     #    right (C00 first). After N opens, the first `remaining` entries remain.
     cage = game.cage
-    game.cage_group.remove(cage.smile_postion)
+    game.cage_group.remove(cage.smile_position)
     for sp in list(cage.sprite_positions):
         game.cage_group.remove(sp)
     remaining = data["cage"]["remaining_cage"]
@@ -130,7 +130,7 @@ def load_scenario(game, data):
     if remaining > 0:
         game.cage_group.add(cage.sprite_positions)
     if cage.fully_opened:
-        game.cage_group.add(cage.smile_postion)
+        game.cage_group.add(cage.smile_position)
 
     # 9. Clear is_score_paused last — nothing above should have set it
     game.is_score_paused = False
@@ -142,17 +142,17 @@ def dump_state(game):
 
     crocos_state = []
     for croco in game.crocos:
-        if croco.is_killed or croco.spritePosition is None:
+        if croco.is_killed or croco.sprite_position is None:
             crocos_state.append(None)
         else:
-            crocos_state.append({"position": croco.spritePosition.position_name})
+            crocos_state.append({"position": croco.sprite_position.position_name})
 
     birds_state = []
     for bird in game.birds:
-        if bird.is_killed or bird.spritePosition is None:
+        if bird.is_killed or bird.sprite_position is None:
             birds_state.append(None)
         else:
-            birds_state.append({"position": bird.spritePosition.position_name})
+            birds_state.append({"position": bird.sprite_position.position_name})
 
     n = game.nut
     k = game.key
@@ -171,11 +171,11 @@ def dump_state(game):
         "crocos": crocos_state,
         "birds": birds_state,
         "nut": {
-            "position": n.spritePosition.position_name if n.spritePosition else "N00",
+            "position": n.sprite_position.position_name if n.sprite_position else "N00",
             "is_visible": n.is_visible,
         },
         "key": {
-            "position": k.spritePosition.position_name if k.spritePosition else "K00",
+            "position": k.sprite_position.position_name if k.sprite_position else "K00",
             "is_visible": k.is_visible,
             "is_grabable": k.is_grabable,
         },

@@ -1,5 +1,5 @@
+import json
 import os
-import pickle
 import pygame as pg
 
 
@@ -9,8 +9,8 @@ class SpritePosition(pg.sprite.Sprite):
         pg.sprite.Sprite.__init__(self)
         self.position_name = name
         self.actor_type = actorType
-        self.path = self.generatePath()
-        self.image = self.loadImage(self.path)
+        self.path = self.generate_path()
+        self.image = self.load_image(self.path)
         self.rect = self.image.get_rect()
         self.jump_move = None
         self.up_move = None
@@ -20,20 +20,20 @@ class SpritePosition(pg.sprite.Sprite):
         self.next_move = None
         self.eater_name = None
 
-        self.dict_positions = self.getAllPositions(self.actor_type)
+        self.dict_positions = self.get_all_positions(self.actor_type)
         self.x = self.dict_positions.get(self.position_name)[0]
         self.y = self.dict_positions.get(self.position_name)[1]
         self.rect.x = self.x
         self.rect.y = self.y
 
-    def generatePath(self):
+    def generate_path(self):
         return "img/sprites/" + self.actor_type + "/" + self.position_name + ".png"
 
     def update(self):
-        if (self.next_move != None):
+        if self.next_move is not None:
             self.position_name = self.next_move
-            self.path = self.generatePath()
-            self.image = self.loadImage(self.path)
+            self.path = self.generate_path()
+            self.image = self.load_image(self.path)
             self.rect = self.image.get_rect()
             self.x = self.dict_positions.get(self.position_name)[0]
             self.y = self.dict_positions.get(self.position_name)[1]
@@ -41,15 +41,15 @@ class SpritePosition(pg.sprite.Sprite):
             self.rect.y = self.y
 
     @staticmethod
-    def getAllPositions(fileName):
-        newFileName = "positions/" + fileName + "Positions"
-        if os.path.isfile(newFileName):
-            with open(newFileName, "rb") as positionFile:
-                return pickle.Unpickler(positionFile).load()
+    def get_all_positions(file_name):
+        json_path = "positions/" + file_name + "Positions.json"
+        if os.path.isfile(json_path):
+            with open(json_path, "r") as f:
+                return json.load(f)
         return {}
 
     @staticmethod
-    def loadImage(fileName, useColorKey=False):
+    def load_image(fileName, useColorKey=False):
         if os.path.isfile(fileName):
             image = pg.image.load(fileName)
             image = image.convert_alpha()

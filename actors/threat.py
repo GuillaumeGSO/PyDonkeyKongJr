@@ -1,6 +1,5 @@
 from abc import ABC, abstractmethod
 import pygame as pg
-from positions.SpritePosition import SpritePosition
 
 
 class Threat(ABC):
@@ -10,7 +9,7 @@ class Threat(ABC):
         self.all_positions = self.generate_positions()
         self.init()
         self.last_time = pg.time.get_ticks()
-        self.spritePosition = None
+        self.sprite_position = None
         self.is_killed = False
 
     @abstractmethod
@@ -43,9 +42,9 @@ class Threat(ABC):
 
     def finalize_kill(self):
         """Remove sprite from group after score pause ends."""
-        if self.spritePosition is not None:
-            self.game.threat_group.remove(self.spritePosition)
-            self.spritePosition = None
+        if self.sprite_position is not None:
+            self.game.threat_group.remove(self.sprite_position)
+            self.sprite_position = None
 
     def update(self):
         if self.is_killed:
@@ -57,12 +56,12 @@ class Threat(ABC):
         if not self.can_update():
             return
 
-        if self.spritePosition == None:
-            self.spritePosition = self.all_positions.get(self.get_start_position())
+        if self.sprite_position is None:
+            self.sprite_position = self.all_positions.get(self.get_start_position())
             return
-        newPosition = self.all_positions.get(self.spritePosition.next_move)
-        self.spritePosition.kill()
-        if newPosition != None:
-            self.spritePosition = newPosition
-        self.game.threat_group.add(self.spritePosition)
+        newPosition = self.all_positions.get(self.sprite_position.next_move)
+        self.sprite_position.kill()
+        if newPosition is not None:
+            self.sprite_position = newPosition
+        self.game.threat_group.add(self.sprite_position)
         self.game.croco_sound.play()

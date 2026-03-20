@@ -45,7 +45,7 @@ def _player_pos(app):
 
 def _nut_pos(app):
     n = app.game.nut
-    return n.spritePosition.position_name if n.spritePosition else None
+    return n.sprite_position.position_name if n.sprite_position else None
 
 
 # ---------------------------------------------------------------------------
@@ -214,10 +214,10 @@ class TestNutPasses:
         app = headless_app
         app.game.threat_group.empty()
         for c in app.game.crocos:
-            if c.spritePosition:
-                c.spritePosition.kill()
+            if c.sprite_position:
+                c.sprite_position.kill()
             c.is_killed = True
-            c.spritePosition = None
+            c.sprite_position = None
         # Also put nut at N02 (already set by JSON)
 
         advance_frame(headless_app, None)

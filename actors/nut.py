@@ -1,6 +1,6 @@
 import pygame as pg
 
-from positions.SpritePosition import *
+from positions.graph_loader import load_position_graph
 
 
 class Nut():
@@ -12,12 +12,12 @@ class Nut():
 
     def __init__(self, game):
         self.game = game
-        self.allPositions = self.generate_positions()
+        self.all_positions = self.generate_positions()
         self.init_nut()
 
     def init_nut(self):
         self.is_visible = True
-        self.spritePosition = None
+        self.sprite_position = None
         self.last_time = pg.time.get_ticks()
         self._instant_mode = False
         self._killed_at_bottom = False
@@ -31,15 +31,15 @@ class Nut():
         return False
 
     def update(self):
-        if self.spritePosition is None:
-            self.spritePosition = self.allPositions.get("N00")
+        if self.sprite_position is None:
+            self.sprite_position = self.all_positions.get("N00")
             return
         if not self.is_visible:
             return
 
         # Score pause: keep nut visible; game handles the unpause
         if self.game.is_score_paused:
-            self.game.weapon_group.add(self.spritePosition)
+            self.game.weapon_group.add(self.sprite_position)
             return
 
         # After any kill: instantly traverse remaining positions
@@ -48,57 +48,57 @@ class Nut():
             return
 
         # Normal animated fall
-        if self.mustFall():
+        if self.must_fall():
             if self.can_update():
-                self.spritePosition.kill()
-                self.spritePosition = self.allPositions.get("N01")
-        elif self.spritePosition.position_name != "N00":
+                self.sprite_position.kill()
+                self.sprite_position = self.all_positions.get("N01")
+        elif self.sprite_position.position_name != "N00":
             if self.can_update():
-                next_name = self.spritePosition.next_move
+                next_name = self.sprite_position.next_move
                 if next_name is not None:       # guard: N03 has no next_move
-                    new_pos = self.allPositions.get(next_name)
-                    self.spritePosition.kill()
+                    new_pos = self.all_positions.get(next_name)
+                    self.sprite_position.kill()
                     if new_pos is not None:
-                        self.spritePosition = new_pos
+                        self.sprite_position = new_pos
 
-        if self.handleThreats():
-            self.game.weapon_group.add(self.spritePosition)
+        if self.handle_threats():
+            self.game.weapon_group.add(self.sprite_position)
             return
 
-        self.handleBottom()
+        self.handle_bottom()
         if not self.is_visible:
-            self.spritePosition.kill()
+            self.sprite_position.kill()
             return
 
-        self.game.weapon_group.add(self.spritePosition)
+        self.game.weapon_group.add(self.sprite_position)
 
     def _advance_instant(self):
         """After a kill: move one position forward (no timer), check for more kills."""
-        next_name = self.spritePosition.next_move
+        next_name = self.sprite_position.next_move
         if next_name is not None:
-            self.spritePosition.kill()
-            self.spritePosition = self.allPositions[next_name]
+            self.sprite_position.kill()
+            self.sprite_position = self.all_positions[next_name]
 
-        if self.handleThreats():
-            self.game.weapon_group.add(self.spritePosition)
+        if self.handle_threats():
+            self.game.weapon_group.add(self.sprite_position)
             return
 
-        self.handleBottom()
+        self.handle_bottom()
         if not self.is_visible:
             self._instant_mode = False
-            self.spritePosition.kill()
+            self.sprite_position.kill()
             return
 
-        self.game.weapon_group.add(self.spritePosition)
+        self.game.weapon_group.add(self.sprite_position)
 
-    def mustFall(self) -> bool:
+    def must_fall(self) -> bool:
         player = self.game.player
         return (player.sprite_position is not None
                 and player.sprite_position.position_name == "H2J"
-                and self.spritePosition == self.allPositions.get("N00"))
+                and self.sprite_position == self.all_positions.get("N00"))
 
-    def handleBottom(self):
-        if self.spritePosition.position_name != "N03":
+    def handle_bottom(self):
+        if self.sprite_position.position_name != "N03":
             return
         if self._killed_at_bottom:
             # Score finished for C09 kill: disappear immediately
@@ -118,30 +118,20 @@ class Nut():
         "N03": ("Croco", "C09"),
     }
 
-    def handleThreats(self) -> bool:
-        entry = self.KILL_MAP.get(self.spritePosition.position_name)
+    def handle_threats(self) -> bool:
+        entry = self.KILL_MAP.get(self.sprite_position.position_name)
         if entry is None:
             return False
         actor_type, target_pos = entry
         victims = self.game.crocos if actor_type == "Croco" else self.game.birds
         for victim in victims:
-            if victim.spritePosition and victim.spritePosition.position_name == target_pos:
+            if victim.sprite_position and victim.sprite_position.position_name == target_pos:
                 victim.do_kill()        # do_kill() → add_to_score() → is_score_paused = True
                 self._instant_mode = True
-                if self.spritePosition.position_name == "N03":
+                if self.sprite_position.position_name == "N03":
                     self._killed_at_bottom = True
                 return True
         return False
 
     def generate_positions(self):
-        d = {}
-        c = "Nut"
-        d["N00"] = SpritePosition("N00", c)
-        d["N01"] = SpritePosition("N01", c)
-        d["N02"] = SpritePosition("N02", c)
-        d["N03"] = SpritePosition("N03", c)
-        # No next move in position 0 : not falling without being touched
-        d["N01"].next_move = "N02"
-        d["N02"].next_move = "N03"
-
-        return d
+        return load_position_graph("Nut")

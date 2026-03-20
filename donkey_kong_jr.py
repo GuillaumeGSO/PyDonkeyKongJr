@@ -8,7 +8,7 @@ from actors.key import Key
 from actors.missed import Missed
 from actors.player import Player
 from actors.score import Score
-from settings import *
+from settings import ANIMATION_DELAY, MIN_ANIMATION_DELAY, DIFFICULTY_STEP, NUMBER_OF_LIFE, INVINCIBLE, MAX_CROCOS, MAX_BIRDS
 
 
 class DonkeyKongJr:
@@ -83,10 +83,10 @@ class DonkeyKongJr:
         bird_danger = {"B00", "B01", "B02", "B03"}
         croco_danger = {"C10", "C11", "C12"}
         for bird in self.birds:
-            if bird.spritePosition and bird.spritePosition.position_name in bird_danger:
+            if bird.sprite_position and bird.sprite_position.position_name in bird_danger:
                 bird.do_kill()
         for croco in self.crocos:
-            if croco.spritePosition and croco.spritePosition.position_name in croco_danger:
+            if croco.sprite_position and croco.sprite_position.position_name in croco_danger:
                 croco.do_kill()
 
     def add_to_score(self, points):

@@ -1,0 +1,25 @@
+{
+  "actor_type": "Key",
+  "positions": {
+    "K00": {
+      "next_move": "K01"
+    },
+    "K01": {
+      "next_move": "K02"
+    },
+    "K01b": {
+      "next_move": "K00",
+      "sprite_name": "K01"
+    },
+    "K02": {
+      "next_move": "K03"
+    },
+    "K02b": {
+      "next_move": "K01b",
+      "sprite_name": "K02"
+    },
+    "K03": {
+      "next_move": "K02b"
+    }
+  }
+}
