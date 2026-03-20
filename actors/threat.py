@@ -38,9 +38,14 @@ class Threat(ABC):
 
     def do_kill(self):
         self.is_killed = True
-        self.game.threat_group.remove(self.spritePosition)
         self.game.add_to_score(self.get_points_for_kill())
-        self.spritePosition: SpritePosition = None
+        # Sprite stays in threat_group so it remains visible during score pause
+
+    def finalize_kill(self):
+        """Remove sprite from group after score pause ends."""
+        if self.spritePosition is not None:
+            self.game.threat_group.remove(self.spritePosition)
+            self.spritePosition = None
 
     def update(self):
         if self.is_killed:

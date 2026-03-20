@@ -45,6 +45,12 @@ class DonkeyKongJr:
             self.score.update()
             if not self.score.is_counting:
                 self.is_score_paused = False
+                for croco in self.crocos:
+                    if croco.is_killed:
+                        croco.finalize_kill()
+                for bird in self.birds:
+                    if bird.is_killed:
+                        bird.finalize_kill()
             self.nut.update()
             return
 
