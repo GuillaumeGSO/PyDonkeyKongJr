@@ -7,6 +7,7 @@ https://mamedev.emulab.it/haze/2017-new-focus/
 
 """
 
+import asyncio
 import os
 import sys
 
@@ -65,13 +66,18 @@ class App:
                 elif event.key == pg.K_SPACE:
                     self.game.player_move = "JUMP"
 
-    def run(self):
+    async def run(self):
         while True:
             self.check_events()
             self.update()
             self.draw()
+            await asyncio.sleep(0)
+
+
+async def main():
+    app = App()
+    await app.run()
 
 
 if __name__ == "__main__":
-    app = App()
-    app.run()
+    asyncio.run(main())
