@@ -1,4 +1,6 @@
 __pycache__
 .vscode
 .venv
+.itch.toml
+build/
 tools/scenarios/snapshots
