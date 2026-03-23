@@ -1,6 +1,10 @@
 SCREEN_NAME = "Donkey Kong Jr"
 WIDTH = 700
 HEIGHT = 480
+
+# Device frame: raw screen area measured in img/Device.png (x, y, w, h)
+# Device.png will be scaled at runtime so this area maps exactly to WIDTH x HEIGHT
+DEVICE_SCREEN_RAW = (270, 133, 437, 291)
 FPS = 30
 SCORE_DELAY = 10
 NUMBER_OF_LIFE = 3

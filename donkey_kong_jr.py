@@ -35,7 +35,7 @@ class DonkeyKongJr:
         self.nut = Nut(self)
         self.key = Key(self)
         self.missed = Missed(self)
-        self.score = Score(self.app.screen, self.app.score_sound)
+        self.score = Score(self.app.game_surface, self.app.score_sound)
         self.player = Player(self)
         self.player_move = None
         self.is_score_paused = False
@@ -66,13 +66,13 @@ class DonkeyKongJr:
         self.cage.update()
 
     def draw(self):
-        self.app.screen.blit(self.app.bg, (0, 0))
+        self.app.game_surface.blit(self.app.bg, (0, 0))
 
-        self.player_group.draw(self.app.screen)
-        self.info_group.draw(self.app.screen)
-        self.threat_group.draw(self.app.screen)
-        self.weapon_group.draw(self.app.screen)
-        self.cage_group.draw(self.app.screen)
+        self.player_group.draw(self.app.game_surface)
+        self.info_group.draw(self.app.game_surface)
+        self.threat_group.draw(self.app.game_surface)
+        self.weapon_group.draw(self.app.game_surface)
+        self.cage_group.draw(self.app.game_surface)
         self.score.draw()
 
     def catch_key(self):
