@@ -17,3 +17,5 @@ INVINCIBLE = False
 DEATH_BLINK_INTERVAL = 200
 DEATH_ANIMATION_DURATION = 2000
 TOUCH_BUTTON_RADIUS = 25   # hit-circle radius in raw Device.png pixels
+RESET_BUTTON_W = 70        # reset button width in raw Device.png pixels
+RESET_BUTTON_H = 32        # reset button height in raw Device.png pixels

@@ -16,7 +16,7 @@ import sys
 import pygame as pg
 
 from donkey_kong_jr import DonkeyKongJr
-from settings import SCREEN_NAME, WIDTH, HEIGHT, FPS, DEVICE_SCREEN_RAW, TOUCH_BUTTON_RADIUS
+from settings import SCREEN_NAME, WIDTH, HEIGHT, FPS, DEVICE_SCREEN_RAW, TOUCH_BUTTON_RADIUS, RESET_BUTTON_W, RESET_BUTTON_H
 
 
 class App:
@@ -60,9 +60,14 @@ class App:
             for action, (x, y) in raw_buttons.items()
         }
         self.touch_button_radius = int(TOUCH_BUTTON_RADIUS * max(scale_x, scale_y))
-        self.button_press_feedback = None  # (bx, by, expire_ticks)
+        self.reset_button_size = (int(RESET_BUTTON_W * scale_x), int(RESET_BUTTON_H * scale_y))
+        self.button_press_feedback = None  # ('circle', bx, by, expire) or ('rect', pg.Rect, expire)
 
         self.clock = pg.time.Clock()
+        self.game = DonkeyKongJr(self)
+
+    def _reset_game(self):
+        self.game_surface.blit(self.bg, [0, 0])
         self.game = DonkeyKongJr(self)
 
     def update(self):
@@ -75,10 +80,14 @@ class App:
         self.screen.blit(self.device_frame, (0, 0))
         self.screen.blit(self.game_surface, self.device_offset)
         if self.button_press_feedback:
-            bx, by, expire = self.button_press_feedback
+            shape, *args, expire = self.button_press_feedback
             if pg.time.get_ticks() < expire:
-                pg.draw.circle(self.screen, (220, 30, 30), (bx, by),
-                               self.touch_button_radius + 4, 6)
+                if shape == 'circle':
+                    bx, by = args
+                    pg.draw.circle(self.screen, (220, 30, 30), (bx, by),
+                                   self.touch_button_radius + 4, 6)
+                else:
+                    pg.draw.rect(self.screen, (220, 30, 30), args[0], 4)
             else:
                 self.button_press_feedback = None
         pg.display.flip()
@@ -91,8 +100,7 @@ class App:
                 sys.exit()
             if event.type == pg.KEYDOWN:
                 if event.key == pg.K_r:
-                    self.game_surface.blit(self.bg, [0, 0])
-                    self.game = DonkeyKongJr(self)
+                    self._reset_game()
                 elif event.key == pg.K_LEFT:
                     self.game.player_move = "LEFT"
                 elif event.key == pg.K_RIGHT:
@@ -106,11 +114,19 @@ class App:
             if event.type == pg.MOUSEBUTTONDOWN and event.button == 1:
                 mx, my = event.pos
                 for action, (bx, by) in self.touch_buttons.items():
-                    dx, dy = mx - bx, my - by
-                    if dx * dx + dy * dy <= self.touch_button_radius ** 2:
-                        self.game.player_move = action
-                        self.button_press_feedback = (bx, by, pg.time.get_ticks() + 120)
-                        break
+                    if action == "RESET":
+                        rw, rh = self.reset_button_size
+                        rx, ry = bx - rw // 2, by - rh // 2
+                        if rx <= mx <= rx + rw and ry <= my <= ry + rh:
+                            self._reset_game()
+                            self.button_press_feedback = ('rect', pg.Rect(rx, ry, rw, rh), pg.time.get_ticks() + 120)
+                            break
+                    else:
+                        dx, dy = mx - bx, my - by
+                        if dx * dx + dy * dy <= self.touch_button_radius ** 2:
+                            self.game.player_move = action
+                            self.button_press_feedback = ('circle', bx, by, pg.time.get_ticks() + 120)
+                            break
 
     async def run(self):
         while True:

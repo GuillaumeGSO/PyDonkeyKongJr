@@ -2,13 +2,13 @@
 Interactive tool to calibrate touch button positions on the device frame.
 
 Shows Device.png at its natural resolution. Each button is shown as a labeled
-circle. Nudge the selected button with arrow keys, then save with S or ESC.
+circle or rectangle. Nudge the selected button with arrow keys, then save with S or ESC.
 
 Usage:
     python tools/button_positioning_tool.py
 
 Controls:
-    1-5        Select button (UP, DOWN, LEFT, RIGHT, JUMP)
+    1-6        Select button (UP, DOWN, LEFT, RIGHT, JUMP, RESET)
     Click      Select nearest button
     Arrow keys Nudge selected button 1 px
     S          Save positions to positions/ButtonPositions.json
@@ -25,12 +25,12 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, ROOT)
 os.chdir(ROOT)
 
-from settings import DEVICE_SCREEN_RAW, TOUCH_BUTTON_RADIUS
+from settings import DEVICE_SCREEN_RAW, TOUCH_BUTTON_RADIUS, RESET_BUTTON_W, RESET_BUTTON_H
 
 POSITIONS_FILE = os.path.join("positions", "ButtonPositions.json")
 DEVICE_IMG = os.path.join("img", "Device.png")
 
-BUTTON_ORDER = ["UP", "DOWN", "LEFT", "RIGHT", "JUMP"]
+BUTTON_ORDER = ["UP", "DOWN", "LEFT", "RIGHT", "JUMP", "RESET"]
 
 BUTTON_COLORS = {
     "UP":    (80, 180, 80),
@@ -38,6 +38,7 @@ BUTTON_COLORS = {
     "LEFT":  (80, 180, 80),
     "RIGHT": (80, 180, 80),
     "JUMP":  (200, 80, 200),
+    "RESET": (200, 80, 80),
 }
 
 
@@ -52,7 +53,8 @@ def load_positions():
         "DOWN": [117, 434],
         "LEFT": [71, 393],
         "RIGHT": [160, 393],
-        "JUMP": [819, 388]
+        "JUMP": [819, 388],
+        "RESET": [806, 73],
     }
 
 
@@ -67,12 +69,35 @@ def save_positions(positions):
     print(f"Saved to {POSITIONS_FILE}")
 
 
+def draw_button(screen, name, bx, by, color, font_label, is_selected):
+    if name == "RESET":
+        rect = pg.Rect(bx - RESET_BUTTON_W // 2, by - RESET_BUTTON_H // 2, RESET_BUTTON_W, RESET_BUTTON_H)
+        pg.draw.rect(screen, color, rect)
+        if is_selected:
+            pg.draw.rect(screen, (255, 255, 255), rect.inflate(6, 6), 3)
+    else:
+        pg.draw.circle(screen, color, (bx, by), TOUCH_BUTTON_RADIUS)
+        if is_selected:
+            pg.draw.circle(screen, (255, 255, 255), (bx, by), TOUCH_BUTTON_RADIUS + 3, 3)
+    lbl = font_label.render(name, True, (255, 255, 255))
+    screen.blit(lbl, (bx - lbl.get_width() // 2, by - lbl.get_height() // 2))
+
+
+def hit_distance(name, mx, my, bx, by):
+    """Return a sortable proximity value for click-to-select."""
+    if name == "RESET":
+        cx = max(bx - RESET_BUTTON_W // 2, min(mx, bx + RESET_BUTTON_W // 2))
+        cy = max(by - RESET_BUTTON_H // 2, min(my, by + RESET_BUTTON_H // 2))
+        return (mx - cx) ** 2 + (my - cy) ** 2
+    return (mx - bx) ** 2 + (my - by) ** 2
+
+
 def main():
     pg.init()
     device_raw = pg.image.load(DEVICE_IMG)
     w, h = device_raw.get_size()
     screen = pg.display.set_mode((w, h))
-    pg.display.set_caption("Button Positioning — Arrow keys move | 1-5 select | S save | ESC save & quit")
+    pg.display.set_caption("Button Positioning — Arrow keys move | 1-6 select | S save | ESC save & quit")
     device = device_raw.convert_alpha()
 
     font = pg.font.SysFont(None, 22)
@@ -97,7 +122,7 @@ def main():
                     running = False
                 elif event.key == pg.K_s:
                     save_positions(positions)
-                elif event.key in (pg.K_1, pg.K_2, pg.K_3, pg.K_4, pg.K_5):
+                elif event.key in (pg.K_1, pg.K_2, pg.K_3, pg.K_4, pg.K_5, pg.K_6):
                     selected = event.key - pg.K_1
                 elif event.key == pg.K_UP:
                     positions[BUTTON_ORDER[selected]][1] -= 1
@@ -109,11 +134,10 @@ def main():
                     positions[BUTTON_ORDER[selected]][0] += 1
             elif event.type == pg.MOUSEBUTTONDOWN and event.button == 1:
                 mx, my = event.pos
-                # Select nearest button
                 best_i, best_d = 0, float("inf")
                 for i, name in enumerate(BUTTON_ORDER):
                     bx, by = positions[name]
-                    d = (mx - bx) ** 2 + (my - by) ** 2
+                    d = hit_distance(name, mx, my, bx, by)
                     if d < best_d:
                         best_d, best_i = d, i
                 selected = best_i
@@ -126,12 +150,7 @@ def main():
         # Draw buttons
         for i, name in enumerate(BUTTON_ORDER):
             bx, by = positions[name]
-            color = BUTTON_COLORS[name]
-            pg.draw.circle(screen, color, (bx, by), TOUCH_BUTTON_RADIUS)
-            if i == selected:
-                pg.draw.circle(screen, (255, 255, 255), (bx, by), TOUCH_BUTTON_RADIUS + 3, 3)
-            lbl = font_label.render(name, True, (255, 255, 255))
-            screen.blit(lbl, (bx - lbl.get_width() // 2, by - lbl.get_height() // 2))
+            draw_button(screen, name, bx, by, BUTTON_COLORS[name], font_label, i == selected)
 
         # Status bar
         sel_name = BUTTON_ORDER[selected]
