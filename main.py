@@ -41,6 +41,10 @@ class App:
         self.bg = pg.image.load(os.path.join(
             "img", "EmptyScreen.png")).convert()
 
+        # Semi-transparent LCD tint (grey-green) over the game area
+        self.lcd_overlay = pg.Surface((WIDTH, HEIGHT), pg.SRCALPHA)
+        self.lcd_overlay.fill((114, 129, 122, 128))  # grey-green, alpha=90/255
+
         self.game_surface.blit(self.bg, [0, 0])
 
         self.missed_sound = pg.mixer.Sound(os.path.join("sounds", "Missed.wav"))
@@ -57,6 +61,7 @@ class App:
 
     def draw(self):
         self.game.draw()
+        self.game_surface.blit(self.lcd_overlay, (0, 0))
         self.screen.blit(self.device_frame, (0, 0))
         self.screen.blit(self.game_surface, self.device_offset)
         pg.display.flip()
