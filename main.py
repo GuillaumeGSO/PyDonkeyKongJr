@@ -9,13 +9,14 @@ https://www.homecomputermuseum.nl/en/collectie/nintendo/nintendo-donkey-kong-jr-
 """
 
 import asyncio
+import json
 import os
 import sys
 
 import pygame as pg
 
 from donkey_kong_jr import DonkeyKongJr
-from settings import SCREEN_NAME, WIDTH, HEIGHT, FPS, DEVICE_SCREEN_RAW
+from settings import SCREEN_NAME, WIDTH, HEIGHT, FPS, DEVICE_SCREEN_RAW, TOUCH_BUTTON_RADIUS
 
 
 class App:
@@ -52,6 +53,15 @@ class App:
         self.monkey_sound = pg.mixer.Sound(os.path.join("sounds", "Monkey.wav"))
         self.score_sound  = pg.mixer.Sound(os.path.join("sounds", "Score.wav"))
 
+        with open(os.path.join("positions", "ButtonPositions.json")) as f:
+            raw_buttons = json.load(f)
+        self.touch_buttons = {
+            action: (int(x * scale_x), int(y * scale_y))
+            for action, (x, y) in raw_buttons.items()
+        }
+        self.touch_button_radius = int(TOUCH_BUTTON_RADIUS * max(scale_x, scale_y))
+        self.button_press_feedback = None  # (bx, by, expire_ticks)
+
         self.clock = pg.time.Clock()
         self.game = DonkeyKongJr(self)
 
@@ -64,6 +74,13 @@ class App:
         self.game_surface.blit(self.lcd_overlay, (0, 0))
         self.screen.blit(self.device_frame, (0, 0))
         self.screen.blit(self.game_surface, self.device_offset)
+        if self.button_press_feedback:
+            bx, by, expire = self.button_press_feedback
+            if pg.time.get_ticks() < expire:
+                pg.draw.circle(self.screen, (220, 30, 30), (bx, by),
+                               self.touch_button_radius + 4, 6)
+            else:
+                self.button_press_feedback = None
         pg.display.flip()
 
     def check_events(self):
@@ -86,6 +103,14 @@ class App:
                     self.game.player_move = "DOWN"
                 elif event.key == pg.K_SPACE:
                     self.game.player_move = "JUMP"
+            if event.type == pg.MOUSEBUTTONDOWN and event.button == 1:
+                mx, my = event.pos
+                for action, (bx, by) in self.touch_buttons.items():
+                    dx, dy = mx - bx, my - by
+                    if dx * dx + dy * dy <= self.touch_button_radius ** 2:
+                        self.game.player_move = action
+                        self.button_press_feedback = (bx, by, pg.time.get_ticks() + 120)
+                        break
 
     async def run(self):
         while True:
